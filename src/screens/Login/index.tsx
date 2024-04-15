@@ -12,6 +12,7 @@ import {
 import Logo from '../../../assets/images/logo.svg';
 import GoogleIcon from '../../../assets/images/google.svg';
 import FacebookIcon from '../../../assets/images/facebook.svg';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const LoginScreen = () => {
   return (
@@ -40,13 +41,22 @@ const LoginScreen = () => {
             keyboardType="email-address"
             autoCorrect={false}
           />
-          <TextInput
-            style={styles.loginInput}
-            placeholderTextColor={'#8F8F8F'}
-            placeholder="Password"
-            autoCapitalize="none"
-            secureTextEntry={true}
-          />
+
+          <View style={styles.passwordInputContainer}>
+            <TextInput
+              style={styles.loginInput}
+              placeholderTextColor={'#8F8F8F'}
+              placeholder="Password"
+              autoCapitalize="none"
+              secureTextEntry={true}
+            />
+            <TouchableOpacity
+              style={styles.eyeIconContainer}
+              activeOpacity={0.5}>
+              {/* <Icon name="eye-outline" size={25} color="#000" /> */}
+              <Icon name="eye-off-outline" size={25} color="#000" />
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity activeOpacity={0.5}>
             <Text style={styles.forgotPasswordText}>Olvidé mi contraseña</Text>
           </TouchableOpacity>
@@ -119,13 +129,23 @@ const styles = StyleSheet.create({
   inputsContainer: {
     width: '100%',
   },
+  passwordInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 10,
+  },
+  eyeIconContainer: {
+    position: 'absolute',
+    right: 20,
+  },
   loginInput: {
     width: '100%',
     height: 55,
     borderWidth: 0.5,
     borderColor: '#8F8F8F',
     borderRadius: 3,
-    marginBottom: 15,
     paddingHorizontal: 20,
     fontFamily: 'Poppins-Regular',
   },
