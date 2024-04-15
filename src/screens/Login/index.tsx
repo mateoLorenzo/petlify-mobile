@@ -69,14 +69,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 20,
+    fontFamily: 'Poppins-Bold',
   },
   subtitle: {
     marginTop: 20,
     fontSize: 14,
     textAlign: 'center',
+    fontFamily: 'Poppins-Regular',
   },
   inputsContainer: {
     width: '100%',
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     textAlign: 'right',
     textDecorationLine: 'underline',
+    fontFamily: 'Poppins-Regular',
   },
   spacer: {
     flex: 1,
