@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -15,6 +15,7 @@ import FacebookIcon from '../../../assets/images/facebook.svg';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const LoginScreen = () => {
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <SafeAreaView style={styles.screenContainer1}>
       <ScrollView
@@ -48,13 +49,17 @@ const LoginScreen = () => {
               placeholderTextColor={'#8F8F8F'}
               placeholder="Password"
               autoCapitalize="none"
-              secureTextEntry={true}
+              secureTextEntry={showPassword ? false : true}
             />
             <TouchableOpacity
               style={styles.eyeIconContainer}
+              onPress={() => setShowPassword(!showPassword)}
               activeOpacity={0.5}>
-              {/* <Icon name="eye-outline" size={25} color="#000" /> */}
-              <Icon name="eye-off-outline" size={25} color="#000" />
+              <Icon
+                name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+                size={25}
+                color="#000"
+              />
             </TouchableOpacity>
           </View>
           <TouchableOpacity activeOpacity={0.5}>
@@ -138,7 +143,11 @@ const styles = StyleSheet.create({
   },
   eyeIconContainer: {
     position: 'absolute',
-    right: 20,
+    right: 0,
+    width: 70,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loginInput: {
     width: '100%',
