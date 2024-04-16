@@ -9,29 +9,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Logo from '../../../assets/images/logo.svg';
 import GoogleIcon from '../../../assets/images/google.svg';
 import FacebookIcon from '../../../assets/images/facebook.svg';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
+import {AuthHeader} from '../../components/AuthHeader';
 
 const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigation = useNavigation();
+
   return (
-    <SafeAreaView style={styles.screenContainer1}>
+    <SafeAreaView style={styles.screenContainer}>
       <ScrollView
         contentContainerStyle={styles.contentContainerStyle}
         style={styles.contentContainer}
         bounces={false}>
         <StatusBar barStyle="dark-content" />
-        <Logo height={150} width={150} style={styles.image} />
-        <Text style={styles.title}>Bienvenido a Petlify</Text>
-        <Text style={styles.subtitle}>¡Mejora la vida de tu mascota!</Text>
 
-        <View style={styles.divisorContainer}>
-          <View style={styles.divisorLine} />
-          <Text style={styles.divisorText}>Iniciar sesión</Text>
-          <View style={styles.divisorLine} />
-        </View>
+        <AuthHeader divisorText="Iniciar sesión" />
 
         <View style={styles.inputsContainer}>
           <TextInput
@@ -92,7 +88,9 @@ const LoginScreen = () => {
 
         <TouchableOpacity
           style={styles.registerTextContainer}
-          activeOpacity={0.5}>
+          activeOpacity={0.5}
+          // TODO: Set correct types for navigation
+          onPress={() => navigation.navigate('registerScreen')}>
           <Text style={styles.registerTextLeft}>
             ¿Aún no tienes una cuenta?
           </Text>
@@ -104,7 +102,7 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  screenContainer1: {
+  screenContainer: {
     flex: 1,
   },
   contentContainer: {
@@ -115,6 +113,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
   },
+
   image: {
     marginTop: 20,
   },
@@ -131,6 +130,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     color: '#5C5C5C',
   },
+
   inputsContainer: {
     width: '100%',
   },
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Poppins-SemiBold',
   },
+
   divisorContainer: {
     width: '100%',
     flexDirection: 'row',
@@ -192,6 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: 15,
   },
+
   bottomDivisorContainer: {
     width: '100%',
     flexDirection: 'row',
