@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -9,94 +10,63 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import GoogleIcon from '../../../assets/images/google.svg';
-import FacebookIcon from '../../../assets/images/facebook.svg';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
 import {AuthHeader} from '../../components/AuthHeader';
+import {AuthFooter} from '../../components/AuthFooter';
 
 const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.screenContainer}>
-      <ScrollView
-        contentContainerStyle={styles.contentContainerStyle}
-        style={styles.contentContainer}
-        bounces={false}>
-        <StatusBar barStyle="dark-content" />
+      <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+        <ScrollView
+          contentContainerStyle={styles.contentContainerStyle}
+          style={styles.contentContainer}
+          bounces={false}>
+          <StatusBar barStyle="dark-content" />
 
-        <AuthHeader divisorText="Iniciar sesión" />
+          <AuthHeader divisorText="Iniciar sesión" />
 
-        <View style={styles.inputsContainer}>
-          <TextInput
-            style={styles.loginInput}
-            placeholderTextColor={'#8F8F8F'}
-            placeholder="Email"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            autoCorrect={false}
-          />
-
-          <View style={styles.passwordInputContainer}>
+          <View style={styles.inputsContainer}>
             <TextInput
               style={styles.loginInput}
               placeholderTextColor={'#8F8F8F'}
-              placeholder="Password"
+              placeholder="Email"
               autoCapitalize="none"
-              secureTextEntry={showPassword ? false : true}
+              keyboardType="email-address"
+              autoCorrect={false}
             />
-            <TouchableOpacity
-              style={styles.eyeIconContainer}
-              onPress={() => setShowPassword(!showPassword)}
-              activeOpacity={0.5}>
-              <Icon
-                name={showPassword ? 'eye-outline' : 'eye-off-outline'}
-                size={25}
-                color="#000"
+            <View style={styles.passwordInputContainer}>
+              <TextInput
+                style={styles.loginInput}
+                placeholderTextColor={'#8F8F8F'}
+                placeholder="Password"
+                autoCapitalize="none"
+                secureTextEntry={showPassword ? false : true}
               />
+              <TouchableOpacity
+                style={styles.eyeIconContainer}
+                onPress={() => setShowPassword(!showPassword)}
+                activeOpacity={0.5}>
+                <Icon
+                  name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+                  size={25}
+                  color="#8F8F8F"
+                />
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity activeOpacity={0.5}>
+              <Text style={styles.forgotPasswordText}>
+                Olvidé mi contraseña
+              </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity activeOpacity={0.5}>
-            <Text style={styles.forgotPasswordText}>Olvidé mi contraseña</Text>
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.loginButtonsContainer}>
-          <TouchableOpacity style={styles.logInButton} activeOpacity={0.5}>
-            <Text style={styles.loginButtonText}>Iniciar sesion</Text>
-          </TouchableOpacity>
-          <View style={styles.bottomDivisorContainer}>
-            <View style={styles.divisorLine} />
-            <Text style={styles.bottomDivisorText}>o ingresa con</Text>
-            <View style={styles.divisorLine} />
-          </View>
-          <View style={styles.socialButtonsContainer}>
-            <TouchableOpacity style={styles.socialButton} activeOpacity={0.5}>
-              <GoogleIcon height={25} width={25} />
-              <Text style={styles.socialButtonText}>Google</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton} activeOpacity={0.5}>
-              <FacebookIcon height={25} width={25} />
-              <Text style={styles.socialButtonText}>Facebook</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.spacer} />
-
-        <TouchableOpacity
-          style={styles.registerTextContainer}
-          activeOpacity={0.5}
-          // TODO: Set correct types for navigation
-          onPress={() => navigation.navigate('registerScreen')}>
-          <Text style={styles.registerTextLeft}>
-            ¿Aún no tienes una cuenta?
-          </Text>
-          <Text style={styles.registerTextRight}>Únete ahora</Text>
-        </TouchableOpacity>
-      </ScrollView>
+          <AuthFooter authType="login" />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -113,24 +83,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
   },
-
-  image: {
-    marginTop: 20,
-  },
-  title: {
-    fontSize: 32,
-    textAlign: 'center',
-    marginTop: 20,
-    fontFamily: 'Poppins-Medium',
-    color: 'black',
-  },
-  subtitle: {
-    fontSize: 14,
-    textAlign: 'center',
-    fontFamily: 'Poppins-Regular',
-    color: '#5C5C5C',
-  },
-
   inputsContainer: {
     width: '100%',
   },
@@ -162,98 +114,6 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontFamily: 'Poppins-Regular',
     color: '#1976D2',
-    fontSize: 15,
-  },
-  spacer: {
-    marginTop: 20,
-    flex: 1,
-  },
-  loginButtonsContainer: {
-    width: '100%',
-    marginTop: 20,
-  },
-  logInButton: {
-    width: '100%',
-    height: 55,
-    backgroundColor: '#1E96FF',
-    borderRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loginButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontFamily: 'Poppins-SemiBold',
-  },
-
-  divisorContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 15,
-  },
-
-  bottomDivisorContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 10,
-  },
-  divisorText: {
-    marginHorizontal: 15,
-    fontFamily: 'Poppins-SemiBold',
-    color: '#8F8F8F',
-    fontSize: 16,
-  },
-  bottomDivisorText: {
-    marginHorizontal: 15,
-    fontFamily: 'Poppins-Medium',
-    color: '#8F8F8F',
-    fontSize: 14,
-  },
-  divisorLine: {
-    height: 1,
-    backgroundColor: '#8F8F8F',
-    flex: 1,
-  },
-  socialButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  socialButton: {
-    width: '48%',
-    height: 55,
-    borderColor: '#1E96FF',
-    borderWidth: 1,
-    borderRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  socialButtonText: {
-    fontSize: 15,
-    color: '#1E96FF',
-    fontFamily: 'Poppins-Medium',
-    marginLeft: 10,
-  },
-  registerTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  registerTextLeft: {
-    textAlign: 'center',
-    fontFamily: 'Poppins-Regular',
-    color: '#8F8F8F',
-    fontSize: 15,
-    marginRight: 5,
-  },
-  registerTextRight: {
-    textAlign: 'center',
-    fontFamily: 'Poppins-Medium',
-    color: '#1E96FF',
     fontSize: 15,
   },
 });
