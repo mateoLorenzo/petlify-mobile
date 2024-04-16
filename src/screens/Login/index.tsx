@@ -19,7 +19,9 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView style={styles.screenContainer}>
-      <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+      <KeyboardAvoidingView
+        style={styles.screenSubContainer}
+        behavior="padding">
         <ScrollView
           contentContainerStyle={styles.contentContainerStyle}
           style={styles.contentContainer}
@@ -73,6 +75,9 @@ const LoginScreen = () => {
 
 const styles = StyleSheet.create({
   screenContainer: {
+    flex: 1,
+  },
+  screenSubContainer: {
     flex: 1,
   },
   contentContainer: {

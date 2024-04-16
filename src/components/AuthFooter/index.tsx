@@ -60,7 +60,7 @@ export const AuthFooter = ({authType}: IScreenProps) => {
 
       <TouchableOpacity
         style={styles.registerTextContainer}
-        activeOpacity={0.5}
+        activeOpacity={1.8}
         onPress={() => navigation.navigate(screenToNavigate as never)}>
         <Text style={styles.registerTextLeft}>{authQuestion}</Text>
         <Text style={styles.registerTextRight}>{authQuestionAction}</Text>
