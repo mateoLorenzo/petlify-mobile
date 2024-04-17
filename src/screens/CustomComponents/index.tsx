@@ -32,6 +32,10 @@ const ComponentsScreen = () => {
         name="Custom Spinner"
         onPress={() => navigation.navigate('CustomSpinnerScreen' as never)}
       />
+      <ComponentButton
+        name="React Hook Form"
+        onPress={() => navigation.navigate('ReactHookFormScreen' as never)}
+      />
     </View>
   );
 };
