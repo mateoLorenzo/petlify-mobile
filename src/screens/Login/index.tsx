@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -6,22 +6,20 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {AuthHeader} from '../../components/AuthHeader';
 import {AuthFooter} from '../../components/AuthFooter';
+import {CustomTextInput} from '../CustomComponents/Input';
+import {useForm} from 'react-hook-form';
 
 const LoginScreen = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const {control, handleSubmit} = useForm();
 
   return (
-    <SafeAreaView style={styles.screenContainer}>
-      <KeyboardAvoidingView
-        style={styles.screenSubContainer}
-        behavior="padding">
+    <SafeAreaView style={styles.flex1}>
+      <KeyboardAvoidingView style={styles.flex1} behavior="padding">
         <ScrollView
           contentContainerStyle={styles.contentContainerStyle}
           style={styles.contentContainer}
@@ -31,33 +29,33 @@ const LoginScreen = () => {
           <AuthHeader divisorText="Iniciar sesión" />
 
           <View style={styles.inputsContainer}>
-            <TextInput
-              style={styles.loginInput}
+            <CustomTextInput
+              name="email"
+              control={control}
               placeholderTextColor={'#8F8F8F'}
               placeholder="Email"
               autoCapitalize="none"
               keyboardType="email-address"
               autoCorrect={false}
+              rules={{required: 'Debes poner tu correo!'}}
             />
-            <View style={styles.passwordInputContainer}>
-              <TextInput
-                style={styles.loginInput}
-                placeholderTextColor={'#8F8F8F'}
-                placeholder="Password"
-                autoCapitalize="none"
-                secureTextEntry={showPassword ? false : true}
-              />
-              <TouchableOpacity
-                style={styles.eyeIconContainer}
-                onPress={() => setShowPassword(!showPassword)}
-                activeOpacity={0.5}>
-                <Icon
-                  name={showPassword ? 'eye-outline' : 'eye-off-outline'}
-                  size={25}
-                  color="#8F8F8F"
-                />
-              </TouchableOpacity>
-            </View>
+
+            <CustomTextInput
+              name="password"
+              control={control}
+              placeholderTextColor={'#8F8F8F'}
+              placeholder="Password"
+              autoCapitalize="none"
+              isPasswordField
+              containerStyle={styles.passwordInput}
+              rules={{
+                required: 'Debes poner tu contraseña!',
+                minLength: {
+                  value: 6,
+                  message: 'La contraseña debe tener al menos 6 caracteres',
+                },
+              }}
+            />
 
             <TouchableOpacity activeOpacity={0.5}>
               <Text style={styles.forgotPasswordText}>
@@ -66,7 +64,10 @@ const LoginScreen = () => {
             </TouchableOpacity>
           </View>
 
-          <AuthFooter authType="login" />
+          <AuthFooter
+            authType="login"
+            onAuthPress={handleSubmit(data => console.log('Auth', data))}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -74,12 +75,7 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-  },
-  screenSubContainer: {
-    flex: 1,
-  },
+  flex1: {flex: 1},
   contentContainer: {
     flex: 1,
     paddingHorizontal: 20,
@@ -91,29 +87,9 @@ const styles = StyleSheet.create({
   inputsContainer: {
     width: '100%',
   },
-  passwordInputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  passwordInput: {
     marginTop: 15,
     marginBottom: 10,
-  },
-  eyeIconContainer: {
-    position: 'absolute',
-    right: 0,
-    width: 70,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loginInput: {
-    width: '100%',
-    height: 55,
-    borderWidth: 0.5,
-    borderColor: '#8F8F8F',
-    borderRadius: 3,
-    paddingHorizontal: 20,
-    fontFamily: 'Poppins-Regular',
   },
   forgotPasswordText: {
     textAlign: 'right',

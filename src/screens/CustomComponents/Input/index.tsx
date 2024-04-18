@@ -1,53 +1,90 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Controller, FieldValues, RegisterOptions} from 'react-hook-form';
-import {StyleSheet, Text, TextInput, TextStyle} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputProps,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 
-interface Props {
+interface Props extends TextInputProps {
   control: any;
   name: string;
   placeholder: string;
   style?: TextStyle;
-  secureTextEntry?: boolean;
+  containerStyle?: TextStyle;
   rules?: RegisterOptions<FieldValues>;
+  isPasswordField?: boolean;
+  mainContainerStyle?: ViewStyle;
 }
 
-export const CustomInput = ({
+export const CustomTextInput = ({
   control,
   name,
   placeholder,
   style,
-  secureTextEntry,
+  isPasswordField,
   rules = {},
+  containerStyle,
+  mainContainerStyle,
+  ...props
 }: Props) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <Controller
       control={control}
       rules={rules}
       name={name}
       render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
-        <>
-          <TextInput
-            value={value}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            style={{
-              ...styles.input,
-              ...style,
-              ...(error ? styles.borderError : styles.borderNormal),
-            }}
-            placeholder={placeholder}
-            secureTextEntry={secureTextEntry}
-          />
+        <View style={mainContainerStyle}>
+          <View style={{...styles.container, ...containerStyle}}>
+            <TextInput
+              value={value}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              placeholder={placeholder}
+              secureTextEntry={isPasswordField && !showPassword}
+              style={{
+                ...styles.input,
+                ...style,
+                ...(error ? styles.borderError : styles.borderNormal),
+              }}
+              {...props}
+            />
+            {isPasswordField && (
+              <TouchableOpacity
+                style={styles.eyeIconContainer}
+                onPress={() => setShowPassword(!showPassword)}
+                activeOpacity={0.5}>
+                <Icon
+                  name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+                  size={25}
+                  color="#8F8F8F"
+                />
+              </TouchableOpacity>
+            )}
+          </View>
           {error && (
             <Text style={styles.errorText}>{error.message || 'Error'}</Text>
           )}
-        </>
+        </View>
       )}
     />
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   input: {
     width: '100%',
     height: 55,
@@ -55,7 +92,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     paddingHorizontal: 20,
     fontFamily: 'Poppins-Regular',
-    marginVertical: 5,
   },
   borderNormal: {
     borderColor: '#8F8F8F',
@@ -63,13 +99,18 @@ const styles = StyleSheet.create({
   borderError: {
     borderColor: 'red',
   },
-  borderSuccess: {
-    borderColor: 'green',
-  },
   errorText: {
     color: 'red',
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
     alignSelf: 'flex-start',
+  },
+  eyeIconContainer: {
+    position: 'absolute',
+    right: 0,
+    width: 70,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

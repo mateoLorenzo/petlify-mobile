@@ -6,9 +6,10 @@ import {useNavigation} from '@react-navigation/native';
 
 interface IScreenProps {
   authType: 'login' | 'register';
+  onAuthPress: () => void;
 }
 
-export const AuthFooter = ({authType}: IScreenProps) => {
+export const AuthFooter = ({authType, onAuthPress}: IScreenProps) => {
   const navigation = useNavigation();
 
   let authAction: string = '';
@@ -36,7 +37,10 @@ export const AuthFooter = ({authType}: IScreenProps) => {
   return (
     <>
       <View style={styles.loginButtonsContainer}>
-        <TouchableOpacity style={styles.logInButton} activeOpacity={0.5}>
+        <TouchableOpacity
+          style={styles.logInButton}
+          activeOpacity={0.5}
+          onPress={onAuthPress}>
           <Text style={styles.loginButtonText}>{authAction}</Text>
         </TouchableOpacity>
         <View style={styles.bottomDivisorContainer}>
@@ -87,7 +91,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Poppins-SemiBold',
   },
-
   bottomDivisorContainer: {
     width: '100%',
     flexDirection: 'row',

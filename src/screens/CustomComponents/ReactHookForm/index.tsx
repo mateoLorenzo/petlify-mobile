@@ -1,7 +1,7 @@
 import React from 'react';
 import {useForm} from 'react-hook-form';
 import {Button, StyleSheet, View} from 'react-native';
-import {CustomInput} from '../Input';
+import {CustomTextInput} from '../Input';
 
 const ReactHookFormScreen = () => {
   const {
@@ -14,13 +14,13 @@ const ReactHookFormScreen = () => {
 
   return (
     <View style={styles.container}>
-      <CustomInput
+      <CustomTextInput
         name="email"
         control={control}
         placeholder="Email"
         rules={{required: 'Email is required'}}
       />
-      <CustomInput
+      <CustomTextInput
         name="password"
         control={control}
         placeholder="Password"
