@@ -1,6 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, StyleSheet, Animated} from 'react-native';
-import {CustomSpinner} from '../../screens/CustomComponents/Spinner';
+import {CustomSpinner} from '../../screens/Tests/Spinner';
 import {useAnimation} from '../../hooks/useAnimation';
 
 interface Props {
