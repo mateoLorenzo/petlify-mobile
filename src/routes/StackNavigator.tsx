@@ -4,8 +4,8 @@ import LoginScreen from '../screens/Login';
 import RegisterScreen from '../screens/Register';
 import ComponentsScreen from '../screens/Tests';
 import CustomButtonScreen from '../screens/Tests/Button';
-import CustomSpinnerScreen from '../screens/Tests/Spinner';
 import ReactHookFormScreen from '../screens/Tests/ReactHookForm';
+import CustomSpinnerScreen from '../screens/Tests/Spinner';
 
 const Stack = createNativeStackNavigator();
 
