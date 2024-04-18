@@ -11,8 +11,8 @@ import {
 } from 'react-native';
 import {AuthHeader} from '../../components/AuthHeader';
 import {AuthFooter} from '../../components/AuthFooter';
-import {CustomTextInput} from '../CustomComponents/Input';
 import {useForm} from 'react-hook-form';
+import {CustomTextInput} from '../../components/CustomTextInput';
 
 const LoginScreen = () => {
   const {control, handleSubmit} = useForm();

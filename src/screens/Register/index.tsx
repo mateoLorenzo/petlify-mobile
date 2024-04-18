@@ -9,7 +9,7 @@ import {
 import {AuthHeader} from '../../components/AuthHeader';
 import {AuthFooter} from '../../components/AuthFooter';
 import {useForm} from 'react-hook-form';
-import {CustomTextInput} from '../CustomComponents/Input';
+import {CustomTextInput} from '../../components/CustomTextInput';
 
 const RegisterScreen = () => {
   const {control, handleSubmit} = useForm();

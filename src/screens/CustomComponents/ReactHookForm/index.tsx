@@ -1,7 +1,7 @@
 import React from 'react';
 import {useForm} from 'react-hook-form';
 import {Button, StyleSheet, View} from 'react-native';
-import {CustomTextInput} from '../Input';
+import {CustomTextInput} from '../../../components/CustomTextInput';
 
 const ReactHookFormScreen = () => {
   const {
@@ -19,6 +19,7 @@ const ReactHookFormScreen = () => {
         control={control}
         placeholder="Email"
         rules={{required: 'Email is required'}}
+        style={styles.marginBottom10}
       />
       <CustomTextInput
         name="password"
@@ -48,6 +49,9 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  marginBottom10: {
+    marginBottom: 10,
   },
 });
 
