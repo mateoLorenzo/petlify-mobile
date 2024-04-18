@@ -1,9 +1,13 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet, Animated} from 'react-native';
+import {TouchableOpacity, StyleSheet, Animated} from 'react-native';
 import {CustomSpinner} from '../../screens/CustomComponents/Spinner';
 import {useAnimation} from '../../hooks/useAnimation';
 
-export const CustomButton = () => {
+interface Props {
+  onPress: () => void;
+}
+
+export const CustomButton = ({onPress}: Props) => {
   const {
     textPosition,
     textOpacity,
@@ -15,34 +19,37 @@ export const CustomButton = () => {
     moveLoaderUP,
   } = useAnimation();
 
+  const moveTextAndShowSpinner = () => {
+    moveTextUP(-50);
+    fadeOutButtonText();
+    fadeInLoader();
+    moveLoaderUP(0);
+  };
+
   return (
-    <View style={styles.screenContainer}>
-      <TouchableOpacity
-        style={styles.button}
-        activeOpacity={0.8}
-        onPress={() => {
-          moveTextUP(-50);
-          fadeOutButtonText();
-          fadeInLoader();
-          moveLoaderUP(0);
+    <TouchableOpacity
+      style={styles.button}
+      activeOpacity={0.8}
+      onPress={() => {
+        moveTextAndShowSpinner();
+        onPress();
+      }}>
+      <Animated.Text
+        style={{
+          ...styles.buttonText,
+          transform: [{translateY: textPosition}],
+          opacity: textOpacity,
         }}>
-        <Animated.Text
-          style={{
-            ...styles.buttonText,
-            transform: [{translateY: textPosition}],
-            opacity: textOpacity,
-          }}>
-          Custom Button
-        </Animated.Text>
-        <Animated.View
-          style={{
-            opacity: loaderOpacity,
-            transform: [{translateY: loaderPosition}],
-          }}>
-          <CustomSpinner color="white" />
-        </Animated.View>
-      </TouchableOpacity>
-    </View>
+        Custom Button
+      </Animated.Text>
+      <Animated.View
+        style={{
+          opacity: loaderOpacity,
+          transform: [{translateY: loaderPosition}],
+        }}>
+        <CustomSpinner color="white" />
+      </Animated.View>
+    </TouchableOpacity>
   );
 };
 

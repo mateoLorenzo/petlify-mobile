@@ -42,6 +42,7 @@ const ComponentsScreen = () => {
 
 const styles = StyleSheet.create({
   screenContainer: {
+    backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
