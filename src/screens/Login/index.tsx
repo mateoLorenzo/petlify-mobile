@@ -18,7 +18,7 @@ const LoginScreen = () => {
   const {control, handleSubmit} = useForm();
 
   return (
-    <SafeAreaView style={styles.flex1}>
+    <SafeAreaView style={styles.screenContainer}>
       <KeyboardAvoidingView style={styles.flex1} behavior="padding">
         <ScrollView
           contentContainerStyle={styles.contentContainerStyle}
@@ -75,6 +75,10 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   flex1: {flex: 1},
   contentContainer: {
     flex: 1,

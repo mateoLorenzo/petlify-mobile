@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   contentContainer: {
     flex: 1,
