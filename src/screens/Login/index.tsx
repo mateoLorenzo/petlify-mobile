@@ -13,9 +13,16 @@ import {AuthHeader} from '../../components/AuthHeader';
 import {AuthFooter} from '../../components/AuthFooter';
 import {useForm} from 'react-hook-form';
 import {CustomTextInput} from '../../components/CustomTextInput';
+import {useNavigation} from '@react-navigation/native';
 
 const LoginScreen = () => {
   const {control, handleSubmit} = useForm();
+
+  const {navigate} = useNavigation();
+
+  const login = () => {
+    navigate('RegisterPetScreen' as never);
+  };
 
   return (
     <SafeAreaView style={styles.screenContainer}>
@@ -64,10 +71,7 @@ const LoginScreen = () => {
             </TouchableOpacity>
           </View>
 
-          <AuthFooter
-            authType="login"
-            onAuthPress={handleSubmit(data => console.log('Auth', data))}
-          />
+          <AuthFooter authType="login" onAuthPress={handleSubmit(login)} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

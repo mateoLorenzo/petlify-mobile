@@ -1,13 +1,30 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Animated} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 import {CustomSpinner} from '../Spinner';
 import {useAnimation} from '../../hooks/useAnimation';
 
 interface Props {
   onPress: () => void;
+  disabled?: boolean;
+  style?: StyleProp<ViewStyle>;
+  label?: string;
+  labelStyle?: StyleProp<TextStyle>;
 }
 
-export const CustomButton = ({onPress}: Props) => {
+export const CustomButton = ({
+  onPress,
+  disabled,
+  style,
+  label,
+  labelStyle,
+}: Props) => {
   const {
     textPosition,
     textOpacity,
@@ -28,19 +45,23 @@ export const CustomButton = ({onPress}: Props) => {
 
   return (
     <TouchableOpacity
-      style={styles.button}
+      disabled={disabled}
       activeOpacity={0.8}
+      style={[styles.button, style]}
       onPress={() => {
         moveTextAndShowSpinner();
         onPress();
       }}>
       <Animated.Text
-        style={{
-          ...styles.buttonText,
-          transform: [{translateY: textPosition}],
-          opacity: textOpacity,
-        }}>
-        Custom Button
+        style={[
+          {
+            ...styles.buttonText,
+            transform: [{translateY: textPosition}],
+            opacity: textOpacity,
+          },
+          labelStyle,
+        ]}>
+        {label || 'Button'}
       </Animated.Text>
       <Animated.View
         style={{
@@ -74,8 +95,6 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: '#1E96FF',
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#1E96FF',
     alignItems: 'center',
     justifyContent: 'center',
   },

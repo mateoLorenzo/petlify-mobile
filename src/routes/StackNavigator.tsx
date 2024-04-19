@@ -6,6 +6,7 @@ import ComponentsScreen from '../screens/Tests';
 import CustomButtonScreen from '../screens/Tests/Button';
 import ReactHookFormScreen from '../screens/Tests/ReactHookForm';
 import CustomSpinnerScreen from '../screens/Tests/Spinner';
+import RegisterPetScreen from '../screens/RegisterPet';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="ComponentsNavigator"
         component={ComponentsNavigator}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="RegisterPetScreen"
+        component={RegisterPetScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

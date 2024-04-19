@@ -10,9 +10,16 @@ import {AuthHeader} from '../../components/AuthHeader';
 import {AuthFooter} from '../../components/AuthFooter';
 import {useForm} from 'react-hook-form';
 import {CustomTextInput} from '../../components/CustomTextInput';
+import {useNavigation} from '@react-navigation/native';
 
 const RegisterScreen = () => {
   const {control, handleSubmit} = useForm();
+
+  const {navigate} = useNavigation();
+
+  const register = () => {
+    navigate('RegisterPetScreen' as never);
+  };
 
   return (
     <SafeAreaView style={styles.screenContainer}>
@@ -94,7 +101,7 @@ const RegisterScreen = () => {
 
           <AuthFooter
             authType="register"
-            onAuthPress={handleSubmit(data => console.log('Auth', data))}
+            onAuthPress={handleSubmit(register)}
           />
         </ScrollView>
       </KeyboardAvoidingView>
