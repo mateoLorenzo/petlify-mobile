@@ -6,6 +6,7 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
+  View,
 } from 'react-native';
 import {CustomSpinner} from '../Spinner';
 import {useAnimation} from '../../hooks/useAnimation';
@@ -16,6 +17,7 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   label?: string;
   labelStyle?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export const CustomButton = ({
@@ -24,7 +26,10 @@ export const CustomButton = ({
   style,
   label,
   labelStyle,
+  containerStyle,
 }: Props) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const {
     textPosition,
     textOpacity,
@@ -44,51 +49,44 @@ export const CustomButton = ({
   };
 
   return (
-    <TouchableOpacity
-      disabled={disabled}
-      activeOpacity={0.8}
-      style={[styles.button, style]}
-      onPress={() => {
-        moveTextAndShowSpinner();
-        onPress();
-      }}>
-      <Animated.Text
-        style={[
-          {
-            ...styles.buttonText,
-            transform: [{translateY: textPosition}],
-            opacity: textOpacity,
-          },
-          labelStyle,
-        ]}>
-        {label || 'Button'}
-      </Animated.Text>
-      <Animated.View
-        style={{
-          opacity: loaderOpacity,
-          transform: [{translateY: loaderPosition}],
+    <View style={[styles.buttonContainer, containerStyle]}>
+      <TouchableOpacity
+        disabled={disabled || isLoading}
+        activeOpacity={0.8}
+        style={[styles.button, style]}
+        onPress={() => {
+          setIsLoading(true);
+          moveTextAndShowSpinner();
+          onPress();
         }}>
-        <CustomSpinner color="white" />
-      </Animated.View>
-    </TouchableOpacity>
+        <Animated.Text
+          style={[
+            {
+              ...styles.buttonText,
+              transform: [{translateY: textPosition}],
+              opacity: textOpacity,
+            },
+            labelStyle,
+          ]}>
+          {label || 'Button'}
+        </Animated.Text>
+        <Animated.View
+          style={{
+            opacity: loaderOpacity,
+            transform: [{translateY: loaderPosition}],
+          }}>
+          <CustomSpinner color="white" />
+        </Animated.View>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: 'white',
-  },
-  buttonBackLayer: {
-    backgroundColor: 'black',
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+  buttonContainer: {
     width: '100%',
-    marginBottom: 20,
+    overflow: 'hidden',
+    alignItems: 'center',
   },
   button: {
     width: '100%',

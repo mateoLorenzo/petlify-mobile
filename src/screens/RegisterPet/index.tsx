@@ -30,7 +30,6 @@ const RegisterPetScreen = () => {
 
       <View style={styles.buttonsContainer}>
         <CustomButton
-          disabled
           onPress={() => {}}
           style={styles.registerButton}
           label="Registrar Mascota"
