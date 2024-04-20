@@ -17,3 +17,45 @@ export const isEmpty = (str: string) => str.trim().length === 0;
 export const phoneRegex = /^(?=(?:\D*\d){10}$)(?:\d{2}\s?\d{4}\s?-?\s?\d{4})$/;
 
 export type fieldsColors = 'green' | 'gray' | 'red';
+
+export const validatePassword = (value: string) => {
+  let errorMessages = '';
+  if (isEmpty(value)) {
+    return (errorMessages += 'La contraseña no puede estar vacía.');
+  }
+  if (!hasSixDigits(value)) {
+    errorMessages += 'Debe tener al menos 6 caracteres.';
+  }
+  if (!hasNumber(value)) {
+    errorMessages += 'Debe contener al menos un número.';
+  }
+  if (!hasUpperCase(value)) {
+    errorMessages += 'Debe contener al menos una mayúscula.';
+  }
+  if (errorMessages) {
+    return errorMessages;
+  }
+  return true;
+};
+
+export const fieldValueIsValid = (
+  fieldName: RegisterFormFields,
+  value: string,
+) => {
+  if (fieldName === 'name') {
+    return nameRegex.test(value);
+  }
+  if (fieldName === 'lastName') {
+    return nameRegex.test(value);
+  }
+  if (fieldName === 'email') {
+    return emailRegex.test(value);
+  }
+  if (fieldName === 'password') {
+    return validatePassword(value) === true;
+  }
+  if (fieldName === 'phone') {
+    console.log('phoneRegex.test(value)', phoneRegex.test(value), value);
+    return phoneRegex.test(value);
+  }
+};

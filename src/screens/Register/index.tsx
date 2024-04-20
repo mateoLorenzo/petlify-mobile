@@ -16,13 +16,11 @@ import {
   RegisterFormData,
   RegisterFormFields,
   emailRegex,
+  fieldValueIsValid,
   fieldsColors,
-  hasNumber,
-  hasSixDigits,
-  hasUpperCase,
-  isEmpty,
   nameRegex,
   phoneRegex,
+  validatePassword,
 } from '../../constants';
 
 const RegisterScreen = () => {
@@ -49,26 +47,6 @@ const RegisterScreen = () => {
     navigate('RegisterPetScreen' as never);
   };
 
-  const validatePassword = (value: string) => {
-    let errorMessages = '';
-    if (isEmpty(value)) {
-      return (errorMessages += 'La contraseña no puede estar vacía.');
-    }
-    if (!hasSixDigits(value)) {
-      errorMessages += 'Debe tener al menos 6 caracteres.';
-    }
-    if (!hasNumber(value)) {
-      errorMessages += 'Debe contener al menos un número.';
-    }
-    if (!hasUpperCase(value)) {
-      errorMessages += 'Debe contener al menos una mayúscula.';
-    }
-    if (errorMessages) {
-      return errorMessages;
-    }
-    return true;
-  };
-
   const updateValidFields = (fieldName: RegisterFormFields) => {
     setGreenFields([...greenFields, fieldName]);
     setRedFields(redFields.filter(field => field !== fieldName));
@@ -85,25 +63,6 @@ const RegisterScreen = () => {
     setGrayFields([...grayFields, fieldName]);
     setRedFields(redFields.filter(field => field !== fieldName));
     setGreenFields(greenFields.filter(field => field !== fieldName));
-  };
-
-  const fieldValueIsValid = (fieldName: RegisterFormFields, value: string) => {
-    if (fieldName === 'name') {
-      return nameRegex.test(value);
-    }
-    if (fieldName === 'lastName') {
-      return nameRegex.test(value);
-    }
-    if (fieldName === 'email') {
-      return emailRegex.test(value);
-    }
-    if (fieldName === 'password') {
-      return validatePassword(value) === true;
-    }
-    if (fieldName === 'phone') {
-      console.log('phoneRegex.test(value)', phoneRegex.test(value), value);
-      return phoneRegex.test(value);
-    }
   };
 
   const validateBlurField = (
