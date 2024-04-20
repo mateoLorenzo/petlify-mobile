@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {CustomButton} from '../../components/CustomButton';
 const petImage = require('../../../assets/images/register-pet.png');
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const RegisterPetScreen = () => {
   const imageGradient = [
@@ -13,24 +14,27 @@ const RegisterPetScreen = () => {
     'rgba(255, 255, 255, 0)',
   ];
 
+  const {navigate} = useNavigation();
+
   return (
     <View style={styles.screenContainer}>
       <Logo height={150} width={150} style={styles.logo} />
       <Text style={styles.subtitle}>Comencemos registrando a tu</Text>
       <Text style={styles.title}>¡Compañero Peludo!</Text>
-      <View style={styles.flex1}>
+      <View style={styles.flex1} />
+      <View style={styles.widthFull}>
         <LinearGradient
           colors={imageGradient}
           style={styles.gradient}
           start={{x: 0, y: 0}}
           end={{x: 0, y: 1}}
         />
-        <Image source={petImage} style={styles.image} />
+        <Image source={petImage} resizeMode="contain" style={styles.image} />
       </View>
 
       <View style={styles.buttonsContainer}>
         <CustomButton
-          onPress={() => {}}
+          onPress={() => navigate('PetDetailScreen' as never)}
           style={styles.registerButton}
           label="Registrar Mascota"
           labelStyle={styles.registerButtonText}
@@ -68,6 +72,9 @@ const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
+  widthFull: {
+    width: '100%',
+  },
   gradient: {
     width: '100%',
     height: 120,
@@ -84,17 +91,17 @@ const styles = StyleSheet.create({
     bottom: 40,
   },
   registerButton: {
-    width: '90%',
+    width: '80%',
     backgroundColor: '#1976D2',
-    height: 60,
+    height: 50,
   },
   registerButtonText: {
-    fontSize: 20,
+    fontSize: 16,
   },
   omitButtonText: {
     color: '#FFF',
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 20,
+    fontSize: 16,
     marginTop: 10,
   },
 });

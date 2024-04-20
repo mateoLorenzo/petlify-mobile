@@ -14,7 +14,7 @@ export const AuthHeader = ({divisorText}: IScreenProps) => {
     <>
       <TouchableOpacity
         onPress={() => navigation.navigate('ComponentsNavigator' as never)}>
-        <Logo height={150} width={150} style={styles.image} />
+        <Logo height={100} width={100} style={styles.image} />
       </TouchableOpacity>
       <Text style={styles.title}>Bienvenido a Petlify</Text>
       <Text style={styles.subtitle}>¡Mejora la vida de tu mascota!</Text>

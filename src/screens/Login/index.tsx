@@ -14,6 +14,7 @@ import {AuthFooter} from '../../components/AuthFooter';
 import {useForm} from 'react-hook-form';
 import {CustomTextInput} from '../../components/CustomTextInput';
 import {useNavigation} from '@react-navigation/native';
+import {emailRegex} from '../../constants';
 
 const LoginScreen = () => {
   const {control, handleSubmit} = useForm();
@@ -22,6 +23,14 @@ const LoginScreen = () => {
 
   const login = () => {
     navigate('RegisterPetScreen' as never);
+  };
+
+  const emailIsValid = (email: string) => {
+    console.log('emailRegex.test(email)', emailRegex.test(email));
+    const isValid = emailRegex.test(email);
+    if (!isValid) {
+      return 'El email no es válido';
+    }
   };
 
   return (
@@ -44,7 +53,10 @@ const LoginScreen = () => {
               autoCapitalize="none"
               keyboardType="email-address"
               autoCorrect={false}
-              rules={{required: 'Debes poner tu correo!'}}
+              rules={{
+                required: 'Debes poner tu correo!',
+                validate: emailIsValid,
+              }}
             />
 
             <CustomTextInput
@@ -55,13 +67,7 @@ const LoginScreen = () => {
               autoCapitalize="none"
               isPasswordField
               containerStyle={styles.passwordInput}
-              rules={{
-                required: 'Debes poner tu contraseña!',
-                minLength: {
-                  value: 6,
-                  message: 'La contraseña debe tener al menos 6 caracteres',
-                },
-              }}
+              rules={{required: 'Debes poner tu contraseña!'}}
             />
 
             <TouchableOpacity activeOpacity={0.5}>

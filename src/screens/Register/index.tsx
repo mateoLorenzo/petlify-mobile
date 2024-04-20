@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
 import {AuthHeader} from '../../components/AuthHeader';
@@ -11,14 +12,144 @@ import {AuthFooter} from '../../components/AuthFooter';
 import {useForm} from 'react-hook-form';
 import {CustomTextInput} from '../../components/CustomTextInput';
 import {useNavigation} from '@react-navigation/native';
+import {
+  RegisterFormData,
+  RegisterFormFields,
+  emailRegex,
+  fieldsColors,
+  hasNumber,
+  hasSixDigits,
+  hasUpperCase,
+  isEmpty,
+  nameRegex,
+  phoneRegex,
+} from '../../constants';
 
 const RegisterScreen = () => {
-  const {control, handleSubmit} = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm<RegisterFormData>();
 
   const {navigate} = useNavigation();
+  const errorsFromPass = errors.password?.message?.split('.');
+  const errorMessagesToShow = errorsFromPass?.filter(error => error !== '');
+  const [greenFields, setGreenFields] = useState<string[]>([]);
+  const [redFields, setRedFields] = useState<string[]>([]);
+  const [grayFields, setGrayFields] = useState<string[]>([
+    'name',
+    'lastName',
+    'email',
+    'password',
+    'phone',
+  ]);
 
-  const register = () => {
+  const onPressRegister = () => {
     navigate('RegisterPetScreen' as never);
+  };
+
+  const validatePassword = (value: string) => {
+    let errorMessages = '';
+    if (isEmpty(value)) {
+      return (errorMessages += 'La contraseña no puede estar vacía.');
+    }
+    if (!hasSixDigits(value)) {
+      errorMessages += 'Debe tener al menos 6 caracteres.';
+    }
+    if (!hasNumber(value)) {
+      errorMessages += 'Debe contener al menos un número.';
+    }
+    if (!hasUpperCase(value)) {
+      errorMessages += 'Debe contener al menos una mayúscula.';
+    }
+    if (errorMessages) {
+      return errorMessages;
+    }
+    return true;
+  };
+
+  const updateValidFields = (fieldName: RegisterFormFields) => {
+    setGreenFields([...greenFields, fieldName]);
+    setRedFields(redFields.filter(field => field !== fieldName));
+    setGrayFields(grayFields.filter(field => field !== fieldName));
+  };
+
+  const updateInvalidFields = (fieldName: RegisterFormFields) => {
+    setRedFields([...redFields, fieldName]);
+    setGreenFields(greenFields.filter(field => field !== fieldName));
+    setGrayFields(grayFields.filter(field => field !== fieldName));
+  };
+
+  const updateGrayFields = (fieldName: RegisterFormFields) => {
+    setGrayFields([...grayFields, fieldName]);
+    setRedFields(redFields.filter(field => field !== fieldName));
+    setGreenFields(greenFields.filter(field => field !== fieldName));
+  };
+
+  const fieldValueIsValid = (fieldName: RegisterFormFields, value: string) => {
+    if (fieldName === 'name') {
+      return nameRegex.test(value);
+    }
+    if (fieldName === 'lastName') {
+      return nameRegex.test(value);
+    }
+    if (fieldName === 'email') {
+      return emailRegex.test(value);
+    }
+    if (fieldName === 'password') {
+      return validatePassword(value) === true;
+    }
+    if (fieldName === 'phone') {
+      console.log('phoneRegex.test(value)', phoneRegex.test(value), value);
+      return phoneRegex.test(value);
+    }
+  };
+
+  const validateBlurField = (
+    fieldName: RegisterFormFields,
+    value: string = '',
+  ) => {
+    const fieldIsValid = fieldValueIsValid(fieldName, value);
+    if (fieldIsValid) {
+      updateValidFields(fieldName);
+    } else {
+      updateInvalidFields(fieldName);
+    }
+  };
+
+  const validateChangeField = (
+    fieldName: RegisterFormFields,
+    value: string = '',
+  ) => {
+    const fieldIsValid = fieldValueIsValid(fieldName, value);
+    if (fieldIsValid) {
+      updateValidFields(fieldName);
+    } else {
+      updateGrayFields(fieldName);
+    }
+  };
+
+  const getFieldColor = (fieldName: RegisterFormFields): fieldsColors => {
+    if (greenFields.includes(fieldName)) {
+      return 'green';
+    }
+    if (redFields.includes(fieldName)) {
+      return 'red';
+    }
+    return 'gray';
+  };
+
+  const renderErrorMessages = () => {
+    return (
+      <>
+        {errorMessagesToShow?.map((error, index) => (
+          <Text key={`${index}-${error}`} style={styles.errorMessage}>
+            {error}
+          </Text>
+        ))}
+      </>
+    );
   };
 
   return (
@@ -37,10 +168,19 @@ const RegisterScreen = () => {
                   name="name"
                   control={control}
                   autoCorrect={false}
-                  placeholder="Nombre"
+                  placeholder="Tu Nombre"
                   style={styles.nameInput}
                   placeholderTextColor={'#8F8F8F'}
-                  rules={{required: 'Nombre es requerido'}}
+                  validateBlurField={validateBlurField}
+                  validateChangeField={validateChangeField}
+                  fieldColor={getFieldColor('name')}
+                  rules={{
+                    required: 'Ingrese su nombre',
+                    pattern: {
+                      value: nameRegex,
+                      message: 'Ingrese un nombre valido',
+                    },
+                  }}
                   autoCapitalize={'words'}
                 />
               </View>
@@ -50,8 +190,17 @@ const RegisterScreen = () => {
                   control={control}
                   autoCorrect={false}
                   placeholder="Apellido"
+                  validateBlurField={validateBlurField}
+                  validateChangeField={validateChangeField}
+                  fieldColor={getFieldColor('lastName')}
                   placeholderTextColor={'#8F8F8F'}
-                  rules={{required: 'Apellido es requerido'}}
+                  rules={{
+                    required: 'Ingrese su apellido',
+                    pattern: {
+                      value: nameRegex,
+                      message: 'Ingrese un apellido valido',
+                    },
+                  }}
                   style={{...styles.nameInput}}
                   mainContainerStyle={{...styles.marginLeft}}
                   autoCapitalize={'words'}
@@ -67,7 +216,16 @@ const RegisterScreen = () => {
               autoCapitalize="none"
               keyboardType="email-address"
               placeholderTextColor={'#8F8F8F'}
-              rules={{required: 'Debes poner tu correo!'}}
+              validateBlurField={validateBlurField}
+              validateChangeField={validateChangeField}
+              fieldColor={getFieldColor('email')}
+              rules={{
+                required: 'Ingrese su correo',
+                pattern: {
+                  value: emailRegex,
+                  message: 'Correo invalido',
+                },
+              }}
             />
 
             <CustomTextInput
@@ -75,16 +233,17 @@ const RegisterScreen = () => {
               isPasswordField
               control={control}
               autoCapitalize="none"
-              placeholder="Password"
+              placeholder="Contraseña"
               placeholderTextColor={'#8F8F8F'}
+              validateBlurField={validateBlurField}
+              validateChangeField={validateChangeField}
+              fieldColor={getFieldColor('password')}
               rules={{
-                required: 'Debes poner tu contraseña!',
-                minLength: {
-                  value: 6,
-                  message: 'La contraseña debe tener al menos 6 caracteres',
-                },
+                required: 'Ingrese su contraseña',
+                validate: validatePassword,
               }}
               containerStyle={styles.marginTop10}
+              errorMessages={() => renderErrorMessages()}
             />
 
             <CustomTextInput
@@ -95,13 +254,27 @@ const RegisterScreen = () => {
               keyboardType="phone-pad"
               style={styles.marginTop10}
               placeholderTextColor={'#8F8F8F'}
-              rules={{required: 'Telefono es requerido'}}
+              rules={{
+                required: 'Ingrese su telefono',
+                validate: {
+                  phone: value => {
+                    if (phoneRegex.test(value)) {
+                      return true;
+                    } else {
+                      return 'Ingrese un telefono valido';
+                    }
+                  },
+                },
+              }}
+              validateBlurField={validateBlurField}
+              validateChangeField={validateChangeField}
+              fieldColor={getFieldColor('phone')}
             />
           </View>
 
           <AuthFooter
             authType="register"
-            onAuthPress={handleSubmit(register)}
+            onAuthPress={handleSubmit(onPressRegister)}
           />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -135,7 +308,7 @@ const styles = StyleSheet.create({
   nameInput: {
     flex: 1,
     height: 55,
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderColor: '#8F8F8F',
     borderRadius: 3,
     paddingHorizontal: 20,
@@ -144,6 +317,16 @@ const styles = StyleSheet.create({
   flex1: {flex: 1},
   marginTop10: {marginTop: 10},
   marginLeft: {marginLeft: 10},
+  errorMessage: {
+    color: 'red',
+    fontSize: 13,
+  },
 });
 
 export default RegisterScreen;
+
+export const errors = {
+  message: 'Debes poner tu contraseña!',
+  ref: {name: 'password'},
+  type: 'required',
+};

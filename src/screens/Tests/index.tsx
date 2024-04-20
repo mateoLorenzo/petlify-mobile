@@ -24,6 +24,7 @@ const ComponentsScreen = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.screenContainer}>
+      <Text style={styles.title}>Laboratory</Text>
       <ComponentButton
         name="Custom Button"
         onPress={() => navigation.navigate('CustomButtonScreen' as never)}
@@ -47,6 +48,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontFamily: 'Poppins-SemiBold',
+    marginBottom: 20,
+    textAlign: 'center',
+    width: '100%',
   },
   button: {
     marginVertical: 5,
