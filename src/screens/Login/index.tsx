@@ -26,7 +26,6 @@ const LoginScreen = () => {
   };
 
   const emailIsValid = (email: string) => {
-    console.log('emailRegex.test(email)', emailRegex.test(email));
     const isValid = emailRegex.test(email);
     if (!isValid) {
       return 'El email no es válido';

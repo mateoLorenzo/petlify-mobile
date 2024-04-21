@@ -3,7 +3,7 @@ export type RegisterFormData = {
   lastName: string;
   email: string;
   password: string;
-  phone: string;
+  confirmPassword: string;
 };
 
 export type RegisterFormFields = keyof RegisterFormData; // 'name' | 'lastName' | 'email' | 'password' | 'phone'
@@ -38,6 +38,16 @@ export const validatePassword = (value: string) => {
   return true;
 };
 
+export const validateConfirmPassword = (
+  password: string,
+  confirmPassword: string,
+) => {
+  if (password !== confirmPassword) {
+    return 'Las contraseñas no coinciden.';
+  }
+  return true;
+};
+
 export const fieldValueIsValid = (
   fieldName: RegisterFormFields,
   value: string,
@@ -53,9 +63,5 @@ export const fieldValueIsValid = (
   }
   if (fieldName === 'password') {
     return validatePassword(value) === true;
-  }
-  if (fieldName === 'phone') {
-    console.log('phoneRegex.test(value)', phoneRegex.test(value), value);
-    return phoneRegex.test(value);
   }
 };

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {AuthHeader} from '../../components/AuthHeader';
 import {AuthFooter} from '../../components/AuthFooter';
-import {useForm} from 'react-hook-form';
+import {useForm, useWatch} from 'react-hook-form';
 import {CustomTextInput} from '../../components/CustomTextInput';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -19,7 +19,7 @@ import {
   fieldValueIsValid,
   fieldsColors,
   nameRegex,
-  phoneRegex,
+  validateConfirmPassword,
   validatePassword,
 } from '../../constants';
 
@@ -43,6 +43,8 @@ const RegisterScreen = () => {
     'phone',
   ]);
 
+  const currentPassword = useWatch({control, name: 'password'});
+
   const onPressRegister = () => {
     navigate('RegisterPetScreen' as never);
   };
@@ -63,6 +65,30 @@ const RegisterScreen = () => {
     setGrayFields([...grayFields, fieldName]);
     setRedFields(redFields.filter(field => field !== fieldName));
     setGreenFields(greenFields.filter(field => field !== fieldName));
+  };
+
+  const validateBlurPassword = (field: string, value: string) => {
+    const confirmPasswordIsValid = validateConfirmPassword(
+      currentPassword,
+      value,
+    );
+    if (confirmPasswordIsValid === true) {
+      updateValidFields('confirmPassword');
+    } else {
+      updateInvalidFields('confirmPassword');
+    }
+  };
+
+  const validateChangePassword = (field: string, value: string) => {
+    const confirmPasswordIsValid = validateConfirmPassword(
+      currentPassword,
+      value,
+    );
+    if (confirmPasswordIsValid === true) {
+      updateValidFields('confirmPassword');
+    } else {
+      updateGrayFields('confirmPassword');
+    }
   };
 
   const validateBlurField = (
@@ -206,28 +232,21 @@ const RegisterScreen = () => {
             />
 
             <CustomTextInput
-              name="phone"
+              name="confirmPassword"
+              isPasswordField
               control={control}
-              autoCorrect={false}
-              placeholder="Telefono"
-              keyboardType="phone-pad"
-              style={styles.marginTop10}
+              autoCapitalize="none"
+              placeholder="Confirmar contraseña"
               placeholderTextColor={'#8F8F8F'}
+              validateBlurField={validateBlurPassword}
+              validateChangeField={validateChangePassword}
+              fieldColor={getFieldColor('confirmPassword')}
               rules={{
-                required: 'Ingrese su telefono',
-                validate: {
-                  phone: value => {
-                    if (phoneRegex.test(value)) {
-                      return true;
-                    } else {
-                      return 'Ingrese un telefono valido';
-                    }
-                  },
-                },
+                required: 'Ingrese su contraseña',
+                validate: value =>
+                  validateConfirmPassword(currentPassword, value),
               }}
-              validateBlurField={validateBlurField}
-              validateChangeField={validateChangeField}
-              fieldColor={getFieldColor('phone')}
+              containerStyle={styles.marginTop10}
             />
           </View>
 
