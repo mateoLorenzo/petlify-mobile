@@ -56,6 +56,18 @@ export const CustomTextInput = ({
     return 'lightgray';
   };
 
+  const onBlur = (value: string) => {
+    if (validateBlurField) {
+      return validateBlurField(name, value);
+    }
+  };
+
+  const onChangeText = (text: string) => {
+    if (validateChangeField) {
+      return validateChangeField(name, text);
+    }
+  };
+
   return (
     <Controller
       control={control}
@@ -66,18 +78,12 @@ export const CustomTextInput = ({
           <View style={{...styles.container, ...containerStyle}}>
             <TextInput
               value={value}
-              onBlur={() => {
-                if (validateBlurField) {
-                  return validateBlurField(name, value);
-                }
-              }}
+              placeholder={placeholder}
+              onBlur={() => onBlur(value)}
               onChangeText={text => {
                 onChange(text);
-                if (validateChangeField) {
-                  return validateChangeField(name, text);
-                }
+                return onChangeText(text);
               }}
-              placeholder={placeholder}
               secureTextEntry={isPasswordField && !showPassword}
               style={{
                 ...styles.input,
@@ -92,9 +98,9 @@ export const CustomTextInput = ({
                 onPress={() => setShowPassword(!showPassword)}
                 activeOpacity={0.5}>
                 <Icon
-                  name={showPassword ? 'eye-outline' : 'eye-off-outline'}
                   size={25}
                   color="#8F8F8F"
+                  name={showPassword ? 'eye-outline' : 'eye-off-outline'}
                 />
               </TouchableOpacity>
             )}

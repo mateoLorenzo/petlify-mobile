@@ -8,6 +8,10 @@ import ReactHookFormScreen from '../screens/Tests/ReactHookForm';
 import CustomSpinnerScreen from '../screens/Tests/Spinner';
 import RegisterPetScreen from '../screens/RegisterPet';
 import PetDetailScreen from '../screens/PetDetail';
+import RegisterPhoneScreen from '../screens/RegisterPhone';
+import OneTimePassCodeScreen from '../screens/Tests/OneTimePassCode';
+import ExpandAnimationScreen from '../screens/Tests/ExpandAnimation';
+import CountdownTimerScreen from '../screens/CountdownTimer';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +21,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="loginScreen"
         component={LoginScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="RegisterPhoneScreen"
+        component={RegisterPhoneScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -64,6 +73,21 @@ const ComponentsNavigator = () => {
       <Stack.Screen
         name="ReactHookFormScreen"
         component={ReactHookFormScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="OneTimePassCodeScreen"
+        component={OneTimePassCodeScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ExpandAnimationScreen"
+        component={ExpandAnimationScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CountdownTimerScreen"
+        component={CountdownTimerScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

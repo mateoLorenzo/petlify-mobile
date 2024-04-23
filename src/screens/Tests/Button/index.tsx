@@ -1,13 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {CustomButton} from '../../../components/CustomButton';
 
 const CustomButtonScreen = () => {
-  const onPress = () => {};
+  const [isLoading, setIsLoading] = useState(false);
+  const onPress = () => {
+    setIsLoading(true);
+  };
 
   return (
     <View style={styles.screenContainer}>
-      <CustomButton onPress={onPress} />
+      <CustomButton onPress={onPress} label="Press me" loading={isLoading} />
     </View>
   );
 };

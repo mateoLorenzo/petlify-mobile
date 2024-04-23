@@ -22,7 +22,8 @@ const LoginScreen = () => {
   const {navigate} = useNavigation();
 
   const login = () => {
-    navigate('RegisterPetScreen' as never);
+    // navigate('RegisterPetScreen' as never);
+    navigate('RegisterPhoneScreen' as never);
   };
 
   const emailIsValid = (email: string) => {
@@ -76,7 +77,8 @@ const LoginScreen = () => {
             </TouchableOpacity>
           </View>
 
-          <AuthFooter authType="login" onAuthPress={handleSubmit(login)} />
+          {/* <AuthFooter authType="login" onAuthPress={handleSubmit(login)} /> */}
+          <AuthFooter authType="login" onAuthPress={login} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

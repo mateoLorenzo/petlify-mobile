@@ -24,7 +24,7 @@ export const useAnimation = () => {
   };
 
   const fadeOutButtonText = () => {
-    Animated.timing(loaderPosition, {
+    Animated.timing(textOpacity, {
       toValue: 0,
       duration: 200,
       useNativeDriver: true,

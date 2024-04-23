@@ -46,7 +46,7 @@ const RegisterScreen = () => {
   const currentPassword = useWatch({control, name: 'password'});
 
   const onPressRegister = () => {
-    navigate('RegisterPetScreen' as never);
+    navigate('RegisterPhoneScreen' as never);
   };
 
   const updateValidFields = (fieldName: RegisterFormFields) => {
@@ -297,7 +297,8 @@ const styles = StyleSheet.create({
   marginLeft: {marginLeft: 10},
   errorMessage: {
     color: 'red',
-    fontSize: 13,
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
   },
 });
 

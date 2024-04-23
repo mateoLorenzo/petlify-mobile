@@ -37,6 +37,18 @@ const ComponentsScreen = () => {
         name="React Hook Form"
         onPress={() => navigation.navigate('ReactHookFormScreen' as never)}
       />
+      <ComponentButton
+        name="One Time PassCode"
+        onPress={() => navigation.navigate('OneTimePassCodeScreen' as never)}
+      />
+      <ComponentButton
+        name="Expand Animation"
+        onPress={() => navigation.navigate('ExpandAnimationScreen' as never)}
+      />
+      <ComponentButton
+        name="Countdown Timer"
+        onPress={() => navigation.navigate('CountdownTimerScreen' as never)}
+      />
     </View>
   );
 };

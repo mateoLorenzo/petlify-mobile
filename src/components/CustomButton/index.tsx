@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -18,6 +19,7 @@ interface Props {
   label?: string;
   labelStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
+  loading?: boolean;
 }
 
 export const CustomButton = ({
@@ -27,9 +29,8 @@ export const CustomButton = ({
   label,
   labelStyle,
   containerStyle,
+  loading,
 }: Props) => {
-  const [isLoading, setIsLoading] = React.useState(false);
-
   const {
     textPosition,
     textOpacity,
@@ -41,6 +42,12 @@ export const CustomButton = ({
     moveLoaderUP,
   } = useAnimation();
 
+  useEffect(() => {
+    if (loading) {
+      moveTextAndShowSpinner();
+    }
+  }, [loading]);
+
   const moveTextAndShowSpinner = () => {
     moveTextUP(-50);
     fadeOutButtonText();
@@ -51,12 +58,10 @@ export const CustomButton = ({
   return (
     <View style={[styles.buttonContainer, containerStyle]}>
       <TouchableOpacity
-        disabled={disabled || isLoading}
+        disabled={disabled || loading}
         activeOpacity={0.8}
         style={[styles.button, style]}
         onPress={() => {
-          setIsLoading(true);
-          moveTextAndShowSpinner();
           onPress();
         }}>
         <Animated.Text
