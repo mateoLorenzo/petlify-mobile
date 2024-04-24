@@ -5,6 +5,7 @@ export type RegisterFormData = {
   password: string;
   confirmPassword: string;
   phone: string;
+  phoneCode: string;
 };
 
 export type RegisterFormFields = keyof RegisterFormData; // 'name' | 'lastName' | 'email' | 'password' | 'phone'

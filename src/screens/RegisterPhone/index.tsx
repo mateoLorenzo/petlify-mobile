@@ -1,182 +1,110 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// TODO: Remove line
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  Animated,
-  Dimensions,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Logo from '../../../assets/images/logo.svg';
 import {CustomTextInput} from '../../components/CustomTextInput';
 import {useForm, useWatch} from 'react-hook-form';
 import {CustomButton} from '../../components/CustomButton';
-import {OTPInput} from '../../components/OneTimePassCode';
+// import {OTPInput} from '../../components/OneTimePassCode';// TODO: Remove component
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import CountdownTimer from '../../components/CountdownTimer';
-import {grayOrBlue, phoneRegex} from '../../constants';
-
-// get screen width
-const {width: screenWidth} = Dimensions.get('window');
+import {phoneRegex} from '../../constants';
+import {useAnimation} from '../../hooks/useAnimation';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const RegisterPhoneScreen = () => {
   const {
+    inputPosition,
+    confirmPosition,
+    backButtonPosition,
+    confirmButtonWidth,
+    firstItemsOpacity,
+    secondItemsOpacity,
+    moveInputLeft,
+    moveInputRight,
+    moveConfirmLeft,
+    moveConfirmRight,
+    reduceContinueButtonWidth,
+    expandContinueButtonWidth,
+    showBackButton,
+    hideBackButton,
+    fadeInSecondItems,
+    fadeOutSecondItems,
+    fadeInFirstItems,
+    fadeOutFirstItems,
+  } = useAnimation();
+
+  const {
     control,
-    handleSubmit,
     formState: {errors},
+    reset,
+    trigger,
   } = useForm();
-
   const [isLoading, setIsLoading] = useState(false);
-  const [phoneInputValue, setPhoneInputValue] = useState<string[]>([]);
-  const [resendTextColor, setResendTextColor] = useState<grayOrBlue>('#9B9B9B');
-  const [phoneIsValid, setPhoneIsValid] = useState<boolean>(false);
+  const [activeScreen, setActiveScreen] = useState<'phone' | 'code'>('phone');
   const phoneValue = useWatch({control, name: 'phone'});
-  const inputPosition = useRef(new Animated.Value(0)).current;
-  const confirmPosition = useRef(new Animated.Value(screenWidth)).current;
-  const backButtonPosition = useRef(new Animated.Value(-10)).current;
-  const confirmButtonWidth = useRef(
-    new Animated.Value(screenWidth - 40),
-  ).current;
-  const firstItemsOpacity = useRef(new Animated.Value(1)).current;
-  const secondItemsOpacity = useRef(new Animated.Value(0)).current;
-
+  const phoneCodeValue = useWatch({control, name: 'phoneCode'});
   const {navigate} = useNavigation();
+  const {top} = useSafeAreaInsets();
 
-  console.log('phoneValue', phoneValue);
-
-  const moveInputLeft = (duration: number = 500) => {
-    Animated.timing(inputPosition, {
-      toValue: -screenWidth,
-      duration,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const moveInputRight = () => {
-    Animated.timing(inputPosition, {
-      toValue: 0,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const moveConfirmLeft = (duration: number = 500) => {
-    Animated.timing(confirmPosition, {
-      toValue: -(screenWidth - 40),
-      duration,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const moveConfirmRight = () => {
-    Animated.timing(confirmPosition, {
-      toValue: 100,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const reduceContinueButtonWidth = (duration: number = 500) => {
-    Animated.timing(confirmButtonWidth, {
-      toValue: screenWidth - 110,
-      // toValue: 100,
-      duration,
-      useNativeDriver: false,
-    }).start();
-  };
-  const expandContinueButtonWidth = (duration: number = 500) => {
-    Animated.timing(confirmButtonWidth, {
-      toValue: screenWidth - 40,
-      duration,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const showBackButton = (duration: number = 500) => {
-    Animated.timing(backButtonPosition, {
-      toValue: 0,
-      duration,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const hideBackButton = (duration: number = 500) => {
-    Animated.timing(backButtonPosition, {
-      toValue: -10,
-      duration,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const fadeInSecondItems = (duration: number = 500) => {
-    Animated.timing(secondItemsOpacity, {
-      toValue: 1,
-      duration,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const fadeOutSecondItems = (duration: number = 500) => {
-    Animated.timing(secondItemsOpacity, {
-      toValue: 0,
-      duration,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const fadeInFirstItems = (duration: number = 500) => {
-    Animated.timing(firstItemsOpacity, {
-      toValue: 1,
-      duration,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const fadeOutFirstItems = (duration: number = 500) => {
-    Animated.timing(firstItemsOpacity, {
-      toValue: 0,
-      duration,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const handleChange = (value: Array<string>) => {
-    console.log('value from handleChange', value);
-    setPhoneInputValue(value);
-  };
-
-  const onSubmit = () => {
-    setPhoneIsValid(true);
+  const setValidationScreen = () => {
+    setActiveScreen('code');
     moveInputLeft();
     moveConfirmLeft();
     reduceContinueButtonWidth();
     showBackButton();
     fadeInSecondItems();
     fadeOutFirstItems();
-    // setIsLoading(true);
-    console.log('errors', errors);
+    reset({phoneCode: ''});
+  };
+
+  const onSubmit = async () => {
+    const output = await trigger('phone');
+    if (output === true) {
+      setValidationScreen();
+    }
+
+    if (phoneCodeValue?.length === 4) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate('RegisterPetScreen' as never);
+      }, 3000);
+    }
   };
 
   const goBack = () => {
-    setPhoneIsValid(false);
+    setActiveScreen('phone');
     moveInputRight();
     moveConfirmRight();
     expandContinueButtonWidth();
     hideBackButton();
     fadeOutSecondItems();
     fadeInFirstItems();
+    reset({phoneCode: ''});
+  };
+
+  const getButtonColor = (): '#1E96FF' | 'gray' => {
+    if (activeScreen === 'code' && phoneCodeValue?.length !== 4) {
+      return 'gray';
+    }
+    return '#1E96FF';
+  };
+
+  const validateChangeField = () => {
+    if (errors.phone) {
+      trigger('phone');
+    }
   };
 
   return (
-    <SafeAreaView style={styles.screenContainer}>
-      <StatusBar />
+    <View style={styles.screenContainer}>
       <TouchableOpacity onPress={() => {}}>
-        <Logo height={150} width={150} style={styles.logo} />
+        <Logo
+          height={150}
+          width={150}
+          style={{...styles.logo, marginTop: top + 20}}
+        />
       </TouchableOpacity>
 
       <View style={styles.contentContainer}>
@@ -208,6 +136,7 @@ const RegisterPhoneScreen = () => {
                   message: 'Ingrese un telefono valido',
                 },
               }}
+              validateChangeField={validateChangeField}
             />
           </Animated.View>
           <Animated.View
@@ -221,11 +150,22 @@ const RegisterPhoneScreen = () => {
               </Text>
               <Text style={styles.givenPhone}>+54 9 {phoneValue}</Text>
             </View>
-            <OTPInput
-              length={6}
-              value={phoneInputValue}
-              disabled={false}
-              onChange={handleChange}
+            <CustomTextInput
+              name="phoneCode"
+              control={control}
+              placeholderTextColor={'#8F8F8F'}
+              placeholder="1234"
+              autoCapitalize="none"
+              keyboardType="phone-pad"
+              autoCorrect={false}
+              style={styles.codeInput}
+              rules={{
+                required: 'Debes poner tu código!',
+                pattern: {
+                  value: phoneRegex,
+                  message: 'Ingrese un código valido',
+                },
+              }}
             />
           </Animated.View>
         </View>
@@ -246,35 +186,35 @@ const RegisterPhoneScreen = () => {
           <Animated.View style={{width: confirmButtonWidth}}>
             <CustomButton
               label="Continuar"
-              onPress={handleSubmit(onSubmit)}
-              // onPress={onSubmit}
+              onPress={onSubmit}
               loading={isLoading}
               containerStyle={styles.confirmContainer}
-              style={styles.confirmButton}
+              style={{
+                ...styles.confirmButton,
+                backgroundColor: getButtonColor(),
+              }}
               labelStyle={styles.confirmButtonLabel}
             />
           </Animated.View>
         </View>
 
         <Animated.View style={{opacity: secondItemsOpacity}}>
-          <CountdownTimer startTimer={phoneIsValid} />
+          <CountdownTimer startTimer={activeScreen === 'code'} />
         </Animated.View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    paddingLeft: 20,
+    backgroundColor: 'white',
   },
   contentContainer: {
-    flex: 1,
     paddingHorizontal: 20,
   },
   logo: {
-    marginTop: 20,
     alignSelf: 'center',
   },
   welcomeText: {
@@ -298,6 +238,11 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 20,
   },
+  codeInput: {
+    width: '100%',
+    marginTop: 20,
+    letterSpacing: 10,
+  },
   givenPhone: {
     fontSize: 14,
     fontFamily: 'Poppins-Medium',
@@ -312,7 +257,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 10,
     width: '100%',
   },
@@ -326,34 +271,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   confirmContainer: {
-    // flex: 1,
-    // width: '100%',
-    // width: 350,
     alignSelf: 'flex-end',
   },
   confirmButton: {
-    // marginTop: 20,
     height: 60,
   },
   confirmButtonLabel: {
     fontSize: 18,
-  },
-  resendCodeContainer: {
-    flexDirection: 'row',
-    marginTop: 10,
-  },
-  resendCodeText: {
-    fontFamily: 'Poppins-Medium',
-  },
-  resendCodeTimer: {
-    color: '#1E96FF',
-    fontFamily: 'Poppins-Medium',
-  },
-  countdownText: {
-    color: '#1E96FF',
-    fontFamily: 'Poppins-Medium',
-    marginLeft: 5,
-    fontSize: 16,
   },
 });
 

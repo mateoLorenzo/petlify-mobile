@@ -61,9 +61,7 @@ export const CustomButton = ({
         disabled={disabled || loading}
         activeOpacity={0.8}
         style={[styles.button, style]}
-        onPress={() => {
-          onPress();
-        }}>
+        onPress={onPress}>
         <Animated.Text
           style={[
             {
