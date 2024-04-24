@@ -9,7 +9,6 @@ import CustomSpinnerScreen from '../screens/Tests/Spinner';
 import RegisterPetScreen from '../screens/RegisterPet';
 import PetDetailScreen from '../screens/PetDetail';
 import RegisterPhoneScreen from '../screens/RegisterPhone';
-import OneTimePassCodeScreen from '../screens/Tests/OneTimePassCode';
 import ExpandAnimationScreen from '../screens/Tests/ExpandAnimation';
 import CountdownTimerScreen from '../screens/CountdownTimer';
 
@@ -73,11 +72,6 @@ const ComponentsNavigator = () => {
       <Stack.Screen
         name="ReactHookFormScreen"
         component={ReactHookFormScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="OneTimePassCodeScreen"
-        component={OneTimePassCodeScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen

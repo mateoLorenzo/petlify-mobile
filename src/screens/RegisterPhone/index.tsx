@@ -4,7 +4,6 @@ import Logo from '../../../assets/images/logo.svg';
 import {CustomTextInput} from '../../components/CustomTextInput';
 import {useForm, useWatch} from 'react-hook-form';
 import {CustomButton} from '../../components/CustomButton';
-// import {OTPInput} from '../../components/OneTimePassCode';// TODO: Remove component
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import CountdownTimer from '../../components/CountdownTimer';
