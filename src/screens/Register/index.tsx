@@ -287,7 +287,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 55,
     borderWidth: 1,
-    borderColor: '#8F8F8F',
     borderRadius: 3,
     paddingHorizontal: 20,
     fontFamily: 'Poppins-Regular',

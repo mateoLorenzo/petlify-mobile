@@ -87,8 +87,8 @@ export const CustomTextInput = ({
               secureTextEntry={isPasswordField && !showPassword}
               style={{
                 ...styles.input,
-                ...style,
                 borderColor: error ? 'red' : getBorderColor(fieldColor),
+                ...style,
               }}
               {...props}
             />

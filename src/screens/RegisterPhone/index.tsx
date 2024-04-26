@@ -1,69 +1,71 @@
-import React, {useState} from 'react';
-import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Animated,
+  Dimensions,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Logo from '../../../assets/images/logo.svg';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {CustomTextInput} from '../../components/CustomTextInput';
 import {useForm, useWatch} from 'react-hook-form';
 import {CustomButton} from '../../components/CustomButton';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
 import CountdownTimer from '../../components/CountdownTimer';
 import {phoneRegex} from '../../constants';
+import {useNavigation} from '@react-navigation/native';
 import {useAnimation} from '../../hooks/useAnimation';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+const {width: screenWidth} = Dimensions.get('window');
+
+const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
+  <TouchableOpacity
+    activeOpacity={1}
+    style={styles.container}
+    onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableOpacity>
+);
 
 const RegisterPhoneScreen = () => {
   const {
-    inputPosition,
-    confirmPosition,
-    backButtonPosition,
-    confirmButtonWidth,
-    firstItemsOpacity,
-    secondItemsOpacity,
-    moveInputLeft,
-    moveInputRight,
-    moveConfirmLeft,
-    moveConfirmRight,
-    reduceContinueButtonWidth,
-    expandContinueButtonWidth,
-    showBackButton,
-    hideBackButton,
-    fadeInSecondItems,
-    fadeOutSecondItems,
-    fadeInFirstItems,
-    fadeOutFirstItems,
-  } = useAnimation();
-
-  const {
     control,
     formState: {errors},
-    reset,
     trigger,
+    resetField,
   } = useForm();
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    contentPosition,
+    leftContentOpacity,
+    rightContentOpacity,
+    moveContentLeft,
+    moveContentRight,
+    hideLeftContent,
+    showRightContent,
+    hideRightContent,
+    showLeftContent,
+  } = useAnimation();
   const [activeScreen, setActiveScreen] = useState<'phone' | 'code'>('phone');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [phoneIsValid, setPhoneIsValid] = useState(false);
   const phoneValue = useWatch({control, name: 'phone'});
   const phoneCodeValue = useWatch({control, name: 'phoneCode'});
   const {navigate} = useNavigation();
-  const {top} = useSafeAreaInsets();
 
-  const setValidationScreen = () => {
-    setActiveScreen('code');
-    moveInputLeft();
-    moveConfirmLeft();
-    reduceContinueButtonWidth();
-    showBackButton();
-    fadeInSecondItems();
-    fadeOutFirstItems();
-    reset({phoneCode: ''});
-  };
-
-  const onSubmit = async () => {
+  const onPressContinue = async () => {
     const output = await trigger('phone');
+
     if (output === true) {
-      setValidationScreen();
+      setActiveScreen('code');
+      moveContentLeft();
+      hideLeftContent();
+      showRightContent();
     }
 
-    if (phoneCodeValue?.length === 4) {
+    if (activeScreen === 'code' && phoneCodeValue?.length === 4) {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
@@ -72,22 +74,40 @@ const RegisterPhoneScreen = () => {
     }
   };
 
-  const goBack = () => {
+  const onPressBack = () => {
+    moveContentRight();
+    hideRightContent();
+    showLeftContent();
     setActiveScreen('phone');
-    moveInputRight();
-    moveConfirmRight();
-    expandContinueButtonWidth();
-    hideBackButton();
-    fadeOutSecondItems();
-    fadeInFirstItems();
-    reset({phoneCode: ''});
+    resetField('phoneCode');
   };
 
-  const getButtonColor = (): '#1E96FF' | 'gray' => {
-    if (activeScreen === 'code' && phoneCodeValue?.length !== 4) {
-      return 'gray';
+  const validatePhone = (phone: string) => {
+    if (phoneRegex.test(phone)) {
+      return true;
     }
-    return '#1E96FF';
+    return false;
+  };
+
+  useEffect(() => {
+    const givenPhoneIsValid = validatePhone(phoneValue);
+    if (givenPhoneIsValid) {
+      setPhoneIsValid(true);
+    } else {
+      setPhoneIsValid(false);
+    }
+  }, [phoneValue]);
+
+  const getButtonColor = (): '#1E96FF' | 'gray' => {
+    if (activeScreen === 'phone' && phoneIsValid) {
+      return '#1E96FF';
+    }
+
+    // ToDo: Check if the code is valid
+    if (activeScreen === 'code' && phoneCodeValue?.length === 4) {
+      return '#1E96FF';
+    }
+    return 'gray';
   };
 
   const validateChangeField = () => {
@@ -97,111 +117,89 @@ const RegisterPhoneScreen = () => {
   };
 
   return (
-    <View style={styles.screenContainer}>
-      <TouchableOpacity onPress={() => {}}>
-        <Logo
-          height={150}
-          width={150}
-          style={{...styles.logo, marginTop: top + 20}}
-        />
-      </TouchableOpacity>
-
-      <View style={styles.contentContainer}>
-        <Text style={styles.welcomeText}>Bienvenido!</Text>
-
-        <View style={styles.inputsContainer}>
+    <SafeAreaView style={styles.screenContainer}>
+      <KeyboardAvoidingView
+        style={styles.flex1}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <DismissKeyboard>
+          <Logo height={100} width={100} style={styles.logo} />
           <Animated.View
             style={{
-              ...styles.phoneInputContainer,
-              transform: [{translateX: inputPosition}],
-              opacity: firstItemsOpacity,
+              ...styles.mainContainer,
+              transform: [{translateX: contentPosition}],
             }}>
-            <Text style={styles.subtitle}>
-              Ingresa tu telefono para comenzar
-            </Text>
-            <CustomTextInput
-              name="phone"
-              control={control}
-              placeholderTextColor={'#8F8F8F'}
-              placeholder="Teléfono"
-              autoCapitalize="none"
-              keyboardType="phone-pad"
-              autoCorrect={false}
-              style={styles.phoneInput}
-              rules={{
-                required: 'Debes poner tu teléfono!',
-                pattern: {
-                  value: phoneRegex,
-                  message: 'Ingrese un telefono valido',
-                },
-              }}
-              validateChangeField={validateChangeField}
-            />
-          </Animated.View>
-          <Animated.View
-            style={{
-              transform: [{translateX: confirmPosition}],
-              ...styles.OTPInputContainer,
-            }}>
-            <View>
-              <Text style={styles.subtitle}>
-                Ingresa el codigo que enviamos a:
-              </Text>
-              <Text style={styles.givenPhone}>+54 9 {phoneValue}</Text>
+            <View style={styles.widthFull}>
+              <View style={styles.inputsContainer}>
+                <Animated.View
+                  style={{
+                    ...styles.contentContainer,
+                    opacity: leftContentOpacity,
+                  }}>
+                  <Text style={styles.title}>Ingresa tu Numero</Text>
+                  <Text style={styles.subtitle}>
+                    Te enviaremos un codigo de verificacion
+                  </Text>
+                  <CustomTextInput
+                    name="phone"
+                    control={control}
+                    placeholder="Numero de telefono"
+                    placeholderTextColor={'#8F8F8F'}
+                    autoCorrect={false}
+                    keyboardType="phone-pad"
+                    style={styles.phoneInput}
+                    validateChangeField={validateChangeField}
+                    rules={{
+                      required: 'Debes poner tu teléfono!',
+                      pattern: {
+                        value: phoneRegex,
+                        message: 'Ingrese un telefono valido',
+                      },
+                    }}
+                  />
+                </Animated.View>
+                <Animated.View
+                  style={{
+                    ...styles.contentContainer,
+                    opacity: rightContentOpacity,
+                  }}>
+                  <Text style={styles.title}>Ingresa el codigo</Text>
+                  <Text style={styles.subtitle}>
+                    Te lo hemos enviado a +54 9 {phoneValue}
+                  </Text>
+                  <CustomTextInput
+                    name="phoneCode"
+                    control={control}
+                    placeholder=""
+                    placeholderTextColor={'#8F8F8F'}
+                    keyboardType="phone-pad"
+                    style={styles.phoneCodeInput}
+                  />
+
+                  <Animated.View style={styles.countdownContainer}>
+                    <CountdownTimer startTimer={activeScreen === 'code'} />
+                  </Animated.View>
+                </Animated.View>
+              </View>
             </View>
-            <CustomTextInput
-              name="phoneCode"
-              control={control}
-              placeholderTextColor={'#8F8F8F'}
-              placeholder="1234"
-              autoCapitalize="none"
-              keyboardType="phone-pad"
-              autoCorrect={false}
-              style={styles.codeInput}
-              rules={{
-                required: 'Debes poner tu código!',
-                pattern: {
-                  value: phoneRegex,
-                  message: 'Ingrese un código valido',
-                },
-              }}
-            />
           </Animated.View>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <Animated.View
+
+          <View style={styles.spacer} />
+          <CustomButton
+            label="Continuar"
             style={{
-              transform: [{translateX: backButtonPosition}],
-              opacity: secondItemsOpacity,
-            }}>
-            <TouchableOpacity
-              style={styles.backButton}
-              activeOpacity={0.8}
-              onPress={goBack}>
-              <Icon size={25} color="#FFF" name={'chevron-back-outline'} />
-            </TouchableOpacity>
-          </Animated.View>
-
-          <Animated.View style={{width: confirmButtonWidth}}>
-            <CustomButton
-              label="Continuar"
-              onPress={onSubmit}
-              loading={isLoading}
-              containerStyle={styles.confirmContainer}
-              style={{
-                ...styles.confirmButton,
-                backgroundColor: getButtonColor(),
-              }}
-              labelStyle={styles.confirmButtonLabel}
-            />
-          </Animated.View>
-        </View>
-
-        <Animated.View style={{opacity: secondItemsOpacity}}>
-          <CountdownTimer startTimer={activeScreen === 'code'} />
-        </Animated.View>
-      </View>
-    </View>
+              ...styles.continueButton,
+              backgroundColor: getButtonColor(),
+            }}
+            loading={isLoading}
+            onPress={onPressContinue}
+            labelStyle={styles.buttonTextStyles}
+          />
+          <TouchableOpacity onPress={onPressBack}>
+            <Text style={styles.goBackText}>Volver</Text>
+          </TouchableOpacity>
+        </DismissKeyboard>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -210,73 +208,79 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  contentContainer: {
+  flex1: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
     paddingHorizontal: 20,
   },
   logo: {
-    alignSelf: 'center',
+    marginTop: 40,
   },
-  welcomeText: {
-    fontSize: 36,
+  title: {
+    fontSize: 26,
     marginTop: 20,
-    fontFamily: 'Poppins-Medium',
-    color: 'black',
-  },
-  phoneInputContainer: {
-    justifyContent: 'space-between',
+    fontFamily: 'Poppins-Semibold',
   },
   subtitle: {
     fontSize: 16,
+    marginTop: 5,
+    fontWeight: '100',
     fontFamily: 'Poppins-Regular',
-    color: '#8B8B8B',
+    color: '#000',
+  },
+  mainContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  widthFull: {
+    width: '100%',
   },
   inputsContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: screenWidth * 2 - 40,
+  },
+  contentContainer: {
+    alignItems: 'center',
   },
   phoneInput: {
-    width: '100%',
     marginTop: 20,
+    borderColor: '#8F8F8F',
+    width: screenWidth - 40,
+    alignSelf: 'flex-start',
   },
-  codeInput: {
-    width: '100%',
+  phoneCodeInput: {
     marginTop: 20,
-    letterSpacing: 10,
+    borderColor: '#8F8F8F',
+    width: screenWidth - 40,
+    letterSpacing: 40,
   },
-  givenPhone: {
-    fontSize: 14,
-    fontFamily: 'Poppins-Medium',
-    color: '#1E96FF',
-    marginBottom: 5,
-  },
-  OTPInputContainer: {
+  countdownContainer: {
+    opacity: 1,
     width: '100%',
-    justifyContent: 'space-between',
   },
-  buttonsContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+  spacer: {
+    flex: 1,
+  },
+  continueButton: {
+    marginTop: 20,
+    height: 60,
+    width: '100%',
+    backgroundColor: 'gray',
+  },
+  buttonTextStyles: {
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+  },
+  goBackText: {
     marginTop: 10,
     marginBottom: 10,
-    width: '100%',
-  },
-  backButton: {
-    width: 60,
-    height: 60,
-    backgroundColor: '#1E96FF',
-    marginRight: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  confirmContainer: {
-    alignSelf: 'flex-end',
-  },
-  confirmButton: {
-    height: 60,
-  },
-  confirmButtonLabel: {
-    fontSize: 18,
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium',
+    color: '#000',
   },
 });
 

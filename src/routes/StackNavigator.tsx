@@ -23,13 +23,13 @@ export const StackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="RegisterPhoneScreen"
-        component={RegisterPhoneScreen}
+        name="registerScreen"
+        component={RegisterScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="registerScreen"
-        component={RegisterScreen}
+        name="RegisterPhoneScreen"
+        component={RegisterPhoneScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen

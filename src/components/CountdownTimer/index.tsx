@@ -80,7 +80,7 @@ const CountdownTimer = ({style, startTimer}: Props) => {
 
   return (
     <View style={styles.resendCodeContainer}>
-      <TouchableOpacity disabled={time > 0}>
+      <TouchableOpacity disabled={time > 0} style={{alignItems: 'flex-end'}}>
         <Text style={{...styles.resendCodeText, color: resendTextColor}}>
           Reenviar codigo
         </Text>
@@ -101,15 +101,16 @@ const styles = StyleSheet.create({
   resendCodeContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
+    marginTop: 5,
   },
   resendCodeText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Poppins-Regular',
     fontSize: 14,
   },
   timer: {
     fontSize: 14,
     marginLeft: 5,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Poppins-Regular',
     color: '#1E96FF',
   },
 });
