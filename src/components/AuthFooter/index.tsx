@@ -12,14 +12,14 @@ interface IScreenProps {
 export const AuthFooter = ({authType, onAuthPress}: IScreenProps) => {
   const navigation = useNavigation();
 
-  let authAction: string = '';
+  let authText: string = '';
   let divisorText: string = '';
   let screenToNavigate: string | never = '';
   let authQuestion: string = '';
   let authQuestionAction: string = '';
 
   if (authType === 'login') {
-    authAction = 'Iniciar sesion';
+    authText = 'Iniciar sesion';
     divisorText = 'O inicia sesión con';
     screenToNavigate = 'registerScreen';
     authQuestion = '¿Aún no tienes una cuenta?';
@@ -27,7 +27,7 @@ export const AuthFooter = ({authType, onAuthPress}: IScreenProps) => {
   }
 
   if (authType === 'register') {
-    authAction = 'Registrarme';
+    authText = 'Registrarme';
     divisorText = 'o registrate con';
     screenToNavigate = 'loginScreen';
     authQuestion = '¿Ya tienes una cuenta?';
@@ -41,7 +41,7 @@ export const AuthFooter = ({authType, onAuthPress}: IScreenProps) => {
           style={styles.logInButton}
           activeOpacity={0.5}
           onPress={onAuthPress}>
-          <Text style={styles.loginButtonText}>{authAction}</Text>
+          <Text style={styles.loginButtonText}>{authText}</Text>
         </TouchableOpacity>
         <View style={styles.bottomDivisorContainer}>
           <View style={styles.divisorLine} />

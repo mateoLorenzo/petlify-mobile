@@ -2,7 +2,7 @@ import React from 'react';
 import Logo from '../../../assets/images/logo.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import {CustomButton} from '../../components/CustomButton';
-const petImage = require('../../../assets/images/register-pet.png');
+const petImage = require('../../../assets/images/register-pet2.png');
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -36,7 +36,7 @@ const RegisterPetScreen = () => {
         <CustomButton
           onPress={() => navigate('PetDetailScreen' as never)}
           style={styles.registerButton}
-          label="Registrar Mascota"
+          label="Continuar"
           labelStyle={styles.registerButtonText}
         />
         <TouchableOpacity>
