@@ -9,7 +9,7 @@ import CustomSpinnerScreen from '../screens/Tests/Spinner';
 import RegisterPetScreen from '../screens/RegisterPet';
 import PetDetailScreen from '../screens/PetDetail';
 import RegisterPhoneScreen from '../screens/RegisterPhone';
-import ExpandAnimationScreen from '../screens/Tests/ExpandAnimation';
+import AnimationsScreen from '../screens/Tests/Animations';
 import CountdownTimerScreen from '../screens/CountdownTimer';
 
 const Stack = createNativeStackNavigator();
@@ -76,7 +76,7 @@ const ComponentsNavigator = () => {
       />
       <Stack.Screen
         name="ExpandAnimationScreen"
-        component={ExpandAnimationScreen}
+        component={AnimationsScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen

@@ -10,12 +10,13 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import TitleSubtitle from '../../components/TitleSubtitle';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Logo from '../../../assets/images/logo.svg';
 const dogImage = require('../../../assets/images/dog.png');
 const catImage = require('../../../assets/images/cat.png');
 const rightArrow = require('../../../assets/images/right-arrow.png');
+const maleImage = require('../../../assets/images/male.png');
+const femaleImage = require('../../../assets/images/female.png');
 const steps = [1, 2, 3, 4, 5, 6];
 
 const PetDetailScreen = () => {
@@ -37,7 +38,6 @@ const PetDetailScreen = () => {
   const [contentActualPosition, setContentActualPosition] = useState(0);
 
   const getStepColor = (stepIndex: number) => {
-    console.log('getStepColor', stepIndex, currentStep, completedSteps);
     if (completedSteps.includes(stepIndex)) {
       return '#1E96FF';
     }
@@ -142,6 +142,8 @@ const PetDetailScreen = () => {
     expandStepWidth(currentStep + 1);
     setCurrentStep(currentStep + 1);
     moveContentLeft();
+    hideBorder('left');
+    hideBorder('right');
   };
 
   const onPressBack = () => {
@@ -172,42 +174,90 @@ const PetDetailScreen = () => {
           />
         ))}
       </View>
-      <TitleSubtitle
-        title="¡Registremos Tu Mascota!"
-        subtitle="¿A qué especie pertenece?"
-      />
+      <Text style={styles.title}>¡Registremos Tu Mascota!</Text>
       <Animated.View
         style={{
           ...styles.petBoxesContainer,
           transform: [{translateX: contentPosition}],
         }}>
-        <View style={[styles.petTypeContainer, styles.shadow]}>
-          <TouchableOpacity
-            activeOpacity={0.3}
-            style={styles.petTypeBox}
-            onPress={onDogPress}>
-            <Image source={dogImage} style={styles.dogImage} />
-          </TouchableOpacity>
-          <Animated.View
-            style={{
-              ...styles.customBorder,
-              opacity: borderLeftOpacity,
-            }}
-          />
+        <View style={styles.petButtonsContainer}>
+          <Text style={styles.subtitle}>¿A qué especie pertenece?</Text>
+          <View style={[styles.petTypeContainer, styles.shadow]}>
+            <TouchableOpacity
+              activeOpacity={0.3}
+              style={styles.petTypeBox}
+              onPress={onDogPress}>
+              <Image source={dogImage} style={styles.dogImage} />
+              <Text style={styles.petTypeText}>Perro</Text>
+            </TouchableOpacity>
+            <Animated.View
+              style={{
+                ...styles.customBorder,
+                opacity: borderLeftOpacity,
+              }}
+            />
+          </View>
+          <View style={[styles.petTypeContainer, styles.shadow]}>
+            <Animated.View
+              style={{
+                ...styles.customBorder,
+                opacity: borderRightOpacity,
+              }}
+            />
+            <TouchableOpacity
+              activeOpacity={0.3}
+              style={styles.petTypeBox}
+              onPress={onCatPress}>
+              <Image source={catImage} style={styles.catImage} />
+              <Text style={styles.petTypeText}>Gato</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={[styles.petTypeContainer, styles.shadow]}>
-          <Animated.View
-            style={{
-              ...styles.customBorder,
-              opacity: borderRightOpacity,
-            }}
-          />
-          <TouchableOpacity
-            activeOpacity={0.3}
-            style={styles.petTypeBox}
-            onPress={onCatPress}>
-            <Image source={catImage} style={styles.catImage} />
-          </TouchableOpacity>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.subtitle}>¿A qué especie pertenece?</Text>
+
+          <View style={[styles.petTypeContainer, styles.shadow]}>
+            <TouchableOpacity
+              activeOpacity={0.3}
+              style={styles.petTypeBox}
+              onPress={onDogPress}>
+              <Image source={maleImage} />
+              <Text style={styles.petTypeText}>Macho</Text>
+            </TouchableOpacity>
+            <Animated.View
+              style={{
+                ...styles.customBorder,
+                opacity: borderLeftOpacity,
+              }}
+            />
+          </View>
+          <View style={[styles.petTypeContainer, styles.shadow]}>
+            <TouchableOpacity
+              activeOpacity={0.3}
+              style={styles.petTypeBox}
+              onPress={onCatPress}>
+              <Image source={femaleImage} />
+              <Text style={styles.petTypeText}>Hembra</Text>
+            </TouchableOpacity>
+            <Animated.View
+              style={{
+                ...styles.customBorder,
+                opacity: borderRightOpacity,
+              }}
+            />
+          </View>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text>Section 3</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text>Section 4</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text>Section 5</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text>Section 6</Text>
         </View>
       </Animated.View>
       <View style={styles.spacer} />
@@ -250,16 +300,32 @@ const styles = StyleSheet.create({
     borderRadius: 1,
     backgroundColor: '#000',
   },
+  title: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 26,
+  },
+  subtitle: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 16,
+    position: 'absolute',
+    top: 0,
+  },
   petBoxesContainer: {
     flexDirection: 'row',
-    marginTop: 50,
-    justifyContent: 'space-between',
+    height: 250,
+    justifyContent: 'flex-start',
+    alignSelf: 'flex-start',
+  },
+  petButtonsContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   petTypeContainer: {
     backgroundColor: 'white',
     borderRadius: 10,
     marginHorizontal: 8,
-    justifyContent: 'center',
     width: 170,
     height: 170,
   },
@@ -278,6 +344,11 @@ const styles = StyleSheet.create({
     zIndex: 5,
     height: '100%',
   },
+  petTypeText: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 16,
+    marginTop: 10,
+  },
   dogImage: {
     width: 90,
     height: 90,
@@ -285,6 +356,12 @@ const styles = StyleSheet.create({
   catImage: {
     width: 75,
     height: 75,
+  },
+  sectionContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
   },
   spacer: {
     flex: 1,
