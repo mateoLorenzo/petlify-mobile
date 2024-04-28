@@ -2,10 +2,14 @@ import React, {useRef, useState} from 'react';
 import {
   Animated,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
   useWindowDimensions,
@@ -17,7 +21,17 @@ const catImage = require('../../../assets/images/cat.png');
 const rightArrow = require('../../../assets/images/right-arrow.png');
 const maleImage = require('../../../assets/images/male.png');
 const femaleImage = require('../../../assets/images/female.png');
+const addIcon = require('../../../assets/images/add.png');
 const steps = [1, 2, 3, 4, 5, 6];
+
+const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
+  <TouchableOpacity
+    activeOpacity={1}
+    style={styles.container}
+    onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableOpacity>
+);
 
 const PetDetailScreen = () => {
   const {top} = useSafeAreaInsets();
@@ -36,6 +50,12 @@ const PetDetailScreen = () => {
   const borderRightOpacity = useRef(new Animated.Value(0)).current;
   const contentPosition = useRef(new Animated.Value(0)).current;
   const [contentActualPosition, setContentActualPosition] = useState(0);
+  const nameInputRef = useRef<TextInput>(null);
+
+  const focusInput = () => {
+    // Hacer focus en el input al presionar el botón
+    nameInputRef.current?.focus();
+  };
 
   const getStepColor = (stepIndex: number) => {
     if (completedSteps.includes(stepIndex)) {
@@ -136,6 +156,9 @@ const PetDetailScreen = () => {
     if (currentStep === 6) {
       return;
     }
+    if (currentStep === 1) {
+      Keyboard.dismiss();
+    }
     setCompletedSteps([...completedSteps, currentStep]);
     setUncompletedSteps(uncompletedSteps.filter(step => step !== currentStep));
     reduceStepWidth(currentStep);
@@ -150,140 +173,193 @@ const PetDetailScreen = () => {
     if (currentStep === 1) {
       return;
     }
+    if (currentStep === 2) {
+      focusInput();
+    }
     setCompletedSteps(completedSteps.filter(step => step !== currentStep));
     setUncompletedSteps([...uncompletedSteps, currentStep]);
     reduceStepWidth(currentStep);
     expandStepWidth(currentStep - 1);
     setCurrentStep(currentStep - 1);
     moveContentRight();
+    hideBorder('left');
+    hideBorder('right');
   };
 
   return (
     <SafeAreaView style={{...styles.screenContainer, marginTop: top}}>
-      <StatusBar barStyle={'dark-content'} />
-      <Logo height={100} width={100} style={styles.logo} />
-      <View style={styles.stepsContainer}>
-        {steps.map(step => (
+      <KeyboardAvoidingView
+        style={styles.flex1}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <DismissKeyboard>
+          <StatusBar barStyle={'dark-content'} />
+          <Logo height={70} width={70} style={styles.logo} />
+          <View style={styles.stepsContainer}>
+            {steps.map(step => (
+              <Animated.View
+                style={{
+                  ...styles.stepBar,
+                  backgroundColor: getStepColor(step),
+                  width: getStepWidth(step),
+                }}
+                key={step}
+              />
+            ))}
+          </View>
+
+          <Text style={styles.title}>¡Registremos Tu Mascota!</Text>
           <Animated.View
             style={{
-              ...styles.stepBar,
-              backgroundColor: getStepColor(step),
-              width: getStepWidth(step),
-            }}
-            key={step}
-          />
-        ))}
-      </View>
-      <Text style={styles.title}>¡Registremos Tu Mascota!</Text>
-      <Animated.View
-        style={{
-          ...styles.petBoxesContainer,
-          transform: [{translateX: contentPosition}],
-        }}>
-        <View style={styles.petButtonsContainer}>
-          <Text style={styles.subtitle}>¿A qué especie pertenece?</Text>
-          <View style={[styles.petTypeContainer, styles.shadow]}>
-            <TouchableOpacity
-              activeOpacity={0.3}
-              style={styles.petTypeBox}
-              onPress={onDogPress}>
-              <Image source={dogImage} style={styles.dogImage} />
-              <Text style={styles.petTypeText}>Perro</Text>
-            </TouchableOpacity>
-            <Animated.View
-              style={{
-                ...styles.customBorder,
-                opacity: borderLeftOpacity,
-              }}
-            />
-          </View>
-          <View style={[styles.petTypeContainer, styles.shadow]}>
-            <Animated.View
-              style={{
-                ...styles.customBorder,
-                opacity: borderRightOpacity,
-              }}
-            />
-            <TouchableOpacity
-              activeOpacity={0.3}
-              style={styles.petTypeBox}
-              onPress={onCatPress}>
-              <Image source={catImage} style={styles.catImage} />
-              <Text style={styles.petTypeText}>Gato</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.subtitle}>¿A qué especie pertenece?</Text>
+              ...styles.petBoxesContainer,
+              transform: [{translateX: contentPosition}],
+            }}>
+            <View style={styles.nameSectionContainer}>
+              <Text style={styles.subtitle}>¿Cómo se llama tu mascota?</Text>
+              <TextInput
+                ref={nameInputRef}
+                autoCorrect={false}
+                placeholder="Lucy"
+                autoComplete="off"
+                spellCheck={false}
+                style={styles.nameInput}
+              />
+            </View>
 
-          <View style={[styles.petTypeContainer, styles.shadow]}>
+            <View style={styles.kindSectionContainer}>
+              <Text style={styles.subtitle}>¿A qué especie pertenece?</Text>
+              <View style={[styles.petTypeContainer, styles.shadow]}>
+                <TouchableOpacity
+                  activeOpacity={0.3}
+                  style={styles.petTypeBox}
+                  onPress={onDogPress}>
+                  <Image source={dogImage} style={styles.dogImage} />
+                  <Text style={styles.petTypeText}>Perro</Text>
+                </TouchableOpacity>
+                <Animated.View
+                  style={{
+                    ...styles.customBorder,
+                    opacity: borderLeftOpacity,
+                  }}
+                />
+              </View>
+              <View style={[styles.petTypeContainer, styles.shadow]}>
+                <Animated.View
+                  style={{
+                    ...styles.customBorder,
+                    opacity: borderRightOpacity,
+                  }}
+                />
+                <TouchableOpacity
+                  activeOpacity={0.3}
+                  style={styles.petTypeBox}
+                  onPress={onCatPress}>
+                  <Image source={catImage} style={styles.catImage} />
+                  <Text style={styles.petTypeText}>Gato</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.genderSectionContainer}>
+              <Text style={styles.subtitle}>¿A qué genero pertenece?</Text>
+
+              <View style={[styles.petTypeContainer, styles.shadow]}>
+                <TouchableOpacity
+                  activeOpacity={0.3}
+                  style={styles.petTypeBox}
+                  onPress={onDogPress}>
+                  <Image source={maleImage} />
+                  <Text style={styles.petTypeText}>Macho</Text>
+                </TouchableOpacity>
+                <Animated.View
+                  style={{
+                    ...styles.customBorder,
+                    opacity: borderLeftOpacity,
+                  }}
+                />
+              </View>
+              <View style={[styles.petTypeContainer, styles.shadow]}>
+                <TouchableOpacity
+                  activeOpacity={0.3}
+                  style={styles.petTypeBox}
+                  onPress={onCatPress}>
+                  <Image source={femaleImage} />
+                  <Text style={styles.petTypeText}>Hembra</Text>
+                </TouchableOpacity>
+                <Animated.View
+                  style={{
+                    ...styles.customBorder,
+                    opacity: borderRightOpacity,
+                  }}
+                />
+              </View>
+            </View>
+
+            <View style={styles.raceSectionContainer}>
+              <Text style={styles.subtitle}>¿A qué raza pertenece?</Text>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.selectRaceButton}>
+                <Text style={styles.selectRaceText}>Selecciona una raza</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.ageSectionContainer}>
+              <Text style={styles.subtitle}>¿Cuantos años tiene?</Text>
+              <TouchableOpacity activeOpacity={0.5} style={styles.ageContainer}>
+                <Text style={styles.ageNumber}>0</Text>
+                <Text style={styles.ageText}>Años</Text>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.5} style={styles.ageContainer}>
+                <Text style={styles.ageNumber}>0</Text>
+                <Text style={styles.ageText}>Meses</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.photoSectionContainer}>
+              <View style={[styles.addImageContainer, styles.addImageShadow]}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.addImageCircle}>
+                  <Image source={addIcon} style={styles.addImageIcon} />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity activeOpacity={0.5}>
+                <Text style={styles.addImageText}>Cargar foto</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+          <View style={styles.spacer} />
+          <View style={styles.buttonsContainer}>
             <TouchableOpacity
-              activeOpacity={0.3}
-              style={styles.petTypeBox}
-              onPress={onDogPress}>
-              <Image source={maleImage} />
-              <Text style={styles.petTypeText}>Macho</Text>
+              activeOpacity={0.4}
+              style={styles.backButton}
+              onPress={onPressBack}>
+              <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
-            <Animated.View
-              style={{
-                ...styles.customBorder,
-                opacity: borderLeftOpacity,
-              }}
-            />
-          </View>
-          <View style={[styles.petTypeContainer, styles.shadow]}>
             <TouchableOpacity
-              activeOpacity={0.3}
-              style={styles.petTypeBox}
-              onPress={onCatPress}>
-              <Image source={femaleImage} />
-              <Text style={styles.petTypeText}>Hembra</Text>
+              activeOpacity={0.4}
+              style={styles.continueButton}
+              onPress={onPressContinue}>
+              <Image source={rightArrow} />
             </TouchableOpacity>
-            <Animated.View
-              style={{
-                ...styles.customBorder,
-                opacity: borderRightOpacity,
-              }}
-            />
           </View>
-        </View>
-        <View style={styles.sectionContainer}>
-          <Text>Section 3</Text>
-        </View>
-        <View style={styles.sectionContainer}>
-          <Text>Section 4</Text>
-        </View>
-        <View style={styles.sectionContainer}>
-          <Text>Section 5</Text>
-        </View>
-        <View style={styles.sectionContainer}>
-          <Text>Section 6</Text>
-        </View>
-      </Animated.View>
-      <View style={styles.spacer} />
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          activeOpacity={0.4}
-          style={styles.backButton}
-          onPress={onPressBack}>
-          <Text style={styles.backButtonText}>Back</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.4}
-          style={styles.continueButton}
-          onPress={onPressContinue}>
-          <Image source={rightArrow} />
-        </TouchableOpacity>
-      </View>
+        </DismissKeyboard>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  screenContainer: {
+  container: {
     flex: 1,
     alignItems: 'center',
+  },
+  screenContainer: {
+    flex: 1,
     backgroundColor: 'white',
+  },
+  flex1: {
+    flex: 1,
   },
   logo: {
     marginTop: 20,
@@ -316,7 +392,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignSelf: 'flex-start',
   },
-  petButtonsContainer: {
+  kindSectionContainer: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -363,6 +439,100 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
+  raceSectionContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  selectRaceButton: {
+    paddingHorizontal: 30,
+    paddingVertical: 20,
+    borderWidth: 1,
+    borderColor: '#1E96FF',
+    borderRadius: 15,
+  },
+  selectRaceText: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 16,
+    color: '#1E96FF',
+  },
+  genderSectionContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
+  ageSectionContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ageContainer: {
+    alignItems: 'center',
+    marginHorizontal: 20,
+  },
+  ageNumber: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 50,
+    color: '#1E96FF',
+  },
+  ageText: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 18,
+    color: '#000',
+  },
+  nameSectionContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  nameInput: {
+    fontSize: 40,
+    fontFamily: 'Poppins-Medium',
+  },
+  photoSectionContainer: {
+    width: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  addImageContainer: {
+    borderRadius: 100,
+    width: 150,
+    height: 150,
+    backgroundColor: 'white',
+  },
+  addImageShadow: {
+    shadowColor: '#1E96FF',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+  },
+  addImageCircle: {
+    height: '100%',
+    borderWidth: 2,
+    borderColor: '#1E96FF',
+    borderRadius: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 5,
+  },
+  addImageIcon: {
+    width: 60,
+    height: 60,
+  },
+  addImageText: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#1E96FF',
+    fontSize: 18,
+    fontFamily: 'Poppins-Medium',
+  },
   spacer: {
     flex: 1,
   },
@@ -379,13 +549,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
+    // backgroundColor: 'red',
+    marginBottom: 60,
   },
   continueButton: {
     paddingHorizontal: 30,
     paddingVertical: 20,
     backgroundColor: '#1E96FF',
     borderRadius: 4,
-    marginBottom: 50,
     alignSelf: 'flex-end',
   },
   backButton: {
@@ -393,7 +564,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     backgroundColor: '#1E96FF',
     borderRadius: 4,
-    marginBottom: 50,
     alignSelf: 'flex-end',
   },
   backButtonText: {
