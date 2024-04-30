@@ -1,6 +1,8 @@
-import React, {useRef, useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
+  Dimensions,
   Image,
   Keyboard,
   KeyboardAvoidingView,
@@ -12,10 +14,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Logo from '../../../assets/images/logo.svg';
+import {useAnimation} from '../../hooks/useAnimation';
+import {Controller, useForm, useWatch} from 'react-hook-form';
 const dogImage = require('../../../assets/images/dog.png');
 const catImage = require('../../../assets/images/cat.png');
 const rightArrow = require('../../../assets/images/right-arrow.png');
@@ -23,6 +26,7 @@ const maleImage = require('../../../assets/images/male.png');
 const femaleImage = require('../../../assets/images/female.png');
 const addIcon = require('../../../assets/images/add.png');
 const steps = [1, 2, 3, 4, 5, 6];
+const {width: screenWidth} = Dimensions.get('window');
 
 const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
   <TouchableOpacity
@@ -33,27 +37,58 @@ const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
   </TouchableOpacity>
 );
 
+interface PetData {
+  petName: string;
+  petType: 'dog' | 'cat' | undefined;
+  petGender: 'male' | 'female' | undefined;
+  petRace: string;
+  petAge: {
+    years: number;
+    months: number;
+  };
+  petPhoto: string;
+}
+
+const initialPetData: PetData = {
+  petName: '',
+  petType: undefined,
+  petGender: undefined,
+  petRace: '',
+  petAge: {
+    years: 0,
+    months: 0,
+  },
+  petPhoto: '',
+};
+
 const PetDetailScreen = () => {
   const {top} = useSafeAreaInsets();
-  const {width: screenWidth} = useWindowDimensions();
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [uncompletedSteps, setUncompletedSteps] = useState([2, 3, 4, 5, 6]);
-
-  const stepOneWidth = useRef(new Animated.Value(screenWidth * 0.3)).current;
-  const stepTwoWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
-  const stepThreeWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
-  const stepFourWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
-  const stepFiveWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
-  const stepSixWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
-  const borderLeftOpacity = useRef(new Animated.Value(0)).current;
-  const borderRightOpacity = useRef(new Animated.Value(0)).current;
-  const contentPosition = useRef(new Animated.Value(0)).current;
   const [contentActualPosition, setContentActualPosition] = useState(0);
+  const [petInfo, setPetInfo] = useState<PetData>(initialPetData);
+  const [continueButtonColor, setContinueButtonColor] = useState('gray');
   const nameInputRef = useRef<TextInput>(null);
+  const {control} = useForm();
+  const petName = useWatch({control, name: 'petName'});
+
+  const {
+    showBorder,
+    hideBorder,
+    getStepWidth,
+    reduceStepWidth,
+    expandStepWidth,
+    movePetContentLeft,
+    movePetContentRight,
+    maleBorderOpacity,
+    femaleBorderOpacity,
+    petContentPosition,
+    dogBorderOpacity,
+    catBorderOpacity,
+  } = useAnimation();
 
   const focusInput = () => {
-    // Hacer focus en el input al presionar el botón
     nameInputRef.current?.focus();
   };
 
@@ -67,106 +102,75 @@ const PetDetailScreen = () => {
     return '#000';
   };
 
-  const reduceStepWidth = (stepIndex: number) => {
-    const stepToUpdate = getStepWidth(stepIndex);
-    Animated.timing(stepToUpdate, {
-      toValue: screenWidth * 0.1,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const expandStepWidth = (stepIndex: number) => {
-    const stepToUpdate = getStepWidth(stepIndex);
-    Animated.timing(stepToUpdate, {
-      toValue: screenWidth * 0.3,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const getStepWidth = (stepIndex: number) => {
-    if (stepIndex === 1) {
-      return stepOneWidth;
+  useEffect(() => {
+    if (petInfo.petType === 'dog') {
+      showBorder('dog');
+      hideBorder('cat');
     }
-    if (stepIndex === 2) {
-      return stepTwoWidth;
+    if (petInfo.petType === 'cat') {
+      showBorder('cat');
+      hideBorder('dog');
     }
-    if (stepIndex === 3) {
-      return stepThreeWidth;
+    if (petInfo.petGender === 'male') {
+      showBorder('male');
+      hideBorder('female');
     }
-    if (stepIndex === 4) {
-      return stepFourWidth;
+    if (petInfo.petGender === 'female') {
+      showBorder('female');
+      hideBorder('male');
     }
-    if (stepIndex === 5) {
-      return stepFiveWidth;
+  }, [petInfo.petType, petInfo.petGender]);
+
+  const updatePetType = (type: 'dog' | 'cat') => {
+    setPetInfo({...petInfo, petType: type});
+  };
+
+  const updateGender = (gender: 'male' | 'female') => {
+    setPetInfo({...petInfo, petGender: gender});
+  };
+
+  useEffect(() => {
+    if (currentStep === 1 && petName?.length) {
+      setContinueButtonColor('#1E96FF');
+    } else if (currentStep === 2 && petInfo.petType !== undefined) {
+      setContinueButtonColor('#1E96FF');
+    } else if (currentStep === 3 && petInfo.petGender !== undefined) {
+      setContinueButtonColor('#1E96FF');
+    } else if (currentStep === 4) {
+      setContinueButtonColor('#1E96FF');
+    } else if (currentStep === 5) {
+      setContinueButtonColor('#1E96FF');
+    } else if (currentStep === 6) {
+      setContinueButtonColor('#1E96FF');
+    } else {
+      setContinueButtonColor('gray');
     }
-    return stepSixWidth;
-  };
-
-  const showBorder = (border: 'left' | 'right') => {
-    const borderToUpdate =
-      border === 'left' ? borderLeftOpacity : borderRightOpacity;
-    Animated.timing(borderToUpdate, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const hideBorder = (border: 'left' | 'right') => {
-    const borderToUpdate =
-      border === 'left' ? borderLeftOpacity : borderRightOpacity;
-    Animated.timing(borderToUpdate, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const moveContentLeft = () => {
-    setContentActualPosition(contentActualPosition - screenWidth);
-    Animated.timing(contentPosition, {
-      toValue: contentActualPosition - screenWidth,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const moveContentRight = () => {
-    setContentActualPosition(contentActualPosition + screenWidth);
-    Animated.timing(contentPosition, {
-      toValue: contentActualPosition + screenWidth,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const onDogPress = () => {
-    showBorder('left');
-    hideBorder('right');
-  };
-
-  const onCatPress = () => {
-    showBorder('right');
-    hideBorder('left');
-  };
+  }, [currentStep, petInfo, petName]);
 
   const onPressContinue = () => {
+    console.log('petInfo', petInfo);
+    if (currentStep === 1 && !petName?.length) {
+      return;
+    }
+    if (currentStep === 2 && petInfo.petType === undefined) {
+      return;
+    }
+    if (currentStep === 3 && petInfo.petGender === undefined) {
+      return;
+    }
     if (currentStep === 6) {
       return;
     }
-    if (currentStep === 1) {
+    if (currentStep === 1 && petName?.length > 0) {
       Keyboard.dismiss();
     }
     setCompletedSteps([...completedSteps, currentStep]);
     setUncompletedSteps(uncompletedSteps.filter(step => step !== currentStep));
     reduceStepWidth(currentStep);
     expandStepWidth(currentStep + 1);
+    movePetContentLeft(contentActualPosition);
+    setContentActualPosition(contentActualPosition - screenWidth);
     setCurrentStep(currentStep + 1);
-    moveContentLeft();
-    hideBorder('left');
-    hideBorder('right');
   };
 
   const onPressBack = () => {
@@ -181,9 +185,8 @@ const PetDetailScreen = () => {
     reduceStepWidth(currentStep);
     expandStepWidth(currentStep - 1);
     setCurrentStep(currentStep - 1);
-    moveContentRight();
-    hideBorder('left');
-    hideBorder('right');
+    movePetContentRight(contentActualPosition);
+    setContentActualPosition(contentActualPosition + screenWidth);
   };
 
   return (
@@ -211,34 +214,45 @@ const PetDetailScreen = () => {
           <Animated.View
             style={{
               ...styles.petBoxesContainer,
-              transform: [{translateX: contentPosition}],
+              transform: [{translateX: petContentPosition}],
             }}>
             <View style={styles.nameSectionContainer}>
               <Text style={styles.subtitle}>¿Cómo se llama tu mascota?</Text>
-              <TextInput
-                ref={nameInputRef}
-                autoCorrect={false}
-                placeholder="Lucy"
-                autoComplete="off"
-                spellCheck={false}
-                style={styles.nameInput}
+              <Controller
+                name="petName"
+                rules={{required: 'Ingresa el nombre de tu mascota'}}
+                control={control}
+                render={({field: {value, onChange}}) => (
+                  <TextInput
+                    ref={nameInputRef}
+                    value={value}
+                    autoCorrect={false}
+                    placeholder="Lucy"
+                    autoComplete="off"
+                    spellCheck={false}
+                    style={styles.nameInput}
+                    onChangeText={text => onChange(text)}
+                  />
+                )}
               />
             </View>
 
             <View style={styles.kindSectionContainer}>
-              <Text style={styles.subtitle}>¿A qué especie pertenece?</Text>
+              <Text style={styles.subtitle}>
+                ¿A qué especie pertenece {petName}?
+              </Text>
               <View style={[styles.petTypeContainer, styles.shadow]}>
                 <TouchableOpacity
                   activeOpacity={0.3}
                   style={styles.petTypeBox}
-                  onPress={onDogPress}>
+                  onPress={() => updatePetType('dog')}>
                   <Image source={dogImage} style={styles.dogImage} />
                   <Text style={styles.petTypeText}>Perro</Text>
                 </TouchableOpacity>
                 <Animated.View
                   style={{
                     ...styles.customBorder,
-                    opacity: borderLeftOpacity,
+                    opacity: dogBorderOpacity,
                   }}
                 />
               </View>
@@ -246,13 +260,13 @@ const PetDetailScreen = () => {
                 <Animated.View
                   style={{
                     ...styles.customBorder,
-                    opacity: borderRightOpacity,
+                    opacity: catBorderOpacity,
                   }}
                 />
                 <TouchableOpacity
                   activeOpacity={0.3}
                   style={styles.petTypeBox}
-                  onPress={onCatPress}>
+                  onPress={() => updatePetType('cat')}>
                   <Image source={catImage} style={styles.catImage} />
                   <Text style={styles.petTypeText}>Gato</Text>
                 </TouchableOpacity>
@@ -260,20 +274,22 @@ const PetDetailScreen = () => {
             </View>
 
             <View style={styles.genderSectionContainer}>
-              <Text style={styles.subtitle}>¿A qué genero pertenece?</Text>
+              <Text style={styles.subtitle}>
+                ¿A qué genero pertenece {petName}?
+              </Text>
 
               <View style={[styles.petTypeContainer, styles.shadow]}>
                 <TouchableOpacity
                   activeOpacity={0.3}
                   style={styles.petTypeBox}
-                  onPress={onDogPress}>
+                  onPress={() => updateGender('male')}>
                   <Image source={maleImage} />
                   <Text style={styles.petTypeText}>Macho</Text>
                 </TouchableOpacity>
                 <Animated.View
                   style={{
                     ...styles.customBorder,
-                    opacity: borderLeftOpacity,
+                    opacity: maleBorderOpacity,
                   }}
                 />
               </View>
@@ -281,21 +297,21 @@ const PetDetailScreen = () => {
                 <TouchableOpacity
                   activeOpacity={0.3}
                   style={styles.petTypeBox}
-                  onPress={onCatPress}>
+                  onPress={() => updateGender('female')}>
                   <Image source={femaleImage} />
                   <Text style={styles.petTypeText}>Hembra</Text>
                 </TouchableOpacity>
                 <Animated.View
                   style={{
                     ...styles.customBorder,
-                    opacity: borderRightOpacity,
+                    opacity: femaleBorderOpacity,
                   }}
                 />
               </View>
             </View>
 
             <View style={styles.raceSectionContainer}>
-              <Text style={styles.subtitle}>¿A qué raza pertenece?</Text>
+              <Text style={styles.subtitle}>¿Qué raza es {petName}?</Text>
               <TouchableOpacity
                 activeOpacity={0.5}
                 style={styles.selectRaceButton}>
@@ -304,7 +320,9 @@ const PetDetailScreen = () => {
             </View>
 
             <View style={styles.ageSectionContainer}>
-              <Text style={styles.subtitle}>¿Cuantos años tiene?</Text>
+              <Text style={styles.subtitle}>
+                ¿Cuantos años tiene {petName}?
+              </Text>
               <TouchableOpacity activeOpacity={0.5} style={styles.ageContainer}>
                 <Text style={styles.ageNumber}>0</Text>
                 <Text style={styles.ageText}>Años</Text>
@@ -316,6 +334,10 @@ const PetDetailScreen = () => {
             </View>
 
             <View style={styles.photoSectionContainer}>
+              <Text style={styles.subtitle}>
+                Por ultimo, ¿Qué tal una imagen?
+              </Text>
+
               <View style={[styles.addImageContainer, styles.addImageShadow]}>
                 <TouchableOpacity
                   activeOpacity={0.5}
@@ -338,7 +360,11 @@ const PetDetailScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.4}
-              style={styles.continueButton}
+              style={{
+                ...styles.continueButton,
+                // backgroundColor: getButtonColor(),
+                backgroundColor: continueButtonColor,
+              }}
               onPress={onPressContinue}>
               <Image source={rightArrow} />
             </TouchableOpacity>
@@ -549,7 +575,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
-    // backgroundColor: 'red',
     marginBottom: 60,
   },
   continueButton: {

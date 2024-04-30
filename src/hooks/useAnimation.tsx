@@ -11,6 +11,18 @@ export const useAnimation = () => {
   const leftContentOpacity = useRef(new Animated.Value(1)).current;
   const rightContentOpacity = useRef(new Animated.Value(0)).current;
 
+  const stepOneWidth = useRef(new Animated.Value(screenWidth * 0.3)).current;
+  const stepTwoWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
+  const stepThreeWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
+  const stepFourWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
+  const stepFiveWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
+  const stepSixWidth = useRef(new Animated.Value(screenWidth * 0.1)).current;
+  const dogBorderOpacity = useRef(new Animated.Value(0)).current;
+  const catBorderOpacity = useRef(new Animated.Value(0)).current;
+  const maleBorderOpacity = useRef(new Animated.Value(0)).current;
+  const femaleBorderOpacity = useRef(new Animated.Value(0)).current;
+  const petContentPosition = useRef(new Animated.Value(0)).current;
+
   const moveTextUP = (initPosition: number, duration: number = 200) => {
     Animated.timing(textPosition, {
       toValue: initPosition,
@@ -91,6 +103,90 @@ export const useAnimation = () => {
     }).start();
   };
 
+  const getStepWidth = (stepIndex: number) => {
+    if (stepIndex === 1) {
+      return stepOneWidth;
+    }
+    if (stepIndex === 2) {
+      return stepTwoWidth;
+    }
+    if (stepIndex === 3) {
+      return stepThreeWidth;
+    }
+    if (stepIndex === 4) {
+      return stepFourWidth;
+    }
+    if (stepIndex === 5) {
+      return stepFiveWidth;
+    }
+    return stepSixWidth;
+  };
+
+  const reduceStepWidth = (stepIndex: number) => {
+    const stepToUpdate = getStepWidth(stepIndex);
+    Animated.timing(stepToUpdate, {
+      toValue: screenWidth * 0.1,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const expandStepWidth = (stepIndex: number) => {
+    const stepToUpdate = getStepWidth(stepIndex);
+    Animated.timing(stepToUpdate, {
+      toValue: screenWidth * 0.3,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const getBorderToUpdate = (border: 'dog' | 'cat' | 'male' | 'female') => {
+    if (border === 'dog') {
+      return dogBorderOpacity;
+    }
+    if (border === 'cat') {
+      return catBorderOpacity;
+    }
+    if (border === 'male') {
+      return maleBorderOpacity;
+    }
+    return femaleBorderOpacity;
+  };
+
+  const showBorder = (border: 'dog' | 'cat' | 'male' | 'female') => {
+    const borderToUpdate = getBorderToUpdate(border);
+    Animated.timing(borderToUpdate, {
+      toValue: 1,
+      duration: 150,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const hideBorder = (border: 'dog' | 'cat' | 'male' | 'female') => {
+    const borderToUpdate = getBorderToUpdate(border);
+    Animated.timing(borderToUpdate, {
+      toValue: 0,
+      duration: 150,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const movePetContentLeft = (contentActualPosition: number) => {
+    Animated.timing(petContentPosition, {
+      toValue: contentActualPosition - screenWidth,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const movePetContentRight = (contentActualPosition: number) => {
+    Animated.timing(petContentPosition, {
+      toValue: contentActualPosition + screenWidth,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return {
     textPosition,
     textOpacity,
@@ -99,6 +195,18 @@ export const useAnimation = () => {
     contentPosition,
     leftContentOpacity,
     rightContentOpacity,
+    stepOneWidth,
+    stepTwoWidth,
+    stepThreeWidth,
+    stepFourWidth,
+    stepFiveWidth,
+    stepSixWidth,
+    dogBorderOpacity,
+    catBorderOpacity,
+    maleBorderOpacity,
+    femaleBorderOpacity,
+    petContentPosition,
+
     moveTextUP,
     fadeOutButtonText,
     fadeInLoader,
@@ -109,5 +217,12 @@ export const useAnimation = () => {
     showRightContent,
     hideRightContent,
     showLeftContent,
+    getStepWidth,
+    reduceStepWidth,
+    expandStepWidth,
+    showBorder,
+    hideBorder,
+    movePetContentLeft,
+    movePetContentRight,
   };
 };
