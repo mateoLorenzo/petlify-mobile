@@ -45,6 +45,10 @@ const ComponentsScreen = () => {
         name="Countdown Timer"
         onPress={() => navigation.navigate('CountdownTimerScreen' as never)}
       />
+      <ComponentButton
+        name="Age Picker"
+        onPress={() => navigation.navigate('AgePickerScreen' as never)}
+      />
     </View>
   );
 };

@@ -19,6 +19,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Logo from '../../../assets/images/logo.svg';
 import {useAnimation} from '../../hooks/useAnimation';
 import {Controller, useForm, useWatch} from 'react-hook-form';
+import {AgePicker} from '../../components/AgePicker';
 const dogImage = require('../../../assets/images/dog.png');
 const catImage = require('../../../assets/images/cat.png');
 const rightArrow = require('../../../assets/images/right-arrow.png');
@@ -69,6 +70,8 @@ const PetDetailScreen = () => {
   const [contentActualPosition, setContentActualPosition] = useState(0);
   const [petInfo, setPetInfo] = useState<PetData>(initialPetData);
   const [continueButtonColor, setContinueButtonColor] = useState('gray');
+  const [yearSelected, setYearSelected] = useState('0');
+  const [monthSelected, setMonthSelected] = useState('1');
   const nameInputRef = useRef<TextInput>(null);
   const {control} = useForm();
   const petName = useWatch({control, name: 'petName'});
@@ -209,8 +212,8 @@ const PetDetailScreen = () => {
               />
             ))}
           </View>
-
           <Text style={styles.title}>¡Registremos Tu Mascota!</Text>
+
           <Animated.View
             style={{
               ...styles.petBoxesContainer,
@@ -323,14 +326,28 @@ const PetDetailScreen = () => {
               <Text style={styles.subtitle}>
                 ¿Cuantos años tiene {petName}?
               </Text>
-              <TouchableOpacity activeOpacity={0.5} style={styles.ageContainer}>
-                <Text style={styles.ageNumber}>0</Text>
-                <Text style={styles.ageText}>Años</Text>
-              </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.5} style={styles.ageContainer}>
-                <Text style={styles.ageNumber}>0</Text>
-                <Text style={styles.ageText}>Meses</Text>
-              </TouchableOpacity>
+              <View>
+                <View style={styles.agePickerContainer}>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={styles.ageContainer}>
+                    <Text style={styles.ageNumber}>{yearSelected}</Text>
+                    <Text style={styles.ageText}>Años</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={styles.ageContainer}>
+                    <Text style={styles.ageNumber}>{monthSelected}</Text>
+                    <Text style={styles.ageText}>Meses</Text>
+                  </TouchableOpacity>
+                </View>
+                <AgePicker
+                  yearSelected={yearSelected}
+                  monthSelected={monthSelected}
+                  setYearSelected={setYearSelected}
+                  setMonthSelected={setMonthSelected}
+                />
+              </View>
             </View>
 
             <View style={styles.photoSectionContainer}>
@@ -350,6 +367,7 @@ const PetDetailScreen = () => {
               </TouchableOpacity>
             </View>
           </Animated.View>
+
           <View style={styles.spacer} />
           <View style={styles.buttonsContainer}>
             <TouchableOpacity
@@ -362,7 +380,6 @@ const PetDetailScreen = () => {
               activeOpacity={0.4}
               style={{
                 ...styles.continueButton,
-                // backgroundColor: getButtonColor(),
                 backgroundColor: continueButtonColor,
               }}
               onPress={onPressContinue}>
@@ -494,10 +511,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
+    height: 450,
   },
   ageContainer: {
     alignItems: 'center',
-    marginHorizontal: 20,
+    marginHorizontal: 50,
+  },
+  agePickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   ageNumber: {
     fontFamily: 'Poppins-Medium',
