@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Logo from '../../../assets/images/logo.svg';
 import {useAnimation} from '../../hooks/useAnimation';
@@ -26,8 +27,11 @@ const rightArrow = require('../../../assets/images/right-arrow.png');
 const maleImage = require('../../../assets/images/male.png');
 const femaleImage = require('../../../assets/images/female.png');
 const addIcon = require('../../../assets/images/add.png');
+
 const steps = [1, 2, 3, 4, 5, 6];
 const {width: screenWidth} = Dimensions.get('window');
+const initialImage =
+  'https://cdn.motor1.com/images/mgl/BbKZZ/s3/2019-aston-martin-dbs-superleggera.jpg';
 
 const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
   <TouchableOpacity
@@ -72,6 +76,7 @@ const PetDetailScreen = () => {
   const [continueButtonColor, setContinueButtonColor] = useState('gray');
   const [yearSelected, setYearSelected] = useState('0');
   const [monthSelected, setMonthSelected] = useState('1');
+  const [selectedImage, setSelectedImage] = useState(initialImage);
   const nameInputRef = useRef<TextInput>(null);
   const {control} = useForm();
   const petName = useWatch({control, name: 'petName'});
@@ -149,6 +154,17 @@ const PetDetailScreen = () => {
       setContinueButtonColor('gray');
     }
   }, [currentStep, petInfo, petName]);
+
+  const choosePhotoFromGallery = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then(image => {
+      console.log(image);
+      setSelectedImage(image.path);
+    });
+  };
 
   const onPressContinue = () => {
     console.log('petInfo', petInfo);
@@ -358,11 +374,22 @@ const PetDetailScreen = () => {
               <View style={[styles.addImageContainer, styles.addImageShadow]}>
                 <TouchableOpacity
                   activeOpacity={0.5}
-                  style={styles.addImageCircle}>
-                  <Image source={addIcon} style={styles.addImageIcon} />
+                  style={styles.addImageCircle}
+                  onPress={choosePhotoFromGallery}>
+                  {selectedImage === initialImage ? (
+                    <Image source={addIcon} style={styles.addImageIcon} />
+                  ) : (
+                    <Image
+                      source={{uri: selectedImage}}
+                      style={styles.petImage}
+                      resizeMode="cover"
+                    />
+                  )}
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity activeOpacity={0.5}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={choosePhotoFromGallery}>
                 <Text style={styles.addImageText}>Cargar foto</Text>
               </TouchableOpacity>
             </View>
@@ -573,6 +600,11 @@ const styles = StyleSheet.create({
   addImageIcon: {
     width: 60,
     height: 60,
+  },
+  petImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
   },
   addImageText: {
     textAlign: 'center',

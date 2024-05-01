@@ -12,6 +12,7 @@ import RegisterPhoneScreen from '../screens/RegisterPhone';
 import AnimationsScreen from '../screens/Tests/Animations';
 import CountdownTimerScreen from '../screens/CountdownTimer';
 import AgePickerScreen from '../screens/Tests/AgePicker';
+import ImagePickerScreen from '../screens/Tests/ImagePicker';
 
 const Stack = createNativeStackNavigator();
 
@@ -88,6 +89,11 @@ const ComponentsNavigator = () => {
       <Stack.Screen
         name="AgePickerScreen"
         component={AgePickerScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ImagePickerScreen"
+        component={ImagePickerScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

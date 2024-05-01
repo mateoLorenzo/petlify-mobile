@@ -49,6 +49,10 @@ const ComponentsScreen = () => {
         name="Age Picker"
         onPress={() => navigation.navigate('AgePickerScreen' as never)}
       />
+      <ComponentButton
+        name="Image Picker"
+        onPress={() => navigation.navigate('ImagePickerScreen' as never)}
+      />
     </View>
   );
 };
