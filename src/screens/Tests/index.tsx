@@ -53,6 +53,10 @@ const ComponentsScreen = () => {
         name="Image Picker"
         onPress={() => navigation.navigate('ImagePickerScreen' as never)}
       />
+      <ComponentButton
+        name="Custom Dropdown"
+        onPress={() => navigation.navigate('CustomDropdown' as never)}
+      />
     </View>
   );
 };

@@ -13,6 +13,7 @@ import AnimationsScreen from '../screens/Tests/Animations';
 import CountdownTimerScreen from '../screens/CountdownTimer';
 import AgePickerScreen from '../screens/Tests/AgePicker';
 import ImagePickerScreen from '../screens/Tests/ImagePicker';
+import CustomDropdown from '../screens/Tests/CustomDropdown';
 
 const Stack = createNativeStackNavigator();
 
@@ -94,6 +95,11 @@ const ComponentsNavigator = () => {
       <Stack.Screen
         name="ImagePickerScreen"
         component={ImagePickerScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CustomDropdown"
+        component={CustomDropdown}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

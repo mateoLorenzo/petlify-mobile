@@ -23,6 +23,10 @@ export const useAnimation = () => {
   const femaleBorderOpacity = useRef(new Animated.Value(0)).current;
   const petContentPosition = useRef(new Animated.Value(0)).current;
 
+  const arrowIconOrientation = useRef(new Animated.Value(0)).current;
+  const dropdownHeight = useRef(new Animated.Value(65)).current;
+  const contentContainerOpacity = useRef(new Animated.Value(0)).current;
+
   const moveTextUP = (initPosition: number, duration: number = 200) => {
     Animated.timing(textPosition, {
       toValue: initPosition,
@@ -187,6 +191,55 @@ export const useAnimation = () => {
     }).start();
   };
 
+  const rotateArrowIcon = () => {
+    const arrowOrientation = Number(JSON.stringify(arrowIconOrientation));
+    Animated.timing(arrowIconOrientation, {
+      toValue: arrowOrientation === 0 ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const openDropdown = (afterOpen: () => void) => {
+    Animated.timing(dropdownHeight, {
+      toValue: 380,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => {
+      afterOpen();
+      fadeInContent();
+    });
+  };
+  const closeDropdown = (afterClose: () => void) => {
+    Animated.timing(dropdownHeight, {
+      toValue: 65,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(afterClose);
+  };
+
+  const fadeInContent = () => {
+    Animated.timing(contentContainerOpacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const fadeOutContent = (
+    afterClose: () => void,
+    changePadding: () => void,
+  ) => {
+    Animated.timing(contentContainerOpacity, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => {
+      changePadding();
+      closeDropdown(afterClose);
+    });
+  };
+
   return {
     textPosition,
     textOpacity,
@@ -206,6 +259,9 @@ export const useAnimation = () => {
     maleBorderOpacity,
     femaleBorderOpacity,
     petContentPosition,
+    arrowIconOrientation,
+    dropdownHeight,
+    contentContainerOpacity,
 
     moveTextUP,
     fadeOutButtonText,
@@ -224,5 +280,10 @@ export const useAnimation = () => {
     hideBorder,
     movePetContentLeft,
     movePetContentRight,
+    rotateArrowIcon,
+    openDropdown,
+    closeDropdown,
+    fadeInContent,
+    fadeOutContent,
   };
 };

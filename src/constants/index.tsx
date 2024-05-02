@@ -68,3 +68,27 @@ export const fieldValueIsValid = (
     return validatePassword(value) === true;
   }
 };
+
+export const dogBreeds = [
+  'Ninguna en especifico',
+  'Bulldog',
+  'Bull Terrier',
+  'Cairn Terrier',
+  'Chihuahua',
+  'Dachshund',
+  'Dalmatian',
+  'Doberman',
+  'German',
+  'Golden Retriever',
+  'Great Dane',
+  'Greyhound',
+  'Husky',
+  'Labrador',
+  'Mastiff',
+  'Pitbull',
+  'Poodle',
+  'Pug',
+  'Rottweiler',
+  'Schnauzer',
+  'Shih Tzu',
+];
