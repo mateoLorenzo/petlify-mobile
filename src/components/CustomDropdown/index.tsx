@@ -16,12 +16,14 @@ interface Props {
   breedsList: string[];
   breedSelected: string;
   setBreedSelected: (breed: string) => void;
+  onChangeText: (text: string) => void;
 }
 
 export const CustomDropdown = ({
   breedsList,
   breedSelected,
   setBreedSelected,
+  onChangeText,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [paddingBottom, setPaddingBottom] = useState(0);
@@ -48,6 +50,7 @@ export const CustomDropdown = ({
         () => setPaddingBottom(0),
       );
     } else {
+      onChangeText('');
       openDropdown(() => {
         setIsOpen(true);
         setPaddingBottom(10);
@@ -99,6 +102,7 @@ export const CustomDropdown = ({
                 placeholder="Buscar..."
                 style={styles.raceTextInput}
                 placeholderTextColor={'#5B5B5B'}
+                onChangeText={text => onChangeText(text)}
               />
               <Icon
                 name="search"

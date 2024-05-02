@@ -80,6 +80,7 @@ const PetDetailScreen = () => {
   const [monthSelected, setMonthSelected] = useState('1');
   const [selectedImage, setSelectedImage] = useState(initialImage);
   const [breedSelected, setBreedSelected] = useState('');
+  const [breedsList, setBreedsList] = useState(dogBreeds);
   const nameInputRef = useRef<TextInput>(null);
   const {control} = useForm();
   const petName = useWatch({control, name: 'petName'});
@@ -112,6 +113,14 @@ const PetDetailScreen = () => {
   //   }
   //   return '#000';
   // };
+
+  const onChangeText = (text: string) => {
+    setBreedsList(
+      dogBreeds.filter((breed: string) =>
+        breed.toLowerCase().includes(text.toLowerCase()),
+      ),
+    );
+  };
 
   useEffect(() => {
     if (petInfo.petType === 'dog') {
@@ -348,9 +357,10 @@ const PetDetailScreen = () => {
               </Text>
               <View style={styles.dropdownContainer}>
                 <CustomDropdown
+                  onChangeText={onChangeText}
                   breedSelected={breedSelected}
                   setBreedSelected={setBreedSelected}
-                  breedsList={dogBreeds}
+                  breedsList={breedsList}
                 />
               </View>
             </View>

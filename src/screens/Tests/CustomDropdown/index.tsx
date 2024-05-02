@@ -5,6 +5,15 @@ import {dogBreeds} from '../../../constants';
 
 const CustomDropdownScreen = () => {
   const [breedSelected, setBreedSelected] = useState('');
+  const [breedsList, setBreedsList] = useState(dogBreeds);
+
+  const onChangeText = (text: string) => {
+    setBreedsList(
+      dogBreeds.filter((breed: string) =>
+        breed.toLowerCase().includes(text.toLowerCase()),
+      ),
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -13,7 +22,8 @@ const CustomDropdownScreen = () => {
       <CustomDropdown
         breedSelected={breedSelected}
         setBreedSelected={setBreedSelected}
-        breedsList={dogBreeds}
+        breedsList={breedsList}
+        onChangeText={onChangeText}
       />
     </View>
   );
