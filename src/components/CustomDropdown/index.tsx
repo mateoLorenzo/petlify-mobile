@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   FlatList,
@@ -17,6 +18,9 @@ interface Props {
   breedSelected: string;
   setBreedSelected: (breed: string) => void;
   onChangeText: (text: string) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
+  // breedSearched?: string;
 }
 
 export const CustomDropdown = ({
@@ -24,9 +28,14 @@ export const CustomDropdown = ({
   breedSelected,
   setBreedSelected,
   onChangeText,
-}: Props) => {
+  onOpen,
+  onClose,
+}: // breedSearched,
+Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [paddingBottom, setPaddingBottom] = useState(0);
+  const removeTextOpacity = useRef(new Animated.Value(0)).current;
+  const [breedSearched, setBreedSearched] = useState<string>('');
 
   const {
     arrowIconOrientation,
@@ -37,9 +46,40 @@ export const CustomDropdown = ({
     fadeOutContent,
   } = useAnimation();
 
+  const showRemoveText = () => {
+    Animated.timing(removeTextOpacity, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const hideRemoveText = () => {
+    Animated.timing(removeTextOpacity, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  useEffect(() => {
+    if (breedSearched.length === 1) {
+      return showRemoveText();
+    }
+    if (breedSearched.length === 0) {
+      hideRemoveText();
+    }
+  }, [breedSearched]);
+
   const selectBreed = (breed: string) => {
     setBreedSelected(breed);
     onButtonPress();
+  };
+
+  const cleanField = () => {
+    onChangeText('');
+    setBreedSearched('');
+    hideRemoveText();
   };
 
   const onButtonPress = () => {
@@ -47,10 +87,15 @@ export const CustomDropdown = ({
     if (isOpen) {
       fadeOutContent(
         () => setIsOpen(false),
-        () => setPaddingBottom(0),
+        () => {
+          setPaddingBottom(0);
+          onClose && onClose();
+        },
       );
     } else {
+      onOpen && onOpen();
       onChangeText('');
+      setBreedSearched('');
       openDropdown(() => {
         setIsOpen(true);
         setPaddingBottom(10);
@@ -102,7 +147,13 @@ export const CustomDropdown = ({
                 placeholder="Buscar..."
                 style={styles.raceTextInput}
                 placeholderTextColor={'#5B5B5B'}
-                onChangeText={text => onChangeText(text)}
+                value={breedSearched}
+                autoCorrect={false}
+                autoComplete="off"
+                onChangeText={text => {
+                  setBreedSearched(text);
+                  onChangeText(text);
+                }}
               />
               <Icon
                 name="search"
@@ -110,6 +161,21 @@ export const CustomDropdown = ({
                 color="#5B5B5B"
                 style={styles.searchIcon}
               />
+              <Animated.View
+                style={{
+                  ...styles.closeIconContainer,
+                  opacity: removeTextOpacity,
+                  zIndex: 19,
+                }}>
+                <TouchableOpacity onPress={cleanField}>
+                  <Icon
+                    name="close-sharp"
+                    size={20}
+                    color="#5B5B5B"
+                    style={styles.closeIcon}
+                  />
+                </TouchableOpacity>
+              </Animated.View>
             </View>
             <View style={styles.inputSpacer} />
             <FlatList
@@ -144,8 +210,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 2,
     borderRadius: 15,
-
-    height: '100%',
   },
   buttonContainer: {
     backgroundColor: 'white',
@@ -194,6 +258,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 20,
   },
+  closeIconContainer: {
+    position: 'absolute',
+    right: 15,
+    padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+  },
+  closeIcon: {},
   breedsList: {
     height: '100%',
   },

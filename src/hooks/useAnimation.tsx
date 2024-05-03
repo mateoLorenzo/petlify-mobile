@@ -202,7 +202,7 @@ export const useAnimation = () => {
 
   const openDropdown = (afterOpen: () => void) => {
     Animated.timing(dropdownHeight, {
-      toValue: 380,
+      toValue: 450,
       duration: 300,
       useNativeDriver: false,
     }).start(() => {
@@ -210,6 +210,7 @@ export const useAnimation = () => {
       fadeInContent();
     });
   };
+
   const closeDropdown = (afterClose: () => void) => {
     Animated.timing(dropdownHeight, {
       toValue: 65,

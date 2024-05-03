@@ -92,15 +92,15 @@ export const styles = StyleSheet.create({
   },
   raceSectionContainer: {
     width: '100%',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    height: '100%',
+    alignItems: 'center',
+    height: 400,
+  },
+  raceSubtitle: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 16,
   },
   dropdownContainer: {
-    height: 380,
     width: '90%',
-    position: 'absolute',
-    paddingTop: 80,
   },
   selectRaceText: {
     fontFamily: 'Poppins-Medium',
@@ -212,7 +212,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
-    marginBottom: 60,
+    marginBottom: 20,
   },
   continueButton: {
     paddingHorizontal: 30,
