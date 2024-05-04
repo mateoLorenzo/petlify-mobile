@@ -19,6 +19,7 @@ import CountdownTimer from '../../components/CountdownTimer';
 import {phoneRegex} from '../../constants';
 import {useNavigation} from '@react-navigation/native';
 import {useAnimation} from '../../hooks/useAnimation';
+import Icon from 'react-native-vector-icons/Ionicons';
 const {width: screenWidth} = Dimensions.get('window');
 
 const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
@@ -49,28 +50,32 @@ const RegisterPhoneScreen = () => {
     showLeftContent,
   } = useAnimation();
   const [activeScreen, setActiveScreen] = useState<'phone' | 'code'>('phone');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
   const [phoneIsValid, setPhoneIsValid] = useState(false);
   const phoneValue = useWatch({control, name: 'phone'});
   const phoneCodeValue = useWatch({control, name: 'phoneCode'});
   const {navigate} = useNavigation();
+  const [checked, setChecked] = useState(false);
+
+  const toggleChecked = () => {
+    setChecked(!checked);
+  };
 
   const onPressContinue = async () => {
     const output = await trigger('phone');
-
-    if (output === true) {
+    if (output === true && checked) {
       setActiveScreen('code');
       moveContentLeft();
       hideLeftContent();
       showRightContent();
     }
-
     if (activeScreen === 'code' && phoneCodeValue?.length === 4) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        navigate('RegisterPetScreen' as never);
-      }, 3000);
+      // setIsLoading(true);
+      // setTimeout(() => {
+      //   setIsLoading(false);
+      //   navigate('RegisterPetScreen' as never);
+      // }, 3000);
+      navigate('RegisterPetScreen' as never);
     }
   };
 
@@ -99,10 +104,9 @@ const RegisterPhoneScreen = () => {
   }, [phoneValue]);
 
   const getButtonColor = (): '#1E96FF' | 'gray' => {
-    if (activeScreen === 'phone' && phoneIsValid) {
+    if (activeScreen === 'phone' && phoneIsValid && checked) {
       return '#1E96FF';
     }
-
     // ToDo: Check if the code is valid
     if (activeScreen === 'code' && phoneCodeValue?.length === 4) {
       return '#1E96FF';
@@ -181,16 +185,36 @@ const RegisterPhoneScreen = () => {
                 </Animated.View>
               </View>
             </View>
+            <View style={styles.spacer} />
+            <TouchableOpacity
+              style={styles.termsButton}
+              activeOpacity={0.5}
+              onPress={toggleChecked}>
+              <View style={styles.checkboxContainer}>
+                <View
+                  style={
+                    checked
+                      ? styles.checkedContainer
+                      : styles.uncheckedContainer
+                  }>
+                  {checked ? (
+                    <Icon name="checkmark-sharp" size={15} color="#FFF" />
+                  ) : null}
+                </View>
+              </View>
+              <Text style={styles.termsText}>
+                He leido y acepto los Terminos y Condiciones
+              </Text>
+            </TouchableOpacity>
           </Animated.View>
 
-          <View style={styles.spacer} />
           <CustomButton
             label="Continuar"
             style={{
               ...styles.continueButton,
               backgroundColor: getButtonColor(),
             }}
-            loading={isLoading}
+            // loading={isLoading}
             onPress={onPressContinue}
             labelStyle={styles.buttonTextStyles}
           />
@@ -234,6 +258,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     width: '100%',
     alignItems: 'center',
+    flex: 1,
   },
   widthFull: {
     width: '100%',
@@ -265,11 +290,47 @@ const styles = StyleSheet.create({
   spacer: {
     flex: 1,
   },
+  termsButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkedContainer: {
+    height: 20,
+    width: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#1E96FF',
+    backgroundColor: '#1E96FF',
+  },
+  uncheckedContainer: {
+    height: 20,
+    width: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#A8A8A8',
+    backgroundColor: 'transparent',
+  },
   continueButton: {
     marginTop: 20,
     height: 60,
     width: '100%',
     backgroundColor: 'gray',
+  },
+  termsText: {
+    marginLeft: 10,
+    fontSize: 13,
+    fontFamily: 'Poppins-Regular',
+    color: '#000',
   },
   buttonTextStyles: {
     fontSize: 16,

@@ -2,7 +2,8 @@ import React from 'react';
 import Logo from '../../../assets/images/logo.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import {CustomButton} from '../../components/CustomButton';
-const petImage = require('../../../assets/images/register-pet.png');
+// const petImage = require('../../../assets/images/register-pet2.png');
+const petImage = require('../../../assets/images/register-pet.jpg');
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -18,10 +19,11 @@ const RegisterPetScreen = () => {
 
   return (
     <View style={styles.screenContainer}>
-      <Logo height={150} width={150} style={styles.logo} />
-      <Text style={styles.subtitle}>Comencemos registrando a tu</Text>
-      <Text style={styles.title}>¡Compañero Peludo!</Text>
-      <View style={styles.flex1} />
+      <Logo height={100} width={100} style={styles.logo} />
+      <Text style={styles.newTitle}>¡Ahora Tu Mascota!</Text>
+      <Text style={styles.newSubtitle}>
+        Registra sus datos de forma facil y rapida para comenzar a usar Petlify
+      </Text>
       <View style={styles.widthFull}>
         <LinearGradient
           colors={imageGradient}
@@ -29,7 +31,13 @@ const RegisterPetScreen = () => {
           start={{x: 0, y: 0}}
           end={{x: 0, y: 1}}
         />
-        <Image source={petImage} resizeMode="contain" style={styles.image} />
+        <Image
+          source={petImage}
+          height={70}
+          width={70}
+          resizeMode="contain"
+          style={styles.image}
+        />
       </View>
 
       <View style={styles.buttonsContainer}>
@@ -56,6 +64,19 @@ const styles = StyleSheet.create({
   logo: {
     marginTop: 80,
   },
+  newTitle: {
+    fontSize: 28,
+    marginTop: 20,
+    fontFamily: 'Poppins-Semibold',
+  },
+  newSubtitle: {
+    fontSize: 16,
+    marginTop: 5,
+    fontFamily: 'Poppins-Regular',
+    color: '#000',
+    textAlign: 'center',
+    maxWidth: 350,
+  },
   subtitle: {
     fontSize: 18,
     color: '#565656',
@@ -74,6 +95,9 @@ const styles = StyleSheet.create({
   },
   widthFull: {
     width: '100%',
+    flex: 1,
+    alignItems: 'center',
+    overflow: 'hidden',
   },
   gradient: {
     width: '100%',
@@ -82,7 +106,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   image: {
-    flexGrow: 1,
+    height: '100%',
   },
   buttonsContainer: {
     width: '100%',
