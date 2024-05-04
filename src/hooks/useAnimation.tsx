@@ -178,7 +178,7 @@ export const useAnimation = () => {
   const movePetContentLeft = (contentActualPosition: number) => {
     Animated.timing(petContentPosition, {
       toValue: contentActualPosition - screenWidth,
-      duration: 500,
+      duration: 400,
       useNativeDriver: true,
     }).start();
   };
@@ -186,7 +186,7 @@ export const useAnimation = () => {
   const movePetContentRight = (contentActualPosition: number) => {
     Animated.timing(petContentPosition, {
       toValue: contentActualPosition + screenWidth,
-      duration: 500,
+      duration: 400,
       useNativeDriver: true,
     }).start();
   };

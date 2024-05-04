@@ -2,7 +2,7 @@ import React from 'react';
 import Logo from '../../../assets/images/logo.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import {CustomButton} from '../../components/CustomButton';
-const petImage = require('../../../assets/images/register-pet2.png');
+const petImage = require('../../../assets/images/register-pet.png');
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -39,7 +39,7 @@ const RegisterPetScreen = () => {
           label="Continuar"
           labelStyle={styles.registerButtonText}
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigate('HomeScreen' as never)}>
           <Text style={styles.omitButtonText}>Omitir</Text>
         </TouchableOpacity>
       </View>
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
   },
   registerButtonText: {
     fontSize: 16,
+    fontFamily: 'Poppins-Medium',
   },
   omitButtonText: {
     color: '#FFF',

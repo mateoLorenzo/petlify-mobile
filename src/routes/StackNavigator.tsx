@@ -14,6 +14,7 @@ import CountdownTimerScreen from '../screens/CountdownTimer';
 import AgePickerScreen from '../screens/Tests/AgePicker';
 import ImagePickerScreen from '../screens/Tests/ImagePicker';
 import CustomDropdown from '../screens/Tests/CustomDropdown';
+import HomeScreen from '../screens/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="PetDetailScreen"
         component={PetDetailScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="HomeScreen"
+        component={HomeScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

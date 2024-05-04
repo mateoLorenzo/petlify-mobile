@@ -167,7 +167,9 @@ Props) => {
                   opacity: removeTextOpacity,
                   zIndex: 19,
                 }}>
-                <TouchableOpacity onPress={cleanField}>
+                <TouchableOpacity
+                  style={styles.closeIconButton}
+                  onPress={cleanField}>
                   <Icon
                     name="close-sharp"
                     size={20}
@@ -258,10 +260,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 20,
   },
+  closeIconButton: {
+    padding: 5,
+  },
   closeIconContainer: {
     position: 'absolute',
     right: 15,
-    padding: 5,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,

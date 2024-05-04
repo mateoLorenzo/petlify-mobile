@@ -12,6 +12,12 @@ export const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
+  backButtonContainer: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 1,
+  },
   logo: {
     marginVertical: 20,
   },
@@ -30,6 +36,7 @@ export const styles = StyleSheet.create({
   title: {
     fontFamily: 'Poppins-SemiBold',
     fontSize: 26,
+    marginTop: 30,
   },
   subtitle: {
     fontFamily: 'Poppins-Regular',
@@ -210,26 +217,49 @@ export const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
+    justifyContent: 'flex-end',
+    width: '90%',
     marginBottom: 20,
+    // backgroundColor: 'red',
   },
   continueButton: {
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
     paddingVertical: 20,
     backgroundColor: '#1E96FF',
-    borderRadius: 4,
-    alignSelf: 'flex-end',
+    borderRadius: 5,
   },
   backButton: {
     paddingHorizontal: 30,
     paddingVertical: 20,
     backgroundColor: '#1E96FF',
     borderRadius: 4,
-    alignSelf: 'flex-end',
   },
   backButtonText: {
     color: 'white',
     fontFamily: 'Poppins-Medium',
+  },
+  stepperContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginTop: 28,
+    // marginBottom: 10,
+    // marginVertical: 20,
+    // flex: 1,
+  },
+  completeStepperItem: {
+    width: 10,
+    height: 10,
+    borderRadius: 10,
+    backgroundColor: '#1E96FF',
+    marginHorizontal: 4,
+  },
+  stepperItem: {
+    width: 10,
+    height: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#1E96FF',
+    marginHorizontal: 4,
   },
 });
