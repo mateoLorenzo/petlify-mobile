@@ -57,6 +57,10 @@ const ComponentsScreen = () => {
         name="Custom Dropdown"
         onPress={() => navigation.navigate('CustomDropdown' as never)}
       />
+      <ComponentButton
+        name="Bottom Navigation Bar"
+        onPress={() => navigation.navigate('BottomNavScreen' as never)}
+      />
     </View>
   );
 };

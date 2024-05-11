@@ -209,6 +209,17 @@ const PetDetailScreen = () => {
       return;
     }
     if (currentStep === 6) {
+      const updatedPetInfo = {
+        ...petInfo,
+        petName: petName,
+        petPhoto: selectedImage,
+        petRace: breedSelected,
+        petAge: {
+          years: parseInt(yearSelected),
+          months: parseInt(monthSelected),
+        },
+      };
+      setPetInfo(updatedPetInfo);
       return navigate('HomeScreen' as never);
     }
     if (currentStep === 1 && petName?.length > 0) {

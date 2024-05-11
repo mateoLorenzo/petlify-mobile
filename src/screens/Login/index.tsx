@@ -23,7 +23,7 @@ const LoginScreen = () => {
 
   const login = () => {
     // navigate('RegisterPetScreen' as never);
-    navigate('PetDetailScreen' as never);
+    navigate('ProfileScreen' as never);
   };
 
   const emailIsValid = (email: string) => {

@@ -15,6 +15,8 @@ import AgePickerScreen from '../screens/Tests/AgePicker';
 import ImagePickerScreen from '../screens/Tests/ImagePicker';
 import CustomDropdown from '../screens/Tests/CustomDropdown';
 import HomeScreen from '../screens/Home';
+import ProfileScreen from '../screens/Profile';
+import BottomNavScreen from '../screens/Tests/BottomNav';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +56,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -106,6 +113,11 @@ const ComponentsNavigator = () => {
       <Stack.Screen
         name="CustomDropdown"
         component={CustomDropdown}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="BottomNavScreen"
+        component={BottomNavScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

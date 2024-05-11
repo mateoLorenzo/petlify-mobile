@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
     backgroundColor: 'white',
+    overflow: 'hidden',
   },
   flex1: {
     flex: 1,

@@ -70,11 +70,6 @@ const RegisterPhoneScreen = () => {
       showRightContent();
     }
     if (activeScreen === 'code' && phoneCodeValue?.length === 4) {
-      // setIsLoading(true);
-      // setTimeout(() => {
-      //   setIsLoading(false);
-      //   navigate('RegisterPetScreen' as never);
-      // }, 3000);
       navigate('RegisterPetScreen' as never);
     }
   };
