@@ -86,8 +86,6 @@ const ProfileEditScreen = () => {
             placeholder="Contraseña Actual"
             placeholderTextColor={'#8F8F8F'}
             fieldColor={getFieldColor('oldPassword')}
-            errorMessages={() => renderErrorMessages()}
-            containerStyle={styles.newPassword}
             rules={{required: 'Ingrese su contraseña'}}
           />
           <CustomTextInput
@@ -103,7 +101,7 @@ const ProfileEditScreen = () => {
             errorMessages={() => renderErrorMessages()}
             containerStyle={styles.newPassword}
             rules={{
-              required: 'Ingrese su contraseña',
+              required: 'Ingrese una contraseña valida',
               validate: validatePassword,
             }}
           />
@@ -181,7 +179,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   confirmPassword: {
-    marginTop: 20,
+    marginTop: 10,
   },
   spacer: {
     flex: 1,
