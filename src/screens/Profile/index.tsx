@@ -13,6 +13,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 const myImage = require('../../../assets/images/matumoto.png');
 import Icon from 'react-native-vector-icons/Ionicons';
 import BottomNav from '../../components/BottomNav';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 const ProfileScreen = () => {
@@ -21,6 +22,7 @@ const ProfileScreen = () => {
   const modalPosition = useRef(new Animated.Value(screenHeight)).current;
   const blackLayerOpacity = useRef(new Animated.Value(0)).current;
   const {navigate} = useNavigation();
+  const {top} = useSafeAreaInsets();
 
   const moveUpModal = () => {
     Animated.timing(modalPosition, {
@@ -56,6 +58,10 @@ const ProfileScreen = () => {
     }).start(onFinish);
   };
 
+  const editProfile = () => {
+    navigate('ProfileEditScreen' as never);
+  };
+
   const choosePhotoFromGallery = () => {
     ImagePicker.openPicker({
       width: 300,
@@ -83,7 +89,7 @@ const ProfileScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, paddingTop: top}}>
       <Text style={styles.title}>Perfil</Text>
       <TouchableOpacity
         style={styles.imageContainer}
@@ -96,25 +102,25 @@ const ProfileScreen = () => {
       <View style={styles.accountInfoContainer}>
         <Text style={styles.accountInfoTitle}>Datos de la cuenta</Text>
         <View style={styles.accountInfoSubContainer}>
-          <TouchableOpacity style={styles.infoRow}>
+          <View style={styles.infoRow}>
             <View style={styles.rowLeftContainer}>
               <Icon name="person-circle-outline" size={25} color="#707070" />
               <Text style={styles.infoRowText}>Mateo Lorenzo</Text>
             </View>
-            <Icon name="chevron-forward-outline" size={25} color="#707070" />
-          </TouchableOpacity>
+            {/* <Icon name="chevron-forward-outline" size={25} color="#707070" /> */}
+          </View>
 
           <View style={styles.rowsDivisor} />
-          <TouchableOpacity style={styles.infoRow}>
+          <View style={styles.infoRow}>
             <View style={styles.rowLeftContainer}>
               <Icon name="mail-outline" size={25} color="#707070" />
               <Text style={styles.infoRowText}>mateolorenzo.dev@gmail.com</Text>
             </View>
-            <Icon name="chevron-forward-outline" size={25} color="#707070" />
-          </TouchableOpacity>
+            {/* <Icon name="chevron-forward-outline" size={25} color="#707070" /> */}
+          </View>
           <View style={styles.rowsDivisor} />
 
-          <TouchableOpacity style={styles.infoRow}>
+          <TouchableOpacity style={styles.infoRow} onPress={editProfile}>
             <View style={styles.rowLeftContainer}>
               <Icon name="key-outline" size={25} color="#707070" />
               <Text style={styles.infoRowText}>********</Text>
@@ -182,7 +188,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     width: '100%',
     color: '#000',
-    marginTop: 20,
   },
   imageContainer: {
     width: 130,
@@ -208,8 +213,8 @@ const styles = StyleSheet.create({
   },
   usernameSubTitle: {
     fontSize: 18,
-    fontFamily: 'Poppins-Medium',
-    color: '#8E8E8E',
+    fontFamily: 'Poppins-Regular',
+    color: 'gray',
   },
   accountInfoContainer: {
     width: '100%',

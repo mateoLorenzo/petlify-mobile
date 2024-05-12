@@ -17,6 +17,7 @@ import CustomDropdown from '../screens/Tests/CustomDropdown';
 import HomeScreen from '../screens/Home';
 import ProfileScreen from '../screens/Profile';
 import BottomNavScreen from '../screens/Tests/BottomNav';
+import ProfileEditScreen from '../screens/ProfileEdit';
 
 const Stack = createNativeStackNavigator();
 
@@ -61,6 +62,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProfileEditScreen"
+        component={ProfileEditScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
