@@ -16,7 +16,8 @@ import {
   validateConfirmPassword,
   validatePassword,
 } from '../../constants';
-import {useRegisterForm} from './useRegisterForm';
+import {useRegisterForm} from '../../hooks/useFormValidations';
+import {useNavigation} from '@react-navigation/native';
 
 const formFields = ['name', 'lastName', 'email', 'password', 'confirmPassword'];
 
@@ -28,11 +29,16 @@ const RegisterScreen = () => {
     validateChangeField,
     validateBlurPassword,
     validateChangePassword,
-    onPressRegister,
     getFieldColor,
     errorMessagesToShow,
     currentPassword,
   } = useRegisterForm(formFields);
+
+  const navigation = useNavigation();
+
+  const onPressRegister = () => {
+    navigation.navigate('RegisterPhoneScreen' as never);
+  };
 
   const renderErrorMessages = () => {
     return (

@@ -1,13 +1,12 @@
 import {useState} from 'react';
 import {useForm, useWatch} from 'react-hook-form';
-import {useNavigation} from '@react-navigation/native';
 import {
   RegisterFormData,
   RegisterFormFields,
   fieldValueIsValid,
   fieldsColors,
   validateConfirmPassword,
-} from '../../constants';
+} from '../constants';
 
 export const useRegisterForm = (formFields: string[]) => {
   const {
@@ -16,7 +15,6 @@ export const useRegisterForm = (formFields: string[]) => {
     formState: {errors},
   } = useForm<RegisterFormData>();
 
-  const {navigate} = useNavigation();
   const errorsFromPass = errors.password?.message?.split('.');
   const errorMessagesToShow = errorsFromPass?.filter(error => error !== '');
   const [greenFields, setGreenFields] = useState<string[]>([]);
@@ -24,10 +22,6 @@ export const useRegisterForm = (formFields: string[]) => {
   const [grayFields, setGrayFields] = useState<string[]>(formFields);
 
   const currentPassword = useWatch({control, name: 'password'});
-
-  const onPressRegister = () => {
-    navigate('RegisterPhoneScreen' as never);
-  };
 
   const updateValidFields = (fieldName: RegisterFormFields) => {
     setGreenFields([...greenFields, fieldName]);
@@ -110,7 +104,6 @@ export const useRegisterForm = (formFields: string[]) => {
     handleSubmit,
     errors,
     errorMessagesToShow,
-    onPressRegister,
     validateBlurPassword,
     validateChangePassword,
     validateBlurField,

@@ -14,7 +14,7 @@ import {CustomButton} from '../../components/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CustomTextInput} from '../../components/CustomTextInput';
 import {validateConfirmPassword, validatePassword} from '../../constants';
-import {useRegisterForm} from '../Register/useRegisterForm';
+import {useRegisterForm} from '../../hooks/useFormValidations';
 
 const formFields = ['oldPassword', 'password', 'confirmPassword'];
 
