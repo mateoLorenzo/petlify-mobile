@@ -6,8 +6,6 @@ import ComponentsScreen from '../screens/Tests';
 import CustomButtonScreen from '../screens/Tests/Button';
 import ReactHookFormScreen from '../screens/Tests/ReactHookForm';
 import CustomSpinnerScreen from '../screens/Tests/Spinner';
-import RegisterPetScreen from '../screens/RegisterPet';
-import PetDetailScreen from '../screens/PetDetail';
 import RegisterPhoneScreen from '../screens/RegisterPhone';
 import AnimationsScreen from '../screens/Tests/Animations';
 import CountdownTimerScreen from '../screens/CountdownTimer';
@@ -19,6 +17,8 @@ import ProfileScreen from '../screens/Profile';
 import BottomNavScreen from '../screens/Tests/BottomNav';
 import ProfileEditScreen from '../screens/ProfileEdit';
 import {BottomTabNavigator} from './BottomTabNavigator';
+import RegisterPetInvitationScreen from '../screens/RegisterPetInvitation';
+import RegisterPetScreen from '../screens/RegisterPet';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,13 +46,13 @@ export const StackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="RegisterPetScreen"
-        component={RegisterPetScreen}
+        name="RegisterPetInvitationScreen"
+        component={RegisterPetInvitationScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="PetDetailScreen"
-        component={PetDetailScreen}
+        name="RegisterPetScreen"
+        component={RegisterPetScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen

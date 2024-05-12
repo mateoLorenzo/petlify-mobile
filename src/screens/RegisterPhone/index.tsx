@@ -50,7 +50,6 @@ const RegisterPhoneScreen = () => {
     showLeftContent,
   } = useAnimation();
   const [activeScreen, setActiveScreen] = useState<'phone' | 'code'>('phone');
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
   const [phoneIsValid, setPhoneIsValid] = useState(false);
   const phoneValue = useWatch({control, name: 'phone'});
   const phoneCodeValue = useWatch({control, name: 'phoneCode'});
@@ -70,7 +69,7 @@ const RegisterPhoneScreen = () => {
       showRightContent();
     }
     if (activeScreen === 'code' && phoneCodeValue?.length === 4) {
-      navigate('RegisterPetScreen' as never);
+      navigate('RegisterPetInvitationScreen' as never);
     }
   };
 

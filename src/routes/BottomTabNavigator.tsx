@@ -2,10 +2,10 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/Home';
 import ProfileScreen from '../screens/Profile';
-import PetScreen from '../screens/Pet';
 import SchedulesScreen from '../screens/Schedules';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import PetDetailScreen from '../screens/PetDetail';
 
 const Tab = createBottomTabNavigator();
 
@@ -59,7 +59,7 @@ export const BottomTabNavigator = () => {
           tabBarLabelStyle: styles.labelStyle,
         }}
         name="PetScreen"
-        component={PetScreen}
+        component={PetDetailScreen}
       />
       <Tab.Screen
         options={{

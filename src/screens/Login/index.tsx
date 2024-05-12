@@ -17,12 +17,14 @@ import {useNavigation} from '@react-navigation/native';
 import {emailRegex} from '../../constants';
 
 const LoginScreen = () => {
-  const {control, handleSubmit} = useForm();
+  const {
+    control,
+    // handleSubmit
+  } = useForm();
 
   const {navigate} = useNavigation();
 
   const login = () => {
-    // navigate('RegisterPetScreen' as never);
     navigate('BottomTabNavigator' as never);
   };
 
