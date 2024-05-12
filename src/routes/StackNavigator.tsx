@@ -18,6 +18,7 @@ import HomeScreen from '../screens/Home';
 import ProfileScreen from '../screens/Profile';
 import BottomNavScreen from '../screens/Tests/BottomNav';
 import ProfileEditScreen from '../screens/ProfileEdit';
+import {BottomTabNavigator} from './BottomTabNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -67,6 +68,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="ProfileEditScreen"
         component={ProfileEditScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="BottomTabNavigator"
+        component={BottomTabNavigator}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -124,6 +130,11 @@ const ComponentsNavigator = () => {
       <Stack.Screen
         name="BottomNavScreen"
         component={BottomNavScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="BottomTabNavigator"
+        component={BottomTabNavigator}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

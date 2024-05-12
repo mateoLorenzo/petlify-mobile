@@ -12,7 +12,6 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 const myImage = require('../../../assets/images/matumoto.png');
 import Icon from 'react-native-vector-icons/Ionicons';
-import BottomNav from '../../components/BottomNav';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
@@ -170,8 +169,6 @@ const ProfileScreen = () => {
           </Animated.View>
         </View>
       )}
-
-      <BottomNav />
     </View>
   );
 };
@@ -206,7 +203,7 @@ const styles = StyleSheet.create({
   },
   usernameTitle: {
     fontSize: 24,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins-Medium',
     marginTop: 10,
     color: '#000',
     marginBottom: -5,
@@ -225,6 +222,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     width: '100%',
     color: '#000',
+    marginBottom: 10,
   },
   accountInfoSubContainer: {
     width: '100%',

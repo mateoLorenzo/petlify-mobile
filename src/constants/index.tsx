@@ -8,7 +8,13 @@ export type RegisterFormData = {
   phoneCode: string;
 };
 
-export type RegisterFormFields = keyof RegisterFormData; // 'name' | 'lastName' | 'email' | 'password' | 'phone'
+export type ChangePassword = {
+  oldPassword: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export type RegisterFormFields = keyof RegisterFormData | keyof ChangePassword; // 'name' | 'lastName' | 'email' | 'password' | 'phone'
 export type fieldsColors = 'green' | 'gray' | 'red';
 export type grayOrBlue = '#9B9B9B' | '#1E96FF'; // 'gray' | 'blue'
 

@@ -66,6 +66,7 @@ const initialPetData: PetData = {
   petPhoto: '',
 };
 
+// TODO: Change name PetRegister
 const PetDetailScreen = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);

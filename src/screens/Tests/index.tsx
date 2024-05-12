@@ -61,6 +61,10 @@ const ComponentsScreen = () => {
         name="Bottom Navigation Bar"
         onPress={() => navigation.navigate('BottomNavScreen' as never)}
       />
+      <ComponentButton
+        name="Bottom Tab Navigator"
+        onPress={() => navigation.navigate('BottomTabNavigator' as never)}
+      />
     </View>
   );
 };

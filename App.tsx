@@ -1,10 +1,10 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {StackNavigator} from './src/routes/StackNavigator';
-import {LogBox} from 'react-native';
+// import {LogBox} from 'react-native';
 
 const App = () => {
-  LogBox.ignoreAllLogs();
+  // LogBox.ignoreAllLogs();
 
   return (
     <NavigationContainer>
