@@ -4,7 +4,7 @@ import {StyleSheet, Text, View} from 'react-native';
 const PetDetailScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>PetScreen</Text>
+      <Text>PetDetailScreen</Text>
     </View>
   );
 };
