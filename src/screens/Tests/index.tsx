@@ -65,6 +65,10 @@ const ComponentsScreen = () => {
         name="Bottom Tab Navigator"
         onPress={() => navigation.navigate('BottomTabNavigator' as never)}
       />
+      <ComponentButton
+        name="Services Done Animation"
+        onPress={() => navigation.navigate('ServicesDoneScreen' as never)}
+      />
     </View>
   );
 };
