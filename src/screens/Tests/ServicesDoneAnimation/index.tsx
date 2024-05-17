@@ -38,7 +38,7 @@ const renderService = (item: number) => (
   </TouchableOpacity>
 );
 
-const ServicesDoneScreen = () => {
+const ServicesDoneAnimationScreen = () => {
   const [walkersAreShown, setWalkersAreShown] = useState(true);
 
   const {top} = useSafeAreaInsets();
@@ -183,4 +183,4 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
-export default ServicesDoneScreen;
+export default ServicesDoneAnimationScreen;

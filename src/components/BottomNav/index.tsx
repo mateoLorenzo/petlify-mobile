@@ -13,12 +13,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const walker = require('../../../assets/images/paseo.png');
 const sitter = require('../../../assets/images/cuidado.png');
 
-const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+const {width: screenWidth} = Dimensions.get('window');
 
 const BottomNav = () => {
   const [showBlackLayer, setShowBlackLayer] = useState(false);
   const blackLayerOpacity = useRef(new Animated.Value(0)).current;
-  const modalPosition = useRef(new Animated.Value(200)).current;
+  const modalPosition = useRef(new Animated.Value(500)).current;
 
   const showLayerAnimation = () => {
     Animated.timing(blackLayerOpacity, {
@@ -38,15 +38,15 @@ const BottomNav = () => {
   const showModalAnimation = () => {
     Animated.timing(modalPosition, {
       toValue: 0,
-      duration: 350,
+      duration: 400,
       useNativeDriver: true,
     }).start();
   };
 
   const hideModalAnimation = (onFinish?: () => void) => {
     Animated.timing(modalPosition, {
-      toValue: screenHeight,
-      duration: 350,
+      toValue: 500,
+      duration: 400,
       useNativeDriver: true,
     }).start(onFinish);
   };

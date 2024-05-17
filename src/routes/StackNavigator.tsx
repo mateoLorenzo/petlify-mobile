@@ -19,7 +19,8 @@ import ProfileEditScreen from '../screens/ProfileEdit';
 import {BottomTabNavigator} from './BottomTabNavigator';
 import RegisterPetInvitationScreen from '../screens/RegisterPetInvitation';
 import RegisterPetScreen from '../screens/RegisterPet';
-import ServicesDoneScreen from '../screens/Tests/ServicesDoneAnimation';
+import ServicesDoneAnimationScreen from '../screens/Tests/ServicesDoneAnimation';
+import ServicesDoneScreen from '../screens/ServicesDone';
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="BottomTabNavigator"
         component={BottomTabNavigator}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ServicesDoneScreen"
+        component={ServicesDoneScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -140,7 +146,7 @@ const ComponentsNavigator = () => {
       />
       <Stack.Screen
         name="ServicesDoneScreen"
-        component={ServicesDoneScreen}
+        component={ServicesDoneAnimationScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
