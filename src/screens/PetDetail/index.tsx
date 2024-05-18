@@ -254,11 +254,12 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   registerButtonContainer: {
-    marginBottom: 20,
+    marginBottom: 10,
     width: width - 40,
   },
   registerButton: {
-    height: 60,
+    height: 55,
+    borderRadius: 10,
   },
   registerButtonText: {
     color: '#fff',
