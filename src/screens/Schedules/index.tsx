@@ -316,7 +316,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     marginTop: 10,
     fontFamily: 'Poppins-Semibold',
-    height: 36,
   },
   subtitle: {
     fontSize: 16,
@@ -325,7 +324,6 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     marginBottom: 10,
-    height: 24,
   },
   contentContainer: {
     flex: 1,

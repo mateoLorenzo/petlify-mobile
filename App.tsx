@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {StackNavigator} from './src/routes/StackNavigator';
-// import {BottomTabNavigator} from './src/routes/BottomTabNavigator';
+import {BottomTabNavigator} from './src/routes/BottomTabNavigator';
 // import {LogBox} from 'react-native';
 
 const App = () => {
@@ -9,8 +9,8 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <StackNavigator />
       {/* <BottomTabNavigator /> */}
+      <StackNavigator />
     </NavigationContainer>
   );
 };
