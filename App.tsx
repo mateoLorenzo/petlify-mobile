@@ -1,17 +1,23 @@
-import React from 'react';
+import React, {PropsWithChildren} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {StackNavigator} from './src/routes/StackNavigator';
-import {BottomTabNavigator} from './src/routes/BottomTabNavigator';
-// import {LogBox} from 'react-native';
+import {AppContextProvider} from './src/context/PetlifyContext';
+import {NewServiceModal} from './src/components/NewServiceModal';
+// import {BottomTabNavigator} from './src/routes/BottomTabNavigator';
+
+const AppState = ({children}: PropsWithChildren) => (
+  <AppContextProvider>{children}</AppContextProvider>
+);
 
 const App = () => {
-  // LogBox.ignoreAllLogs();
-
   return (
-    <NavigationContainer>
-      {/* <BottomTabNavigator /> */}
-      <StackNavigator />
-    </NavigationContainer>
+    <AppState>
+      <NavigationContainer>
+        {/* <BottomTabNavigator /> */}
+        <StackNavigator />
+        <NewServiceModal />
+      </NavigationContainer>
+    </AppState>
   );
 };
 

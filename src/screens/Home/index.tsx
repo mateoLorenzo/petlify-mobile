@@ -25,6 +25,10 @@ const HomeScreen = () => {
     navigation.navigate('ServicesFeesScreen' as never);
   };
 
+  const onPressWalkService = () => {};
+
+  const onPressCareService = () => {};
+
   return (
     <ScrollView
       style={styles.container}
@@ -37,14 +41,16 @@ const HomeScreen = () => {
       </Text>
 
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.walkServiceButton}>
+        <TouchableOpacity
+          style={styles.walkServiceButton}
+          onPress={onPressWalkService}>
           <Image source={walker} style={styles.serviceImage} />
           <View style={styles.imageLayerContainer}>
             <View style={styles.imageBlackLayer} />
             <Text style={styles.serviceText}>Paseo</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={onPressCareService}>
           <Image source={sitter} style={styles.serviceImage} />
           <View style={styles.imageLayerContainer}>
             <View style={styles.imageBlackLayer} />
