@@ -10,17 +10,10 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {ServiceDoneCard} from '../../components/ServiceDoneCard';
+import {schedules as fakeSchedules} from '../../data';
 
-const data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const {width: screenWidth} = Dimensions.get('window');
-
-const ServiceDoneCard = () => {
-  return (
-    <View style={styles.serviceDoneCard}>
-      <Text>Service Done</Text>
-    </View>
-  );
-};
 
 const ServicesDoneScreen = () => {
   const {top} = useSafeAreaInsets();
@@ -28,6 +21,10 @@ const ServicesDoneScreen = () => {
 
   const goBack = () => {
     navigation.goBack();
+  };
+
+  const onPressContact = () => {
+    navigation.navigate('WorkerProfileScreen' as never);
   };
 
   return (
@@ -42,9 +39,11 @@ const ServicesDoneScreen = () => {
         Aqui puedes ver tus servicios realizados
       </Text>
       <FlatList
-        data={data}
+        data={fakeSchedules}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={ServiceDoneCard}
+        renderItem={({item}) => (
+          <ServiceDoneCard schedule={item} onPressContact={onPressContact} />
+        )}
         contentContainerStyle={styles.cardsFlatListContent}
         style={{...styles.cardsFlatListContainer}}
         showsVerticalScrollIndicator={false}
@@ -58,6 +57,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   titleContainer: {
     justifyContent: 'center',
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
   cardsFlatListContent: {
     alignItems: 'center',
     width: '100%',
+    paddingHorizontal: 20,
   },
   serviceDoneCard: {
     width: screenWidth - 40,

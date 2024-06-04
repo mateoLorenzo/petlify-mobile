@@ -23,6 +23,7 @@ import ServicesDoneAnimationScreen from '../screens/Tests/ServicesDoneAnimation'
 import ServicesDoneScreen from '../screens/ServicesDone';
 import UpdatePetScreen from '../screens/UpdatePet';
 import ServicesFeesScreen from '../screens/ServicesFees';
+import WorkerProfileScreen from '../screens/WorkerProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +93,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="ServicesFeesScreen"
         component={ServicesFeesScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="WorkerProfileScreen"
+        component={WorkerProfileScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
