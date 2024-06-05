@@ -31,8 +31,7 @@ const WelcomeScreen = () => {
 
         <CustomButton
           label="Comenzar"
-          //   onPress={() => navigation.navigate('OnboardingScreen1' as never)}
-          onPress={() => {}}
+          onPress={() => navigation.navigate('OnboardingScreen1' as never)}
           style={styles.continueButton}
           labelStyle={styles.continueButtonLabel}
         />
@@ -40,7 +39,7 @@ const WelcomeScreen = () => {
           style={styles.animation}
           source={require('../../../assets/animations/party.json')}
           autoPlay
-          loop
+          loop={false}
         />
       </View>
       <LinearGradient
