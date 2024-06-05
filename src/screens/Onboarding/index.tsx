@@ -8,14 +8,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {CustomButton} from '../../../components/CustomButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Animated} from 'react-native';
+import {CustomButton} from '../../components/CustomButton';
 
-const walkService = require('../../../../assets/images/walk.png');
-const careService = require('../../../../assets/images/care.png');
-const adoptService = require('../../../../assets/images/adopt.png');
+const walkService = require('../../../assets/images/walk.png');
+const careService = require('../../../assets/images/care.png');
+const adoptService = require('../../../assets/images/adopt.png');
 
 const {height, width} = Dimensions.get('window');
 
@@ -119,7 +119,7 @@ const Screen3 = ({goBack}: ScreenProps) => {
 type ScreenTypes = 'screen1' | 'screen2' | 'screen3';
 type ActionTypes = 'fadeIn' | 'fadeOut';
 
-const OnboardingScreen1 = () => {
+const OnboardingScreens = () => {
   const [currentScreen, setCurrentScreen] = useState<number>(1);
 
   const screen1Opacity = useRef(new Animated.Value(1)).current;
@@ -284,4 +284,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OnboardingScreen1;
+export default OnboardingScreens;

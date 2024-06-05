@@ -25,9 +25,7 @@ import UpdatePetScreen from '../screens/UpdatePet';
 import ServicesFeesScreen from '../screens/ServicesFees';
 import WorkerProfileScreen from '../screens/WorkerProfile';
 import WelcomeScreen from '../screens/Welcome';
-import OnboardingScreen1 from '../screens/Onboarding/Screen1';
-import OnboardingScreen2 from '../screens/Onboarding/Screen2';
-import OnboardingScreen3 from '../screens/Onboarding/Screen3';
+import OnboardingScreens from '../screens/Onboarding';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,17 +39,7 @@ export const StackNavigator = () => {
       />
       <Stack.Screen
         name="OnboardingScreen1"
-        component={OnboardingScreen1}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="OnboardingScreen2"
-        component={OnboardingScreen2}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="OnboardingScreen3"
-        component={OnboardingScreen3}
+        component={OnboardingScreens}
         options={{headerShown: false}}
       />
       <Stack.Screen
