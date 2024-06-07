@@ -5,10 +5,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import {AuthHeader} from '../../components/AuthHeader';
-import {AuthFooter} from '../../components/AuthFooter';
 import {CustomTextInput} from '../../components/CustomTextInput';
 import {
   emailRegex,
@@ -18,6 +17,8 @@ import {
 } from '../../constants';
 import {useRegisterForm} from '../../hooks/useFormValidations';
 import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {CustomButton} from '../../components/CustomButton';
 
 const formFields = ['name', 'lastName', 'email', 'password', 'confirmPassword'];
 
@@ -59,7 +60,14 @@ const RegisterScreen = () => {
           bounces={false}
           style={styles.contentContainer}
           contentContainerStyle={styles.contentContainerStyle}>
-          <AuthHeader divisorText="Registrarme" />
+          <View style={styles.titleContainer}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}>
+              <Icon name="arrow-back" size={25} color="#000" />
+            </TouchableOpacity>
+            <Text style={styles.title}>Registrar Cuenta</Text>
+          </View>
 
           <View style={styles.inputsContainer}>
             <View style={styles.nameInputContainer}>
@@ -165,10 +173,19 @@ const RegisterScreen = () => {
             />
           </View>
 
-          <AuthFooter
-            authType="register"
-            onAuthPress={handleSubmit(onPressRegister)}
+          <CustomButton
+            label="Registrarme"
+            style={styles.registerButton}
+            onPress={handleSubmit(onPressRegister)}
           />
+
+          <TouchableOpacity
+            style={styles.registerTextContainer}
+            activeOpacity={1.8}
+            onPress={() => navigation.navigate('loginScreen' as never)}>
+            <Text style={styles.registerTextLeft}>¿Ya tienes una cuenta?</Text>
+            <Text style={styles.registerTextRight}> Inicia sesion ahora</Text>
+          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -189,8 +206,27 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
   },
+  titleContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    left: 0,
+  },
+  title: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 25,
+  },
   inputsContainer: {
     width: '100%',
+    marginTop: 20,
+  },
+  registerButton: {
+    height: 55,
+    marginTop: 20,
   },
   nameInputContainer: {
     flexDirection: 'row',
@@ -213,6 +249,25 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
+  },
+  registerTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+    marginTop: 15,
+  },
+  registerTextLeft: {
+    textAlign: 'center',
+    fontFamily: 'Poppins-Regular',
+    color: '#8F8F8F',
+    fontSize: 15,
+    marginRight: 5,
+  },
+  registerTextRight: {
+    textAlign: 'center',
+    fontFamily: 'Poppins-SemiBold',
+    color: '#1976D2',
+    fontSize: 15,
   },
 });
 
