@@ -26,6 +26,7 @@ import ServicesFeesScreen from '../screens/ServicesFees';
 import WorkerProfileScreen from '../screens/WorkerProfile';
 import WelcomeScreen from '../screens/Welcome';
 import OnboardingScreens from '../screens/Onboarding';
+import PreSignUpScreen from '../screens/PreSignUp';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,8 +39,13 @@ export const StackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="OnboardingScreen1"
+        name="OnboardingScreens"
         component={OnboardingScreens}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PreSignUpScreen"
+        component={PreSignUpScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -48,7 +54,7 @@ export const StackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="registerScreen"
+        name="RegisterScreen"
         component={RegisterScreen}
         options={{headerShown: false}}
       />

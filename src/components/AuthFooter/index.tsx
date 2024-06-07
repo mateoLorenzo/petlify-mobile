@@ -21,7 +21,7 @@ export const AuthFooter = ({authType, onAuthPress}: IScreenProps) => {
   if (authType === 'login') {
     authText = 'Iniciar sesion';
     divisorText = 'O inicia sesión con';
-    screenToNavigate = 'registerScreen';
+    screenToNavigate = 'RegisterScreen';
     authQuestion = '¿Aún no tienes una cuenta?';
     authQuestionAction = 'Únete ahora';
   }

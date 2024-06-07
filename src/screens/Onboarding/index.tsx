@@ -109,7 +109,7 @@ const Screen3 = ({goBack}: ScreenProps) => {
       <View style={styles.spacer} />
       <CustomButton
         label="Continuar"
-        onPress={() => navigation.navigate('loginScreen' as never)}
+        onPress={() => navigation.navigate('PreSignUpScreen' as never)}
         style={styles.continueButton}
       />
     </View>

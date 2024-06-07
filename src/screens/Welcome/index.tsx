@@ -31,7 +31,7 @@ const WelcomeScreen = () => {
 
         <CustomButton
           label="Comenzar"
-          onPress={() => navigation.navigate('OnboardingScreen1' as never)}
+          onPress={() => navigation.navigate('OnboardingScreens' as never)}
           style={styles.continueButton}
           labelStyle={styles.continueButtonLabel}
         />
