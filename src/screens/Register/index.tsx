@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {
+  Animated,
+  Dimensions,
+  Keyboard,
   KeyboardAvoidingView,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -19,8 +21,21 @@ import {useRegisterForm} from '../../hooks/useFormValidations';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomButton} from '../../components/CustomButton';
+// import {useForm} from 'react-hook-form';
 
 const formFields = ['name', 'lastName', 'email', 'password', 'confirmPassword'];
+type screenTypes = 'register' | 'login';
+
+const {width} = Dimensions.get('window');
+
+const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
+  <TouchableOpacity
+    activeOpacity={1}
+    style={styles.container}
+    onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableOpacity>
+);
 
 const RegisterScreen = () => {
   const {
@@ -35,11 +50,53 @@ const RegisterScreen = () => {
     currentPassword,
   } = useRegisterForm(formFields);
 
+  // const {trigger} = useForm();
+
+  const [currentScreen, setCurrentScreen] = useState<screenTypes>('register');
+  const registerSectionPosition = useRef(new Animated.Value(0)).current;
+  const loginSectionPosition = useRef(new Animated.Value(width)).current;
+  const registerSectionOpacity = useRef(new Animated.Value(1)).current;
+  const loginSectionOpacity = useRef(new Animated.Value(0)).current;
+
+  const changeRegisterSection = () => {
+    Animated.timing(registerSectionPosition, {
+      toValue: currentScreen === 'register' ? -width : 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(loginSectionPosition, {
+      toValue: currentScreen === 'login' ? width : 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(registerSectionOpacity, {
+      toValue: currentScreen === 'register' ? 0 : 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(loginSectionOpacity, {
+      toValue: currentScreen === 'login' ? 0 : 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const navigation = useNavigation();
 
   const onPressRegister = () => {
     navigation.navigate('RegisterPhoneScreen' as never);
   };
+
+  // const validateSomeFields = async () => {
+  //   const result = await trigger(['name']);
+  //   console.log('result', result);
+  //   if (result) {
+  //     handleSubmit(onPressRegister)();
+  //   }
+  // };
 
   const renderErrorMessages = () => {
     return (
@@ -53,141 +110,207 @@ const RegisterScreen = () => {
     );
   };
 
+  const emailIsValid = (email: string) => {
+    const isValid = emailRegex.test(email);
+    if (!isValid) {
+      return 'El email no es válido';
+    }
+  };
+
   return (
     <SafeAreaView style={styles.screenContainer}>
-      <KeyboardAvoidingView behavior="padding">
-        <ScrollView
-          bounces={false}
-          style={styles.contentContainer}
-          contentContainerStyle={styles.contentContainerStyle}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={styles.contentContainer}
+        keyboardVerticalOffset={10}>
+        <DismissKeyboard>
           <View style={styles.titleContainer}>
             <TouchableOpacity
               style={styles.backButton}
               onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" size={25} color="#000" />
             </TouchableOpacity>
-            <Text style={styles.title}>Registrar Cuenta</Text>
+            <Animated.Text
+              style={{...styles.title, opacity: registerSectionOpacity}}>
+              Registrar Cuenta
+            </Animated.Text>
+            <Animated.Text
+              style={{...styles.title, opacity: loginSectionOpacity}}>
+              Iniciar Sesion
+            </Animated.Text>
           </View>
 
-          <View style={styles.inputsContainer}>
-            <View style={styles.nameInputContainer}>
-              <View style={styles.flex1}>
-                <CustomTextInput
-                  name="name"
-                  control={control}
-                  autoCorrect={false}
-                  placeholder="Tu Nombre"
-                  style={styles.nameInput}
-                  placeholderTextColor={'#8F8F8F'}
-                  validateBlurField={validateBlurField}
-                  validateChangeField={validateChangeField}
-                  fieldColor={getFieldColor('name')}
-                  rules={{
-                    required: 'Ingrese su nombre',
-                    pattern: {
-                      value: nameRegex,
-                      message: 'Ingrese un nombre valido',
-                    },
-                  }}
-                  autoCapitalize={'words'}
-                />
+          <View style={styles.sectionsContainer}>
+            <Animated.View
+              style={{
+                ...styles.inputsContainer,
+                transform: [{translateX: registerSectionPosition}],
+              }}>
+              <View style={styles.nameInputContainer}>
+                <View style={styles.flex1}>
+                  <CustomTextInput
+                    name="name"
+                    control={control}
+                    autoCorrect={false}
+                    placeholder="Tu Nombre"
+                    style={styles.nameInput}
+                    placeholderTextColor={'#8F8F8F'}
+                    validateBlurField={validateBlurField}
+                    validateChangeField={validateChangeField}
+                    fieldColor={getFieldColor('name')}
+                    rules={{
+                      required: 'Ingrese su nombre',
+                      pattern: {
+                        value: nameRegex,
+                        message: 'Ingrese un nombre valido',
+                      },
+                    }}
+                    autoCapitalize={'words'}
+                  />
+                </View>
+                <View style={styles.flex1}>
+                  <CustomTextInput
+                    name="lastName"
+                    control={control}
+                    autoCorrect={false}
+                    placeholder="Apellido"
+                    validateBlurField={validateBlurField}
+                    validateChangeField={validateChangeField}
+                    fieldColor={getFieldColor('lastName')}
+                    placeholderTextColor={'#8F8F8F'}
+                    rules={{
+                      required: 'Ingrese su apellido',
+                      pattern: {
+                        value: nameRegex,
+                        message: 'Ingrese un apellido valido',
+                      },
+                    }}
+                    style={{...styles.nameInput}}
+                    mainContainerStyle={{...styles.marginLeft}}
+                    autoCapitalize={'words'}
+                  />
+                </View>
               </View>
-              <View style={styles.flex1}>
-                <CustomTextInput
-                  name="lastName"
-                  control={control}
-                  autoCorrect={false}
-                  placeholder="Apellido"
-                  validateBlurField={validateBlurField}
-                  validateChangeField={validateChangeField}
-                  fieldColor={getFieldColor('lastName')}
-                  placeholderTextColor={'#8F8F8F'}
-                  rules={{
-                    required: 'Ingrese su apellido',
-                    pattern: {
-                      value: nameRegex,
-                      message: 'Ingrese un apellido valido',
-                    },
-                  }}
-                  style={{...styles.nameInput}}
-                  mainContainerStyle={{...styles.marginLeft}}
-                  autoCapitalize={'words'}
-                />
-              </View>
-            </View>
 
-            <CustomTextInput
-              name="email"
-              control={control}
-              placeholder="Email"
-              autoCorrect={false}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              placeholderTextColor={'#8F8F8F'}
-              validateBlurField={validateBlurField}
-              validateChangeField={validateChangeField}
-              fieldColor={getFieldColor('email')}
-              rules={{
-                required: 'Ingrese su correo',
-                pattern: {
-                  value: emailRegex,
-                  message: 'Correo invalido',
-                },
-              }}
-            />
+              <CustomTextInput
+                name="email"
+                control={control}
+                placeholder="Email"
+                autoCorrect={false}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                placeholderTextColor={'#8F8F8F'}
+                validateBlurField={validateBlurField}
+                validateChangeField={validateChangeField}
+                fieldColor={getFieldColor('email')}
+                rules={{
+                  required: 'Ingrese su correo',
+                  pattern: {
+                    value: emailRegex,
+                    message: 'Correo invalido',
+                  },
+                }}
+              />
 
-            <CustomTextInput
-              name="password"
-              isPasswordField
-              control={control}
-              autoCapitalize="none"
-              placeholder="Contraseña"
-              placeholderTextColor={'#8F8F8F'}
-              validateBlurField={validateBlurField}
-              validateChangeField={validateChangeField}
-              fieldColor={getFieldColor('password')}
-              rules={{
-                required: 'Ingrese su contraseña',
-                validate: validatePassword,
-              }}
-              containerStyle={styles.marginTop10}
-              errorMessages={() => renderErrorMessages()}
-            />
+              <CustomTextInput
+                name="password"
+                isPasswordField
+                control={control}
+                autoCapitalize="none"
+                placeholder="Contraseña"
+                placeholderTextColor={'#8F8F8F'}
+                validateBlurField={validateBlurField}
+                validateChangeField={validateChangeField}
+                fieldColor={getFieldColor('password')}
+                rules={{
+                  required: 'Ingrese su contraseña',
+                  validate: validatePassword,
+                }}
+                containerStyle={styles.marginTop10}
+                errorMessages={() => renderErrorMessages()}
+              />
 
-            <CustomTextInput
-              name="confirmPassword"
-              isPasswordField
-              control={control}
-              autoCapitalize="none"
-              placeholder="Confirmar contraseña"
-              placeholderTextColor={'#8F8F8F'}
-              validateBlurField={validateBlurPassword}
-              validateChangeField={validateChangePassword}
-              fieldColor={getFieldColor('confirmPassword')}
-              rules={{
-                required: 'Ingrese su contraseña',
-                validate: value =>
-                  validateConfirmPassword(currentPassword, value),
-              }}
-              containerStyle={styles.marginTop10}
-            />
+              <CustomTextInput
+                name="confirmPassword"
+                isPasswordField
+                control={control}
+                autoCapitalize="none"
+                placeholder="Confirmar contraseña"
+                placeholderTextColor={'#8F8F8F'}
+                validateBlurField={validateBlurPassword}
+                validateChangeField={validateChangePassword}
+                fieldColor={getFieldColor('confirmPassword')}
+                rules={{
+                  required: 'Ingrese su contraseña',
+                  validate: value =>
+                    validateConfirmPassword(currentPassword, value),
+                }}
+                containerStyle={styles.marginTop10}
+              />
+            </Animated.View>
+
+            <Animated.View
+              style={{
+                ...styles.inputsContainer,
+                transform: [{translateX: loginSectionPosition}],
+              }}>
+              <CustomTextInput
+                name="email"
+                control={control}
+                placeholderTextColor={'#8F8F8F'}
+                placeholder="Email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                autoCorrect={false}
+                rules={{
+                  required: 'Debes poner tu correo!',
+                  validate: emailIsValid,
+                }}
+              />
+              <CustomTextInput
+                name="password"
+                control={control}
+                placeholderTextColor={'#8F8F8F'}
+                placeholder="Password"
+                autoCapitalize="none"
+                isPasswordField
+                containerStyle={styles.passwordInput}
+                rules={{required: 'Debes poner tu contraseña!'}}
+              />
+              <TouchableOpacity activeOpacity={0.5}>
+                <Text style={styles.forgotPasswordText}>
+                  Olvidé mi contraseña
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
           </View>
+
+          <View style={styles.spacer} />
 
           <CustomButton
-            label="Registrarme"
+            label={
+              currentScreen === 'register' ? 'Registrarme' : 'Iniciar Sesion'
+            }
             style={styles.registerButton}
+            // onPress={validateSomeFields}
             onPress={handleSubmit(onPressRegister)}
           />
-
-          <TouchableOpacity
-            style={styles.registerTextContainer}
-            activeOpacity={1.8}
-            onPress={() => navigation.navigate('loginScreen' as never)}>
-            <Text style={styles.registerTextLeft}>¿Ya tienes una cuenta?</Text>
-            <Text style={styles.registerTextRight}> Inicia sesion ahora</Text>
-          </TouchableOpacity>
-        </ScrollView>
+        </DismissKeyboard>
       </KeyboardAvoidingView>
+      <TouchableOpacity
+        style={styles.registerTextContainer}
+        activeOpacity={0.5}
+        onPress={() => {
+          changeRegisterSection();
+          if (currentScreen === 'register') {
+            setCurrentScreen('login');
+          } else {
+            setCurrentScreen('register');
+          }
+        }}>
+        <Text style={styles.registerTextLeft}>¿Ya tienes una cuenta?</Text>
+        <Text style={styles.registerTextRight}> Inicia sesion ahora</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -198,9 +321,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+  },
   contentContainer: {
     flex: 1,
     paddingHorizontal: 20,
+    width: '100%',
   },
   contentContainerStyle: {
     flexGrow: 1,
@@ -208,9 +336,10 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '100%',
-    alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: 30,
+    backgroundColor: 'red',
+    marginBottom: 20,
   },
   backButton: {
     position: 'absolute',
@@ -219,10 +348,26 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Poppins-SemiBold',
     fontSize: 25,
+    marginLeft: 40,
+    position: 'absolute',
+  },
+  sectionsContainer: {
+    alignItems: 'center',
   },
   inputsContainer: {
     width: '100%',
     marginTop: 20,
+    position: 'absolute',
+  },
+  passwordInput: {
+    marginTop: 10,
+  },
+  forgotPasswordText: {
+    textAlign: 'right',
+    fontFamily: 'Poppins-Medium',
+    color: '#1976D2',
+    fontSize: 15,
+    marginTop: 10,
   },
   registerButton: {
     height: 55,
@@ -243,8 +388,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
   },
   flex1: {flex: 1},
-  marginTop10: {marginTop: 10},
-  marginLeft: {marginLeft: 10},
+  marginTop10: {
+    marginTop: 10,
+  },
+  marginLeft: {
+    marginLeft: 10,
+  },
+  spacer: {
+    flex: 1,
+  },
   errorMessage: {
     color: 'red',
     fontSize: 12,
@@ -272,9 +424,3 @@ const styles = StyleSheet.create({
 });
 
 export default RegisterScreen;
-
-export const errors = {
-  message: 'Debes poner tu contraseña!',
-  ref: {name: 'password'},
-  type: 'required',
-};
