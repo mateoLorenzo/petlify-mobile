@@ -25,7 +25,9 @@ const HomeScreen = () => {
     navigation.navigate('ServicesFeesScreen' as never);
   };
 
-  const onPressWalkService = () => {};
+  const onPressWalkService = () => {
+    navigation.navigate('ServiceRequestScreen', {service: 'walk'});
+  };
 
   const onPressCareService = () => {};
 

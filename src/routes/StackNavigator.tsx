@@ -27,12 +27,21 @@ import WorkerProfileScreen from '../screens/WorkerProfile';
 import WelcomeScreen from '../screens/Welcome';
 import OnboardingScreens from '../screens/Onboarding';
 import PreSignUpScreen from '../screens/PreSignUp';
+import ServiceRequestScreen from '../screens/ServiceRequest';
+import LocationScreen from '../screens/Location';
+import DateScreen from '../screens/Date';
+import SelectPetScreen from '../screens/SelectPet';
 
 const Stack = createNativeStackNavigator();
 
 export const StackNavigator = () => {
   return (
     <Stack.Navigator>
+      {/* <Stack.Screen
+        name="RegisterScreen"
+        component={RegisterScreen}
+        options={{headerShown: false}}
+      /> */}
       <Stack.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}
@@ -116,6 +125,26 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="WorkerProfileScreen"
         component={WorkerProfileScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ServiceRequestScreen"
+        component={ServiceRequestScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LocationScreen"
+        component={LocationScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="DateScreen"
+        component={DateScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SelectPetScreen"
+        component={SelectPetScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
