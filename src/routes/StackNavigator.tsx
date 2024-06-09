@@ -32,7 +32,42 @@ import LocationScreen from '../screens/Location';
 import DateScreen from '../screens/Date';
 import SelectPetScreen from '../screens/SelectPet';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParams = {
+  WelcomeScreen: undefined;
+  OnboardingScreens: undefined;
+  PreSignUpScreen: undefined;
+  loginScreen: undefined;
+  RegisterScreen: undefined;
+  RegisterPhoneScreen: undefined;
+  ComponentsNavigator: undefined;
+  RegisterPetInvitationScreen: undefined;
+  RegisterPetScreen: undefined;
+  HomeScreen: undefined;
+  ProfileScreen: undefined;
+  ProfileEditScreen: undefined;
+  BottomTabNavigator: undefined;
+  ServicesDoneScreen: undefined;
+  UpdatePetScreen: undefined;
+  ServicesFeesScreen: undefined;
+  WorkerProfileScreen: undefined;
+  ServiceRequestScreen: {service: 'walk' | 'care'};
+  LocationScreen: undefined;
+  DateScreen: undefined;
+  SelectPetScreen: undefined;
+
+  ComponentsScreen: undefined;
+  CustomButtonScreen: undefined;
+  CustomSpinnerScreen: undefined;
+  ReactHookFormScreen: undefined;
+  ExpandAnimationScreen: undefined;
+  CountdownTimerScreen: undefined;
+  AgePickerScreen: undefined;
+  ImagePickerScreen: undefined;
+  CustomDropdown: undefined;
+  BottomNavScreen: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParams>();
 
 export const StackNavigator = () => {
   return (

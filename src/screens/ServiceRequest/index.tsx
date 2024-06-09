@@ -6,11 +6,27 @@ import NewDate from '../../../assets/images/new-date.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomButton} from '../../components/CustomButton';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../routes/StackNavigator';
 
-const ServiceRequestScreen = () => {
+type DetailsScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParams,
+  'ServiceRequestScreen'
+>;
+type DetailsScreenRouteProp = RouteProp<
+  RootStackParams,
+  'ServiceRequestScreen'
+>;
+
+type Props = {
+  navigation: DetailsScreenNavigationProp;
+  route: DetailsScreenRouteProp;
+};
+
+const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
   const {top: marginTop} = useSafeAreaInsets();
-  const navigation = useNavigation();
+  const {service: serviceSelected} = route.params;
 
   const onPressLocation = () => {
     navigation.navigate('LocationScreen' as never);
@@ -28,11 +44,22 @@ const ServiceRequestScreen = () => {
     navigation.goBack();
   };
 
+  const screenTitles = {
+    walk: {
+      title: '¡Solicita tu Paseo!',
+      subtitle: 'Te aseguramos Seguridad y Diversion',
+    },
+    care: {
+      title: '¡Solicita tu Cuidado!',
+      subtitle: 'Seguridad y Cariño para tu mascota',
+    },
+  };
+
   return (
     <View style={styles.container}>
       <Logo height={100} width={100} style={{marginTop}} />
-      <Text style={styles.title}>¡Solicita tu Paseo!</Text>
-      <Text style={styles.subtitle}>Te aseguramos Seguridad y Diversion</Text>
+      <Text style={styles.title}>{screenTitles[serviceSelected].title}</Text>
+      <Text style={styles.subtitle}>{screenTitles[serviceSelected].title}</Text>
 
       <TouchableOpacity
         style={styles.cardContainer}
@@ -125,7 +152,6 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'space-between',
     marginTop: 10,
 
     shadowColor: 'rgba(0, 0, 0, 0.20)',

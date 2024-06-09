@@ -11,15 +11,27 @@ import {
 import Logo from '../../../assets/images/logo.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CustomButton} from '../../components/CustomButton';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../routes/StackNavigator';
 const walker = require('../../../assets/images/paseo.png');
 const sitter = require('../../../assets/images/cuidado.png');
 const stylishDog = require('../../../assets/images/stylish-dog.png');
 const adoptGrid = require('../../../assets/images/adopt-grid.png');
 
-const HomeScreen = () => {
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParams,
+  'HomeScreen'
+>;
+type HomeScreenRouteProp = RouteProp<RootStackParams, 'HomeScreen'>;
+
+type Props = {
+  navigation: HomeScreenNavigationProp;
+  route: HomeScreenRouteProp;
+};
+
+const HomeScreen: React.FC<Props> = ({navigation}) => {
   const {top: marginTop} = useSafeAreaInsets();
-  const navigation = useNavigation();
 
   const onPressCheckFees = () => {
     navigation.navigate('ServicesFeesScreen' as never);
@@ -29,7 +41,9 @@ const HomeScreen = () => {
     navigation.navigate('ServiceRequestScreen', {service: 'walk'});
   };
 
-  const onPressCareService = () => {};
+  const onPressCareService = () => {
+    navigation.navigate('ServiceRequestScreen', {service: 'care'});
+  };
 
   return (
     <ScrollView
@@ -107,6 +121,7 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     alignItems: 'center',
     paddingBottom: 50,
+    backgroundColor: 'white',
   },
   container: {
     flex: 1,
