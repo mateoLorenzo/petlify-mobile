@@ -72,11 +72,6 @@ const Stack = createNativeStackNavigator<RootStackParams>();
 export const StackNavigator = () => {
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen
-        name="RegisterScreen"
-        component={RegisterScreen}
-        options={{headerShown: false}}
-      /> */}
       <Stack.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}

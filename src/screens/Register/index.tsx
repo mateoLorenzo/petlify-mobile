@@ -21,7 +21,6 @@ import {useRegisterForm} from '../../hooks/useFormValidations';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomButton} from '../../components/CustomButton';
-// import {useForm} from 'react-hook-form';
 
 const formFields = ['name', 'lastName', 'email', 'password', 'confirmPassword'];
 type screenTypes = 'register' | 'login';
@@ -48,9 +47,10 @@ const RegisterScreen = () => {
     getFieldColor,
     errorMessagesToShow,
     currentPassword,
+    trigger,
+    reset,
+    resetFields,
   } = useRegisterForm(formFields);
-
-  // const {trigger} = useForm();
 
   const [currentScreen, setCurrentScreen] = useState<screenTypes>('register');
   const registerSectionPosition = useRef(new Animated.Value(0)).current;
@@ -58,7 +58,7 @@ const RegisterScreen = () => {
   const registerSectionOpacity = useRef(new Animated.Value(1)).current;
   const loginSectionOpacity = useRef(new Animated.Value(0)).current;
 
-  const changeRegisterSection = () => {
+  const changeAuthSection = () => {
     Animated.timing(registerSectionPosition, {
       toValue: currentScreen === 'register' ? -width : 0,
       duration: 500,
@@ -89,14 +89,32 @@ const RegisterScreen = () => {
   const onPressRegister = () => {
     navigation.navigate('RegisterPhoneScreen' as never);
   };
+  const onPressLogin = () => {
+    navigation.navigate('HomeScreen' as never);
+  };
 
-  // const validateSomeFields = async () => {
-  //   const result = await trigger(['name']);
-  //   console.log('result', result);
-  //   if (result) {
-  //     handleSubmit(onPressRegister)();
-  //   }
-  // };
+  const validateRegisterFields = async () => {
+    const result = await trigger([
+      'name',
+      'lastName',
+      'email',
+      'password',
+      'confirmPassword',
+    ]);
+    if (result) {
+      handleSubmit(onPressRegister)();
+    }
+  };
+  const validateLoginFields = async () => {
+    const result = await trigger(['email', 'password']);
+
+    console.log('result', result);
+    if (result) {
+      onPressLogin();
+    } else {
+      handleSubmit(onPressLogin)();
+    }
+  };
 
   const renderErrorMessages = () => {
     return (
@@ -284,16 +302,17 @@ const RegisterScreen = () => {
               </TouchableOpacity>
             </Animated.View>
           </View>
-
           <View style={styles.spacer} />
-
           <CustomButton
             label={
               currentScreen === 'register' ? 'Registrarme' : 'Iniciar Sesion'
             }
             style={styles.registerButton}
-            // onPress={validateSomeFields}
-            onPress={handleSubmit(onPressRegister)}
+            onPress={
+              currentScreen === 'register'
+                ? validateRegisterFields
+                : validateLoginFields
+            }
           />
         </DismissKeyboard>
       </KeyboardAvoidingView>
@@ -301,7 +320,9 @@ const RegisterScreen = () => {
         style={styles.registerTextContainer}
         activeOpacity={0.5}
         onPress={() => {
-          changeRegisterSection();
+          changeAuthSection();
+          reset();
+          resetFields();
           if (currentScreen === 'register') {
             setCurrentScreen('login');
           } else {
@@ -309,7 +330,7 @@ const RegisterScreen = () => {
           }
         }}>
         <Text style={styles.registerTextLeft}>¿Ya tienes una cuenta?</Text>
-        <Text style={styles.registerTextRight}> Inicia sesion ahora</Text>
+        <Text style={styles.registerTextRight}> Inicia sesion</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

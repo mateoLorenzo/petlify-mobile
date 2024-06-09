@@ -13,6 +13,8 @@ export const useRegisterForm = (formFields: string[]) => {
     control,
     handleSubmit,
     formState: {errors},
+    trigger,
+    reset,
   } = useForm<RegisterFormData>();
 
   const errorsFromPass = errors.password?.message?.split('.');
@@ -39,6 +41,12 @@ export const useRegisterForm = (formFields: string[]) => {
     setGrayFields([...grayFields, fieldName]);
     setRedFields(redFields.filter(field => field !== fieldName));
     setGreenFields(greenFields.filter(field => field !== fieldName));
+  };
+
+  const resetFields = () => {
+    setGreenFields([]);
+    setRedFields([]);
+    setGrayFields(formFields);
   };
 
   const validateBlurPassword = (field: string, value: string) => {
@@ -101,14 +109,17 @@ export const useRegisterForm = (formFields: string[]) => {
 
   return {
     control,
-    handleSubmit,
     errors,
     errorMessagesToShow,
+    currentPassword,
+    handleSubmit,
     validateBlurPassword,
     validateChangePassword,
     validateBlurField,
     validateChangeField,
     getFieldColor,
-    currentPassword,
+    trigger,
+    reset,
+    resetFields,
   };
 };
