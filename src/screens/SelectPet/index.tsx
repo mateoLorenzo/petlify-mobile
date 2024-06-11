@@ -1,18 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Pet} from '../../interfaces';
 import {CustomButton} from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
+import {RadioCard} from '../../components/RadioCard';
 
 const lucyImage = require('../../../assets/images/lucy.jpeg');
 const anastasiaImage = require('../../../assets/images/anastasia.jpeg');
@@ -27,36 +21,6 @@ const pets: Pet[] = [
     },
   },
 ];
-
-const PetCard = ({
-  name,
-  selected,
-  onSelect,
-  index,
-  imageURL,
-}: {
-  name: string;
-  selected: boolean;
-  onSelect: (index: number) => void;
-  index: number;
-  imageURL: ImageSourcePropType | undefined;
-}) => {
-  return (
-    <TouchableOpacity
-      activeOpacity={0.6}
-      style={{...styles.optionButton, ...styles.optionShadow}}
-      onPress={() => onSelect(index)}>
-      <Image style={styles.petImage} source={imageURL} />
-      <Text style={styles.petName}>{name}</Text>
-      <View style={styles.spacer} />
-      <Icon
-        name={selected ? 'radio-button-on-outline' : 'radio-button-off-outline'}
-        size={30}
-        color={selected ? '#1E96FF' : '#000'}
-      />
-    </TouchableOpacity>
-  );
-};
 
 const SelectPetScreen = () => {
   const {top} = useSafeAreaInsets();
@@ -78,7 +42,7 @@ const SelectPetScreen = () => {
         <Text style={styles.title}>Mascota</Text>
       </View>
       {pets.map((pet, index) => (
-        <PetCard
+        <RadioCard
           key={index}
           name={pet.name}
           selected={selectedPetIndex === index}

@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   serviceFeeSubtitle: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'Poppins-Regular',
     marginVertical: 10,
     textAlign: 'center',
