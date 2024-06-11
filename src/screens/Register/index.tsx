@@ -135,6 +135,17 @@ const RegisterScreen = () => {
     }
   };
 
+  const onAuthPress = () => {
+    changeAuthSection();
+    reset();
+    resetFields();
+    if (currentScreen === 'register') {
+      setCurrentScreen('login');
+    } else {
+      setCurrentScreen('register');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.screenContainer}>
       <KeyboardAvoidingView
@@ -319,18 +330,20 @@ const RegisterScreen = () => {
       <TouchableOpacity
         style={styles.registerTextContainer}
         activeOpacity={0.5}
-        onPress={() => {
-          changeAuthSection();
-          reset();
-          resetFields();
-          if (currentScreen === 'register') {
-            setCurrentScreen('login');
-          } else {
-            setCurrentScreen('register');
-          }
-        }}>
-        <Text style={styles.registerTextLeft}>¿Ya tienes una cuenta?</Text>
-        <Text style={styles.registerTextRight}> Inicia sesion</Text>
+        onPress={onAuthPress}>
+        {currentScreen === 'register' ? (
+          <>
+            <Text style={styles.registerTextLeft}>¿Ya tienes una cuenta?</Text>
+            <Text style={styles.registerTextRight}>Inicia sesion</Text>
+          </>
+        ) : (
+          <>
+            <Text style={styles.registerTextLeft}>
+              ¿Aún no tienes una cuenta?
+            </Text>
+            <Text style={styles.registerTextRight}>Únete ahora</Text>
+          </>
+        )}
       </TouchableOpacity>
     </SafeAreaView>
   );

@@ -59,7 +59,9 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
     <View style={styles.container}>
       <Logo height={100} width={100} style={{marginTop}} />
       <Text style={styles.title}>{screenTitles[serviceSelected].title}</Text>
-      <Text style={styles.subtitle}>{screenTitles[serviceSelected].title}</Text>
+      <Text style={styles.subtitle}>
+        {screenTitles[serviceSelected].subtitle}
+      </Text>
 
       <TouchableOpacity
         style={styles.cardContainer}
@@ -71,7 +73,8 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
         <View style={styles.textContainer}>
           <Text style={styles.cardTitle}>Direccion</Text>
           <Text style={styles.cardSubtitle}>
-            Donde quieres realizar el paseo
+            Donde quieres realizar el{' '}
+            {serviceSelected === 'care' ? 'cuidado' : 'paseo'}
           </Text>
         </View>
         <View style={styles.spacer} />
@@ -88,7 +91,8 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
         <View style={styles.textContainer}>
           <Text style={styles.cardTitle}>Fecha</Text>
           <Text style={styles.cardSubtitle}>
-            Cuando quieres realizar el paseo
+            Cuando quieres realizar el{' '}
+            {serviceSelected === 'care' ? 'cuidado' : 'paseo'}
           </Text>
         </View>
         <View style={styles.spacer} />
@@ -105,7 +109,8 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
         <View style={styles.textContainer}>
           <Text style={styles.cardTitle}>Mascota</Text>
           <Text style={styles.cardSubtitle}>
-            Selecciona la mascota a cuidar
+            Selecciona la mascota a{' '}
+            {serviceSelected === 'care' ? 'cuidar' : 'pasear'}
           </Text>
         </View>
         <View style={styles.spacer} />
