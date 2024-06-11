@@ -15,3 +15,8 @@ export interface Pet {
   age?: number;
   image: ImageSourcePropType;
 }
+
+export interface Location {
+  title: string;
+  description: string;
+}

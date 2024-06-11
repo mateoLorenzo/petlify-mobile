@@ -31,6 +31,7 @@ import ServiceRequestScreen from '../screens/ServiceRequest';
 import LocationScreen from '../screens/Location';
 import DateScreen from '../screens/Date';
 import SelectPetScreen from '../screens/SelectPet';
+import NewLocationScreen from '../screens/NewLocation';
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -54,6 +55,7 @@ export type RootStackParams = {
   LocationScreen: undefined;
   DateScreen: undefined;
   SelectPetScreen: undefined;
+  NewLocationScreen: undefined;
 
   ComponentsScreen: undefined;
   CustomButtonScreen: undefined;
@@ -175,6 +177,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="SelectPetScreen"
         component={SelectPetScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="NewLocationScreen"
+        component={NewLocationScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

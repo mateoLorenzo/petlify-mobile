@@ -15,21 +15,40 @@ export const RadioCard = ({
   onSelect,
   index,
   imageURL,
+  cardType = 'pet',
+  locationDescription,
 }: {
   name: string;
   selected: boolean;
   onSelect: (index: number) => void;
   index: number;
   imageURL: ImageSourcePropType | undefined;
+  cardType: 'pet' | 'location';
+  locationDescription?: string;
 }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.6}
       style={{...styles.optionButton, ...styles.optionShadow}}
       onPress={() => onSelect(index)}>
-      <Image style={styles.petImage} source={imageURL} />
-      <Text style={styles.petName}>{name}</Text>
-      <View style={styles.spacer} />
+      {cardType === 'pet' ? (
+        <Image style={styles.petImage} source={imageURL} />
+      ) : (
+        <View style={styles.locationIconContainer}>
+          <Icon name={'location-sharp'} size={22} color={'#1E96FF'} />
+        </View>
+      )}
+      <View style={styles.cardTextContainer}>
+        <Text style={styles.cardTitle}>{name}</Text>
+        {cardType === 'location' && (
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.locationDescription}>
+            {locationDescription}
+          </Text>
+        )}
+      </View>
       <Icon
         name={selected ? 'radio-button-on-outline' : 'radio-button-off-outline'}
         size={30}
@@ -64,13 +83,23 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 5,
-    marginRight: 10,
   },
-  petName: {
+  locationIconContainer: {
+    padding: 12,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 100,
+  },
+  cardTextContainer: {
+    marginLeft: 10,
+    flex: 1,
+  },
+  cardTitle: {
     fontFamily: 'Poppins-Medium',
     fontSize: 16,
   },
-  spacer: {
-    flex: 1,
+  locationDescription: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 12,
+    color: 'gray',
   },
 });

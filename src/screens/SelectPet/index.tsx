@@ -49,6 +49,7 @@ const SelectPetScreen = () => {
           onSelect={handleSelect}
           index={index}
           imageURL={pet.image}
+          cardType="pet"
         />
       ))}
       <TouchableOpacity
@@ -71,6 +72,7 @@ const SelectPetScreen = () => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
