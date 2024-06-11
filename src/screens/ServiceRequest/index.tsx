@@ -66,6 +66,24 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
       <TouchableOpacity
         style={styles.cardContainer}
         activeOpacity={0.7}
+        onPress={onPressPet}>
+        <View style={styles.cardImage}>
+          <Logo height={25} width={25} />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.cardTitle}>Mascota</Text>
+          <Text style={styles.cardSubtitle}>
+            Selecciona la mascota a{' '}
+            {serviceSelected === 'care' ? 'cuidar' : 'pasear'}
+          </Text>
+        </View>
+        <View style={styles.spacer} />
+        <Icon name="chevron-forward-sharp" size={20} color="#8A8A8A" />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.cardContainer}
+        activeOpacity={0.7}
         onPress={onPressLocation}>
         <View style={styles.cardImage}>
           <NewLocation height={25} width={25} />
@@ -93,24 +111,6 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
           <Text style={styles.cardSubtitle}>
             Cuando quieres realizar el{' '}
             {serviceSelected === 'care' ? 'cuidado' : 'paseo'}
-          </Text>
-        </View>
-        <View style={styles.spacer} />
-        <Icon name="chevron-forward-sharp" size={20} color="#8A8A8A" />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.cardContainer}
-        activeOpacity={0.7}
-        onPress={onPressPet}>
-        <View style={styles.cardImage}>
-          <Logo height={25} width={25} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.cardTitle}>Mascota</Text>
-          <Text style={styles.cardSubtitle}>
-            Selecciona la mascota a{' '}
-            {serviceSelected === 'care' ? 'cuidar' : 'pasear'}
           </Text>
         </View>
         <View style={styles.spacer} />

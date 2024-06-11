@@ -9,3 +9,9 @@ export interface ScheduleDetails {
   date: Date;
   time: string;
 }
+
+export interface Pet {
+  name: string;
+  age?: number;
+  image: ImageSourcePropType;
+}
