@@ -70,13 +70,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionShadow: {
-    shadowColor: '#757575',
+    shadowColor: '#ADADAD',
     shadowOffset: {
       width: 0,
       height: 0,
     },
     shadowOpacity: 2,
-    shadowRadius: 1,
+    shadowRadius: 3,
     borderRadius: 10,
   },
   petImage: {
