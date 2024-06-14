@@ -4,9 +4,15 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {AgePicker} from '../../components/AgePicker';
-// import {`[Calendar](#calendar), [CalendarList](#calendarlist), [Agenda](#agenda)`} from 'react-native-calendars';
+import {TimePicker} from '../../components/TimePicker';
+import {CustomButton} from '../../components/CustomButton';
+
 const DateScreen = () => {
+  const [startHour, setStartHour] = useState('00');
+  const [startMinute, setStartMinute] = useState('00');
+  const [endHour, setEndHour] = useState('00');
+  const [endMinute, setEndMinute] = useState('00');
+
   const {top} = useSafeAreaInsets();
   const navigation = useNavigation();
 
@@ -44,17 +50,33 @@ const DateScreen = () => {
           />
         </View>
       </View>
-      <View style={styles.hourBlocksContainer}>
-        <View style={styles.hourBlockContainer}>
-          <Text style={styles.hourBlockText}>Hora de partida</Text>
-          <View style={{...styles.hourBlock, ...styles.shadow}} />
-        </View>
-        <View
-          style={{...styles.hourBlockContainer, ...styles.leftHourContainer}}>
-          <Text style={styles.hourBlockText}>Hora de regreso</Text>
-          <View style={{...styles.hourBlock, ...styles.shadow}} />
-        </View>
+
+      <View style={styles.timePickersContainer}>
+        <TimePicker
+          label={`Hora de partida ${startHour}: ${startMinute}`}
+          hourSelected={startHour}
+          minuteSelected={startMinute}
+          setHourSelected={setStartHour}
+          setMinuteSelected={setStartMinute}
+        />
+        <TimePicker
+          label={`Hora de regreso ${endHour}: ${endMinute}`}
+          hourSelected={endHour}
+          minuteSelected={endMinute}
+          setHourSelected={setEndHour}
+          setMinuteSelected={setEndMinute}
+        />
       </View>
+
+      <View style={styles.spacer} />
+
+      <CustomButton
+        label="Continuar"
+        onPress={() => navigation.goBack()}
+        style={{
+          ...styles.continueButton,
+        }}
+      />
     </View>
   );
 };
@@ -126,6 +148,32 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 3,
     borderRadius: 10,
+  },
+  selectedTime: {
+    marginTop: 20,
+    fontSize: 18,
+  },
+  pickersContainer: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingVertical: 40,
+  },
+  timePickersContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 20,
+    marginTop: 20,
+  },
+  spacer: {
+    flex: 1,
+  },
+  continueButton: {
+    marginTop: 20,
+    height: 55,
+    marginBottom: 40,
   },
 });
 
