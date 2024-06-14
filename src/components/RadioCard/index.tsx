@@ -2,12 +2,24 @@ import React from 'react';
 import {
   Image,
   ImageSourcePropType,
+  ImageStyle,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+interface Props {
+  name: string;
+  selected: boolean;
+  onSelect: (index: number) => void;
+  index: number;
+  imageURL: ImageSourcePropType | undefined;
+  cardType: 'pet' | 'location';
+  locationDescription?: string;
+  imageStyles?: ImageStyle;
+}
 
 export const RadioCard = ({
   name,
@@ -17,22 +29,15 @@ export const RadioCard = ({
   imageURL,
   cardType = 'pet',
   locationDescription,
-}: {
-  name: string;
-  selected: boolean;
-  onSelect: (index: number) => void;
-  index: number;
-  imageURL: ImageSourcePropType | undefined;
-  cardType: 'pet' | 'location';
-  locationDescription?: string;
-}) => {
+  imageStyles,
+}: Props) => {
   return (
     <TouchableOpacity
       activeOpacity={0.6}
       style={{...styles.optionButton, ...styles.optionShadow}}
       onPress={() => onSelect(index)}>
       {cardType === 'pet' ? (
-        <Image style={styles.petImage} source={imageURL} />
+        <Image style={{...styles.petImage, ...imageStyles}} source={imageURL} />
       ) : (
         <View style={styles.locationIconContainer}>
           <Icon name={'location-sharp'} size={22} color={'#1E96FF'} />

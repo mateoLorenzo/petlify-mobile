@@ -44,6 +44,10 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
     navigation.goBack();
   };
 
+  const navigateToPaymentMethod = () => {
+    navigation.navigate('SelectPaymentMethodScreen' as never);
+  };
+
   const screenTitles = {
     walk: {
       title: '¡Solicita tu Paseo!',
@@ -121,7 +125,7 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
 
       <CustomButton
         label="Continuar"
-        onPress={() => {}}
+        onPress={navigateToPaymentMethod}
         style={styles.continueButton}
       />
       <TouchableOpacity onPress={onPressCancel}>
@@ -194,7 +198,7 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     height: 55,
-    backgroundColor: 'gray',
+    // backgroundColor: 'gray',
   },
   cancelButtonText: {
     fontFamily: 'Poppins-Medium',

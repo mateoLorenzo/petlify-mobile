@@ -32,6 +32,8 @@ import LocationScreen from '../screens/Location';
 import DateScreen from '../screens/Date';
 import SelectPetScreen from '../screens/SelectPet';
 import NewLocationScreen from '../screens/NewLocation';
+import SelectPaymentMethodScreen from '../screens/SelectPaymentMethod';
+import AddNewCardScreen from '../screens/AddNewCard';
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -56,6 +58,8 @@ export type RootStackParams = {
   DateScreen: undefined;
   SelectPetScreen: undefined;
   NewLocationScreen: undefined;
+  SelectPaymentMethodScreen: undefined;
+  AddNewCardScreen: undefined;
 
   ComponentsScreen: undefined;
   CustomButtonScreen: undefined;
@@ -182,6 +186,16 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="NewLocationScreen"
         component={NewLocationScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SelectPaymentMethodScreen"
+        component={SelectPaymentMethodScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AddNewCardScreen"
+        component={AddNewCardScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
