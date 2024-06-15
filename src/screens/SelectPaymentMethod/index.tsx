@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 26,
+    fontSize: 24,
     marginTop: 20,
     fontFamily: 'Poppins-Semibold',
   },
