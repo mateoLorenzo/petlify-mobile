@@ -1,22 +1,48 @@
+/* eslint-disable react-native/no-inline-styles */
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {TimePicker} from '../../components/TimePicker';
 import {CustomButton} from '../../components/CustomButton';
+import {PetlifyContext} from '../../context/PetlifyContext';
 
-const DateScreen = () => {
-  const [startHour, setStartHour] = useState('00');
-  const [startMinute, setStartMinute] = useState('00');
-  const [endHour, setEndHour] = useState('00');
-  const [endMinute, setEndMinute] = useState('00');
-
+const SelectDateScreen = () => {
   const {top} = useSafeAreaInsets();
   const navigation = useNavigation();
+  const {
+    startDaySelected,
+    startHour,
+    startMinute,
+    endHour,
+    endMinute,
+    setStartDaySelected,
+    setStartHour,
+    setStartMinute,
+    setEndHour,
+    setEndMinute,
+  } = useContext(PetlifyContext);
 
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  useEffect(() => {
+    console.log('startDaySelected', startDaySelected);
+  }, [startDaySelected]);
+
+  const onPressContinue = () => {
+    navigation.goBack();
+  };
+
+  const serviceDateIsSelected = () => {
+    if (
+      startDaySelected &&
+      Boolean(parseFloat(startHour) + parseFloat(startMinute)) &&
+      Boolean(parseFloat(endHour) + parseFloat(endMinute))
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   return (
     <View style={{...styles.container}}>
@@ -37,15 +63,13 @@ const DateScreen = () => {
           }}>
           <Calendar
             style={{borderRadius: 10}}
-            onDayPress={day => {
-              setSelectedDate(day.dateString);
-            }}
+            onDayPress={day => setStartDaySelected(day.dateString)}
             theme={{
               textDayFontFamily: 'Poppins-Medium',
               textDayHeaderFontFamily: 'Poppins-Regular',
             }}
             markedDates={{
-              [selectedDate]: {selected: true, selectedColor: '#1E96FF'},
+              [startDaySelected]: {selected: true, selectedColor: '#1E96FF'},
             }}
           />
         </View>
@@ -72,10 +96,12 @@ const DateScreen = () => {
 
       <CustomButton
         label="Continuar"
-        onPress={() => navigation.goBack()}
+        onPress={onPressContinue}
         style={{
           ...styles.continueButton,
+          backgroundColor: serviceDateIsSelected() ? '#1E96FF' : 'gray',
         }}
+        disabled={serviceDateIsSelected() === false}
       />
     </View>
   );
@@ -177,4 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DateScreen;
+export default SelectDateScreen;

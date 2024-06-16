@@ -1,35 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Pet} from '../../interfaces';
 import {CustomButton} from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {RadioCard} from '../../components/RadioCard';
-
-const lucyImage = require('../../../assets/images/lucy.jpeg');
-const anastasiaImage = require('../../../assets/images/anastasia.jpeg');
-
-const pets: Pet[] = [
-  {name: 'Lucy', image: lucyImage},
-  {name: 'Anastasia', image: anastasiaImage},
-  {
-    name: 'Rocco',
-    image: {
-      uri: 'https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg',
-    },
-  },
-];
+import {pets} from '../../data';
+import {PetlifyContext} from '../../context/PetlifyContext';
 
 const SelectPetScreen = () => {
   const {top} = useSafeAreaInsets();
   const navigation = useNavigation();
-  const [selectedPetIndex, setSelectedPetIndex] = useState<number | null>(null);
 
-  const handleSelect = (index: number) => {
-    setSelectedPetIndex(index);
-  };
+  const {petSelectedIndex, setPetSelectedIndex} = useContext(PetlifyContext);
 
   return (
     <View style={styles.container}>
@@ -45,8 +29,8 @@ const SelectPetScreen = () => {
         <RadioCard
           key={index}
           name={pet.name}
-          selected={selectedPetIndex === index}
-          onSelect={handleSelect}
+          selected={petSelectedIndex === index}
+          onSelect={setPetSelectedIndex}
           index={index}
           imageURL={pet.image}
           cardType="pet"
@@ -63,10 +47,10 @@ const SelectPetScreen = () => {
       <CustomButton
         label="Continuar"
         onPress={() => navigation.goBack()}
-        disabled={selectedPetIndex === null}
+        disabled={petSelectedIndex === null}
         style={{
           ...styles.continueButton,
-          backgroundColor: selectedPetIndex === null ? 'gray' : '#1E96FF',
+          backgroundColor: petSelectedIndex === null ? 'gray' : '#1E96FF',
         }}
       />
     </View>

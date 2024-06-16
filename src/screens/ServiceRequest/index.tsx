@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Logo from '../../../assets/images/logo.svg';
 import NewLocation from '../../../assets/images/new-location.svg';
@@ -9,6 +10,9 @@ import {CustomButton} from '../../components/CustomButton';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../routes/StackNavigator';
+import {PetlifyContext} from '../../context/PetlifyContext';
+import {locations, pets} from '../../data';
+import {formatDateTimeString, getCompleteDate} from '../../utils';
 
 type DetailsScreenNavigationProp = NativeStackNavigationProp<
   RootStackParams,
@@ -27,18 +31,41 @@ type Props = {
 const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
   const {top: marginTop} = useSafeAreaInsets();
   const {service: serviceSelected} = route.params;
+  const [dateToShow, setDateToShow] = useState('');
 
-  const onPressLocation = () => {
-    navigation.navigate('LocationScreen' as never);
+  const {
+    petSelectedIndex,
+    locationSelectedIndex,
+    startDaySelected,
+    startHour,
+    startMinute,
+    endHour,
+    endMinute,
+  } = useContext(PetlifyContext);
+
+  useEffect(() => {
+    if (
+      startDaySelected &&
+      Boolean(parseFloat(startHour) + parseFloat(startMinute)) &&
+      Boolean(parseFloat(endHour) + parseFloat(endMinute))
+    ) {
+      changeDateToShow();
+    } else if (dateToShow) {
+      setDateToShow('');
+    }
+  }, [startDaySelected, startHour, startMinute, endHour, endMinute]);
+
+  const changeDateToShow = () => {
+    const startDate = getCompleteDate(startDaySelected, startHour, startMinute);
+    const endDate = getCompleteDate(startDaySelected, endHour, endMinute);
+
+    const formattedDate = formatDateTimeString(startDate, endDate);
+    setDateToShow(formattedDate);
   };
 
-  const onPressDate = () => {
-    navigation.navigate('DateScreen' as never);
-  };
-
-  const onPressPet = () => {
-    navigation.navigate('SelectPetScreen' as never);
-  };
+  const onPressPet = () => navigation.navigate('SelectPetScreen');
+  const onPressLocation = () => navigation.navigate('LocationScreen');
+  const onPressDate = () => navigation.navigate('SelectDateScreen');
 
   const onPressCancel = () => {
     navigation.goBack();
@@ -59,6 +86,28 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
     },
   };
 
+  const getShadowColor = (cardType: 'pet' | 'location' | 'date') => {
+    const conditions = {
+      pet: petSelectedIndex !== null,
+      location: locationSelectedIndex !== null,
+      date: Boolean(dateToShow),
+    };
+
+    return conditions[cardType]
+      ? 'rgba(30, 150, 225, 0.50)'
+      : 'rgba(0, 0, 0, 0.4)';
+  };
+
+  const isContinueButtonDisabled = () => {
+    if (petSelectedIndex === null || locationSelectedIndex === null) {
+      return true;
+    }
+    if (!dateToShow) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <View style={styles.container}>
       <Logo height={100} width={100} style={{marginTop}} />
@@ -68,7 +117,7 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
       </Text>
 
       <TouchableOpacity
-        style={styles.cardContainer}
+        style={{...styles.cardContainer, shadowColor: getShadowColor('pet')}}
         activeOpacity={0.7}
         onPress={onPressPet}>
         <View style={styles.cardImage}>
@@ -76,17 +125,25 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.cardTitle}>Mascota</Text>
-          <Text style={styles.cardSubtitle}>
-            Selecciona la mascota a{' '}
-            {serviceSelected === 'care' ? 'cuidar' : 'pasear'}
-          </Text>
+          {petSelectedIndex !== null ? (
+            <Text style={styles.cardSubtitleSelected}>
+              {pets[petSelectedIndex].name}
+            </Text>
+          ) : (
+            <Text style={styles.cardSubtitle}>
+              Selecciona la mascota a{' '}
+              {serviceSelected === 'care' ? 'cuidar' : 'pasear'}
+            </Text>
+          )}
         </View>
-        <View style={styles.spacer} />
         <Icon name="chevron-forward-sharp" size={20} color="#8A8A8A" />
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.cardContainer}
+        style={{
+          ...styles.cardContainer,
+          shadowColor: getShadowColor('location'),
+        }}
         activeOpacity={0.7}
         onPress={onPressLocation}>
         <View style={styles.cardImage}>
@@ -94,17 +151,28 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.cardTitle}>Direccion</Text>
-          <Text style={styles.cardSubtitle}>
-            Donde quieres realizar el{' '}
-            {serviceSelected === 'care' ? 'cuidado' : 'paseo'}
-          </Text>
+
+          {locationSelectedIndex !== null ? (
+            <Text
+              style={{
+                ...styles.cardSubtitleSelected,
+              }}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {locations[locationSelectedIndex].description}
+            </Text>
+          ) : (
+            <Text style={styles.cardSubtitle}>
+              Donde quieres realizar el{' '}
+              {serviceSelected === 'care' ? 'cuidado' : 'paseo'}
+            </Text>
+          )}
         </View>
-        <View style={styles.spacer} />
         <Icon name="chevron-forward-sharp" size={20} color="#8A8A8A" />
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.cardContainer}
+        style={{...styles.cardContainer, shadowColor: getShadowColor('date')}}
         activeOpacity={0.7}
         onPress={onPressDate}>
         <View style={styles.cardImage}>
@@ -112,12 +180,15 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.cardTitle}>Fecha</Text>
-          <Text style={styles.cardSubtitle}>
-            Cuando quieres realizar el{' '}
-            {serviceSelected === 'care' ? 'cuidado' : 'paseo'}
-          </Text>
+          {dateToShow ? (
+            <Text style={styles.cardSubtitleSelected}>{dateToShow}</Text>
+          ) : (
+            <Text style={styles.cardSubtitle}>
+              Cuando quieres realizar el{' '}
+              {serviceSelected === 'care' ? 'cuidado' : 'paseo'}
+            </Text>
+          )}
         </View>
-        <View style={styles.spacer} />
         <Icon name="chevron-forward-sharp" size={20} color="#8A8A8A" />
       </TouchableOpacity>
 
@@ -126,7 +197,12 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
       <CustomButton
         label="Continuar"
         onPress={navigateToPaymentMethod}
-        style={styles.continueButton}
+        style={
+          isContinueButtonDisabled() === true
+            ? styles.continueButtonDisabled
+            : styles.continueButton
+        }
+        disabled={isContinueButtonDisabled()}
       />
       <TouchableOpacity onPress={onPressCancel}>
         <Text style={styles.cancelButtonText}>Cancelar</Text>
@@ -162,8 +238,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
-
-    shadowColor: 'rgba(0, 0, 0, 0.20)',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -182,6 +256,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginLeft: 10,
+    flex: 1,
   },
   cardTitle: {
     fontSize: 16,
@@ -196,9 +271,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     color: '#8A8A8A',
   },
+  cardSubtitleSelected: {
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+    color: '#000000',
+  },
   continueButton: {
     height: 55,
-    // backgroundColor: 'gray',
+  },
+  continueButtonDisabled: {
+    height: 55,
+    backgroundColor: 'gray',
   },
   cancelButtonText: {
     fontFamily: 'Poppins-Medium',

@@ -122,10 +122,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 50,
     backgroundColor: 'white',
+    paddingHorizontal: 10,
   },
   container: {
     flex: 1,
-    paddingHorizontal: 10,
   },
   title: {
     fontSize: 26,

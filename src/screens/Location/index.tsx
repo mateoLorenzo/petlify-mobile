@@ -1,27 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {RadioCard} from '../../components/RadioCard';
 import {useNavigation} from '@react-navigation/native';
 import {CustomButton} from '../../components/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Location} from '../../interfaces';
-
-const locations: Location[] = [
-  {title: 'Casa', description: 'Colorados del Monte 142, San Miguel del Monte'},
-  {title: 'Dpto de Matu', description: 'Belgrano 2662, Mar del Plata'},
-  {title: 'Dpto de Ema', description: 'Calle altura, Ciudad'},
-];
+import {locations} from '../../data';
+import {PetlifyContext} from '../../context/PetlifyContext';
 
 const LocationScreen = () => {
   const {top} = useSafeAreaInsets();
   const navigation = useNavigation();
-  const [selectedPetIndex, setSelectedPetIndex] = useState<number | null>(null);
-
-  const handleSelect = (index: number) => {
-    setSelectedPetIndex(index);
-  };
+  const {locationSelectedIndex, setLocationSelectedIndex} =
+    useContext(PetlifyContext);
 
   const onPressNewAddress = () => {
     navigation.navigate('NewLocationScreen' as never);
@@ -41,8 +33,8 @@ const LocationScreen = () => {
         <RadioCard
           key={index}
           name={location.title}
-          selected={selectedPetIndex === index}
-          onSelect={handleSelect}
+          selected={locationSelectedIndex === index}
+          onSelect={setLocationSelectedIndex}
           index={index}
           imageURL={undefined}
           cardType="location"
@@ -60,10 +52,10 @@ const LocationScreen = () => {
       <CustomButton
         label="Continuar"
         onPress={() => navigation.goBack()}
-        disabled={selectedPetIndex === null}
+        disabled={locationSelectedIndex === null}
         style={{
           ...styles.continueButton,
-          backgroundColor: selectedPetIndex === null ? 'gray' : '#1E96FF',
+          backgroundColor: locationSelectedIndex === null ? 'gray' : '#1E96FF',
         }}
       />
     </View>

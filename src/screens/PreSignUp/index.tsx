@@ -19,14 +19,14 @@ const PreSignUpScreen = () => {
       <TouchableOpacity
         style={styles.socialButton}
         activeOpacity={0.6}
-        onPress={() => navigation.navigate('HomeScreen' as never)}>
+        onPress={() => navigation.navigate('BottomTabNavigator' as never)}>
         <GoogleIcon height={22} width={22} />
         <Text style={styles.socialButtonText}>Ingresar Con Google</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.socialButton}
         activeOpacity={0.6}
-        onPress={() => navigation.navigate('HomeScreen' as never)}>
+        onPress={() => navigation.navigate('BottomTabNavigator' as never)}>
         <FacebookIcon height={22} width={22} />
         <Text style={styles.socialButtonText}>Ingresar Con Facebook</Text>
       </TouchableOpacity>

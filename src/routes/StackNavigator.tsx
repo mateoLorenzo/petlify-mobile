@@ -29,7 +29,7 @@ import OnboardingScreens from '../screens/Onboarding';
 import PreSignUpScreen from '../screens/PreSignUp';
 import ServiceRequestScreen from '../screens/ServiceRequest';
 import LocationScreen from '../screens/Location';
-import DateScreen from '../screens/Date';
+import SelectDateScreen from '../screens/SelectDate';
 import SelectPetScreen from '../screens/SelectPet';
 import NewLocationScreen from '../screens/NewLocation';
 import SelectPaymentMethodScreen from '../screens/SelectPaymentMethod';
@@ -55,7 +55,7 @@ export type RootStackParams = {
   WorkerProfileScreen: undefined;
   ServiceRequestScreen: {service: 'walk' | 'care'};
   LocationScreen: undefined;
-  DateScreen: undefined;
+  SelectDateScreen: undefined;
   SelectPetScreen: undefined;
   NewLocationScreen: undefined;
   SelectPaymentMethodScreen: undefined;
@@ -174,8 +174,8 @@ export const StackNavigator = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="DateScreen"
-        component={DateScreen}
+        name="SelectDateScreen"
+        component={SelectDateScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
