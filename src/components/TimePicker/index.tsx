@@ -20,10 +20,9 @@ export const TimePicker = ({
   const totalHours = Array.from({length: 24}, (_, i) =>
     i.toString().padStart(2, '0'),
   );
-  const totalMinutes = Array.from({length: 60}, (_, i) =>
-    i.toString().padStart(2, '0'),
+  const totalMinutes = Array.from({length: 12}, (_, i) =>
+    (i * 5).toString().padStart(2, '0'),
   );
-
   return (
     <View style={styles.timePickerContainer}>
       <Text style={styles.label}>{label}</Text>
