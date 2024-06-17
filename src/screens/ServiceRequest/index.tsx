@@ -83,6 +83,7 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
   const {service: serviceSelected} = route.params;
   const [dateToShow, setDateToShow] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState<Boolean>(false);
+  const [checked, setChecked] = useState(false);
 
   const modalOpacity = useRef(new Animated.Value(1)).current;
 
@@ -137,6 +138,10 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
   const onPressPet = () => navigation.navigate('SelectPetScreen');
   const onPressLocation = () => navigation.navigate('LocationScreen');
   const onPressDate = () => navigation.navigate('SelectDateScreen');
+
+  const toggleChecked = () => {
+    setChecked(!checked);
+  };
 
   const onPressCancel = () => {
     navigation.goBack();
@@ -210,7 +215,6 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
         }`}
         isSelected={petSelectedIndex !== null}
       />
-
       <ServiceRequestCard
         onPress={onPressLocation}
         shadowColor={getShadowColor('location')}
@@ -239,6 +243,26 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
       />
 
       <View style={styles.spacer} />
+
+      <TouchableOpacity
+        style={styles.termsButton}
+        activeOpacity={0.5}
+        onPress={toggleChecked}>
+        <View style={styles.checkboxContainer}>
+          <View
+            style={
+              checked ? styles.checkedContainer : styles.uncheckedContainer
+            }>
+            {checked ? (
+              <Icon name="checkmark-sharp" size={15} color="#FFF" />
+            ) : null}
+          </View>
+        </View>
+        <Text style={styles.termsText}>
+          Quiero repetir este {serviceSelected === 'walk' ? 'paseo' : 'cuidado'}{' '}
+          semanalmente!
+        </Text>
+      </TouchableOpacity>
 
       <CustomButton
         label="Continuar"
@@ -367,6 +391,43 @@ const styles = StyleSheet.create({
   },
   spacer: {
     flex: 1,
+  },
+  termsButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 10,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkedContainer: {
+    height: 20,
+    width: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#1E96FF',
+    backgroundColor: '#1E96FF',
+  },
+  uncheckedContainer: {
+    height: 20,
+    width: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#A8A8A8',
+    backgroundColor: 'transparent',
+  },
+  termsText: {
+    marginLeft: 10,
+    fontSize: 13,
+    fontFamily: 'Poppins-Regular',
+    color: '#000',
   },
   cardSubtitle: {
     fontSize: 12,
