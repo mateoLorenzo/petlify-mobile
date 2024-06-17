@@ -38,7 +38,7 @@ const SelectPaymentMethodScreen = () => {
         <Icon name="arrow-back" size={25} color="#000" />
       </TouchableOpacity>
       <Text style={{...styles.title, marginTop: top + 10}}>Metodo de Pago</Text>
-      <Text style={styles.subtitle}>¡Elige tu metodo de pago mas comodo!</Text>
+      <Text style={styles.subtitle}>Elige tu metodo de pago mas comodo</Text>
 
       {paymentMethods.map((method, index) => (
         <RadioCard

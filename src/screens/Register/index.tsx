@@ -108,7 +108,6 @@ const RegisterScreen = () => {
   const validateLoginFields = async () => {
     const result = await trigger(['email', 'password']);
 
-    console.log('result', result);
     if (result) {
       onPressLogin();
     } else {

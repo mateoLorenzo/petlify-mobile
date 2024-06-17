@@ -5,6 +5,7 @@ import {
   ImageStyle,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -19,6 +20,7 @@ interface Props {
   cardType: 'pet' | 'location';
   locationDescription?: string;
   imageStyles?: ImageStyle;
+  titleStyles?: TextStyle;
 }
 
 export const RadioCard = ({
@@ -30,6 +32,7 @@ export const RadioCard = ({
   cardType = 'pet',
   locationDescription,
   imageStyles,
+  titleStyles,
 }: Props) => {
   return (
     <TouchableOpacity
@@ -44,7 +47,7 @@ export const RadioCard = ({
         </View>
       )}
       <View style={styles.cardTextContainer}>
-        <Text style={styles.cardTitle}>{name}</Text>
+        <Text style={{...styles.cardTitle, ...titleStyles}}>{name}</Text>
         {cardType === 'location' && (
           <Text
             numberOfLines={1}

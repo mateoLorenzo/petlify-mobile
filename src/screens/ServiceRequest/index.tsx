@@ -1,6 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {
+  Animated,
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import Logo from '../../../assets/images/logo.svg';
 import NewLocation from '../../../assets/images/new-location.svg';
 import NewDate from '../../../assets/images/new-date.svg';
@@ -13,6 +21,9 @@ import {RootStackParams} from '../../routes/StackNavigator';
 import {PetlifyContext} from '../../context/PetlifyContext';
 import {locations, pets} from '../../data';
 import {formatDateTimeString, getCompleteDate} from '../../utils';
+import {SvgProps} from 'react-native-svg';
+
+const {width, height} = Dimensions.get('window');
 
 type DetailsScreenNavigationProp = NativeStackNavigationProp<
   RootStackParams,
@@ -28,10 +39,53 @@ type Props = {
   route: DetailsScreenRouteProp;
 };
 
+interface ServiceRequestCardProps {
+  onPress: () => void;
+  shadowColor: string;
+  logo: React.FC<SvgProps>;
+  title: string;
+  subtitleSelected: string;
+  subtitleDefault: string;
+  isSelected: boolean;
+}
+
+const ServiceRequestCard: React.FC<ServiceRequestCardProps> = ({
+  onPress,
+  shadowColor,
+  logo: LogoComponent,
+  title,
+  subtitleSelected,
+  subtitleDefault,
+  isSelected,
+}) => {
+  return (
+    <TouchableOpacity
+      style={{...styles.cardContainer, shadowColor}}
+      activeOpacity={0.7}
+      onPress={onPress}>
+      <View style={styles.cardImage}>
+        <LogoComponent height={25} width={25} />
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.cardTitle}>{title}</Text>
+        {isSelected ? (
+          <Text style={styles.cardSubtitleSelected}>{subtitleSelected}</Text>
+        ) : (
+          <Text style={styles.cardSubtitle}>{subtitleDefault}</Text>
+        )}
+      </View>
+      <Icon name="chevron-forward-sharp" size={20} color="#8A8A8A" />
+    </TouchableOpacity>
+  );
+};
+
 const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
   const {top: marginTop} = useSafeAreaInsets();
   const {service: serviceSelected} = route.params;
   const [dateToShow, setDateToShow] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState<Boolean>(false);
+
+  const modalOpacity = useRef(new Animated.Value(1)).current;
 
   const {
     petSelectedIndex,
@@ -55,6 +109,23 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
     }
   }, [startDaySelected, startHour, startMinute, endHour, endMinute]);
 
+  const showModal = () => {
+    Animated.timing(modalOpacity, {
+      toValue: 1,
+      duration: 150,
+      useNativeDriver: true,
+    }).start();
+  };
+  const hideModal = () => {
+    Animated.timing(modalOpacity, {
+      toValue: 0,
+      duration: 150,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowConfirmModal(false);
+    });
+  };
+
   const changeDateToShow = () => {
     const startDate = getCompleteDate(startDaySelected, startHour, startMinute);
     const endDate = getCompleteDate(startDaySelected, endHour, endMinute);
@@ -71,8 +142,17 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
     navigation.goBack();
   };
 
-  const navigateToPaymentMethod = () => {
+  const onPressContinue = () => {
+    setShowConfirmModal(true);
+    showModal();
+  };
+
+  const onPressConfirmService = () => {
     navigation.navigate('SelectPaymentMethodScreen' as never);
+  };
+
+  const onPressCancelModal = () => {
+    hideModal();
   };
 
   const screenTitles = {
@@ -116,87 +196,52 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
         {screenTitles[serviceSelected].subtitle}
       </Text>
 
-      <TouchableOpacity
-        style={{...styles.cardContainer, shadowColor: getShadowColor('pet')}}
-        activeOpacity={0.7}
-        onPress={onPressPet}>
-        <View style={styles.cardImage}>
-          <Logo height={25} width={25} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.cardTitle}>Mascota</Text>
-          {petSelectedIndex !== null ? (
-            <Text style={styles.cardSubtitleSelected}>
-              {pets[petSelectedIndex].name}
-            </Text>
-          ) : (
-            <Text style={styles.cardSubtitle}>
-              Selecciona la mascota a{' '}
-              {serviceSelected === 'care' ? 'cuidar' : 'pasear'}
-            </Text>
-          )}
-        </View>
-        <Icon name="chevron-forward-sharp" size={20} color="#8A8A8A" />
-      </TouchableOpacity>
+      <ServiceRequestCard
+        onPress={onPressPet}
+        shadowColor={getShadowColor('pet')}
+        logo={Logo}
+        title="Mascota"
+        subtitleSelected={
+          petSelectedIndex !== null ? pets[petSelectedIndex].name : ''
+        }
+        subtitleDefault={`Selecciona la mascota a ${
+          serviceSelected === 'care' ? 'cuidar' : 'pasear'
+        }`}
+        isSelected={petSelectedIndex !== null}
+      />
 
-      <TouchableOpacity
-        style={{
-          ...styles.cardContainer,
-          shadowColor: getShadowColor('location'),
-        }}
-        activeOpacity={0.7}
-        onPress={onPressLocation}>
-        <View style={styles.cardImage}>
-          <NewLocation height={25} width={25} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.cardTitle}>Direccion</Text>
-
-          {locationSelectedIndex !== null ? (
-            <Text
-              style={{
-                ...styles.cardSubtitleSelected,
-              }}
-              numberOfLines={1}
-              ellipsizeMode="tail">
-              {locations[locationSelectedIndex].description}
-            </Text>
-          ) : (
-            <Text style={styles.cardSubtitle}>
-              Donde quieres realizar el{' '}
-              {serviceSelected === 'care' ? 'cuidado' : 'paseo'}
-            </Text>
-          )}
-        </View>
-        <Icon name="chevron-forward-sharp" size={20} color="#8A8A8A" />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={{...styles.cardContainer, shadowColor: getShadowColor('date')}}
-        activeOpacity={0.7}
-        onPress={onPressDate}>
-        <View style={styles.cardImage}>
-          <NewDate height={25} width={25} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.cardTitle}>Fecha</Text>
-          {dateToShow ? (
-            <Text style={styles.cardSubtitleSelected}>{dateToShow}</Text>
-          ) : (
-            <Text style={styles.cardSubtitle}>
-              Cuando quieres realizar el{' '}
-              {serviceSelected === 'care' ? 'cuidado' : 'paseo'}
-            </Text>
-          )}
-        </View>
-        <Icon name="chevron-forward-sharp" size={20} color="#8A8A8A" />
-      </TouchableOpacity>
+      <ServiceRequestCard
+        onPress={onPressLocation}
+        shadowColor={getShadowColor('location')}
+        logo={NewLocation}
+        title="Direccion"
+        subtitleSelected={
+          locationSelectedIndex !== null
+            ? locations[locationSelectedIndex].description
+            : ''
+        }
+        subtitleDefault={`Donde quieres realizar el ${
+          serviceSelected === 'care' ? 'cuidado' : 'paseo'
+        }`}
+        isSelected={locationSelectedIndex !== null}
+      />
+      <ServiceRequestCard
+        onPress={onPressDate}
+        shadowColor={getShadowColor('date')}
+        logo={NewDate}
+        title="Fecha"
+        subtitleSelected={dateToShow}
+        subtitleDefault={`Cuando quieres realizar el ${
+          serviceSelected === 'care' ? 'cuidado' : 'paseo'
+        }`}
+        isSelected={!!dateToShow}
+      />
 
       <View style={styles.spacer} />
 
       <CustomButton
         label="Continuar"
-        onPress={navigateToPaymentMethod}
+        onPress={onPressContinue}
         style={
           isContinueButtonDisabled() === true
             ? styles.continueButtonDisabled
@@ -207,6 +252,60 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
       <TouchableOpacity onPress={onPressCancel}>
         <Text style={styles.cancelButtonText}>Cancelar</Text>
       </TouchableOpacity>
+
+      {showConfirmModal && (
+        <TouchableWithoutFeedback onPress={onPressCancelModal}>
+          <Animated.View
+            style={{...styles.modalContainer, opacity: modalOpacity}}>
+            <View style={styles.confirmServiceModal}>
+              <Text style={styles.modalTitle}>Confirmemos Los Datos</Text>
+
+              <View style={styles.resumeRow}>
+                <View style={styles.locationIconContainer}>
+                  <Logo height={25} width={25} style={{}} />
+                </View>
+                <View style={styles.resumeTextContainer}>
+                  <Text style={styles.cardTitle}>Mascota</Text>
+                  <Text style={styles.resumeCardSubtitle}>
+                    {petSelectedIndex && pets[petSelectedIndex].name}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.resumeRow}>
+                <View style={styles.locationIconContainer}>
+                  <Icon name={'location-sharp'} size={22} color={'#1E96FF'} />
+                </View>
+                <View style={styles.resumeTextContainer}>
+                  <Text style={styles.cardTitle}>Direccion</Text>
+                  <Text style={styles.resumeCardSubtitle}>
+                    {locationSelectedIndex &&
+                      locations[locationSelectedIndex].description}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.resumeRow}>
+                <View style={styles.locationIconContainer}>
+                  <Icon name={'time'} size={22} color={'#1E96FF'} />
+                </View>
+                <View style={styles.resumeTextContainer}>
+                  <Text style={styles.cardTitle}>Fecha</Text>
+                  <Text style={styles.resumeCardSubtitle}>{dateToShow}</Text>
+                </View>
+              </View>
+              <CustomButton
+                label="Confirmar"
+                onPress={onPressConfirmService}
+                style={styles.confirmServiceButton}
+                labelStyle={styles.confirmButtonLabel}
+              />
+              <TouchableOpacity onPress={onPressCancelModal}>
+                <Text style={styles.cancelModalButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </TouchableWithoutFeedback>
+      )}
     </View>
   );
 };
@@ -276,6 +375,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     color: '#000000',
   },
+  resumeCardSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+    color: '#5B5B5B',
+  },
   continueButton: {
     height: 55,
   },
@@ -288,6 +392,60 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     marginTop: 15,
     fontSize: 14,
+  },
+  modalContainer: {
+    width,
+    height,
+    position: 'absolute',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  confirmServiceModal: {
+    minHeight: 400,
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+    paddingVertical: 25,
+    paddingHorizontal: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontFamily: 'Poppins-SemiBold',
+    // marginBottom: 20,
+  },
+  resumeRow: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  resumeTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    marginLeft: 10,
+  },
+  locationIconContainer: {
+    // padding: 12,
+    width: 50,
+    height: 50,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  confirmServiceButton: {
+    height: 50,
+    marginTop: 40,
+  },
+  confirmButtonLabel: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 14,
+  },
+  cancelModalButtonText: {
+    fontFamily: 'Poppins-Medium',
+    marginTop: 15,
+    fontSize: 12,
+    color: '#000',
   },
 });
 

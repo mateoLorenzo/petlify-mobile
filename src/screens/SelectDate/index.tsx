@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import {useNavigation} from '@react-navigation/native';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -24,21 +25,35 @@ const SelectDateScreen = () => {
     setEndHour,
     setEndMinute,
   } = useContext(PetlifyContext);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
-    console.log('startDaySelected', startDaySelected);
-  }, [startDaySelected]);
+    dateIsInvalid();
+  }, [startHour, startMinute, endHour, endMinute]);
 
   const onPressContinue = () => {
+    if (showError) {
+      return;
+    }
     navigation.goBack();
   };
 
+  const dateIsInvalid = () => {
+    const startTime = parseFloat(startHour + startMinute);
+    const endTime = parseFloat(endHour + endMinute);
+
+    if (startTime > endTime) {
+      setShowError(true);
+    } else {
+      setShowError(false);
+    }
+  };
+
   const serviceDateIsSelected = () => {
-    if (
-      startDaySelected &&
-      Boolean(parseFloat(startHour) + parseFloat(startMinute)) &&
-      Boolean(parseFloat(endHour) + parseFloat(endMinute))
-    ) {
+    const startTime = parseFloat(startHour + startMinute);
+    const endTime = parseFloat(endHour + endMinute);
+
+    if (startDaySelected && startTime && endTime && startTime < endTime) {
       return true;
     }
     return false;
@@ -77,14 +92,14 @@ const SelectDateScreen = () => {
 
       <View style={styles.timePickersContainer}>
         <TimePicker
-          label={`Hora de partida ${startHour}: ${startMinute}`}
+          label={`Hora de partida ${startHour}:${startMinute}`}
           hourSelected={startHour}
           minuteSelected={startMinute}
           setHourSelected={setStartHour}
           setMinuteSelected={setStartMinute}
         />
         <TimePicker
-          label={`Hora de regreso ${endHour}: ${endMinute}`}
+          label={`Hora de regreso ${endHour}:${endMinute}`}
           hourSelected={endHour}
           minuteSelected={endMinute}
           setHourSelected={setEndHour}
@@ -93,6 +108,12 @@ const SelectDateScreen = () => {
       </View>
 
       <View style={styles.spacer} />
+
+      {showError && (
+        <Text style={styles.errorText}>
+          * El horario de regreso debe ser mayor al horario de partida
+        </Text>
+      )}
 
       <CustomButton
         label="Continuar"
@@ -196,8 +217,13 @@ const styles = StyleSheet.create({
   spacer: {
     flex: 1,
   },
+  errorText: {
+    fontSize: 14,
+    color: 'red',
+    fontFamily: 'Poppins-Regular',
+    marginBottom: 10,
+  },
   continueButton: {
-    marginTop: 20,
     height: 55,
     marginBottom: 40,
   },
