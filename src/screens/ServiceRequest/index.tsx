@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import Logo from '../../../assets/images/logo.svg';
@@ -116,13 +115,14 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
       useNativeDriver: true,
     }).start();
   };
-  const hideModal = () => {
+  const hideModal = (postAnimation?: () => void) => {
     Animated.timing(modalOpacity, {
       toValue: 0,
       duration: 150,
       useNativeDriver: true,
     }).start(() => {
       setShowConfirmModal(false);
+      postAnimation && postAnimation();
     });
   };
 
@@ -148,7 +148,8 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   const onPressConfirmService = () => {
-    navigation.navigate('SelectPaymentMethodScreen' as never);
+    hideModal(() => navigation.navigate('SelectPaymentMethodScreen' as never));
+    // navigation.navigate('SelectPaymentMethodScreen' as never);
   };
 
   const onPressCancelModal = () => {
@@ -254,57 +255,59 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
       </TouchableOpacity>
 
       {showConfirmModal && (
-        <TouchableWithoutFeedback onPress={onPressCancelModal}>
-          <Animated.View
-            style={{...styles.modalContainer, opacity: modalOpacity}}>
-            <View style={styles.confirmServiceModal}>
-              <Text style={styles.modalTitle}>Confirmemos Los Datos</Text>
+        <Animated.View
+          style={{...styles.modalContainer, opacity: modalOpacity}}>
+          <TouchableOpacity
+            style={styles.pressOutsideLayer}
+            onPress={onPressCancelModal}
+          />
+          <View style={styles.confirmServiceModal}>
+            <Text style={styles.modalTitle}>Confirmemos Los Datos</Text>
 
-              <View style={styles.resumeRow}>
-                <View style={styles.locationIconContainer}>
-                  <Logo height={25} width={25} style={{}} />
-                </View>
-                <View style={styles.resumeTextContainer}>
-                  <Text style={styles.cardTitle}>Mascota</Text>
-                  <Text style={styles.resumeCardSubtitle}>
-                    {petSelectedIndex && pets[petSelectedIndex].name}
-                  </Text>
-                </View>
+            <View style={styles.resumeRow}>
+              <View style={styles.locationIconContainer}>
+                <Logo height={25} width={25} style={{}} />
               </View>
-              <View style={styles.resumeRow}>
-                <View style={styles.locationIconContainer}>
-                  <Icon name={'location-sharp'} size={22} color={'#1E96FF'} />
-                </View>
-                <View style={styles.resumeTextContainer}>
-                  <Text style={styles.cardTitle}>Direccion</Text>
-                  <Text style={styles.resumeCardSubtitle}>
-                    {locationSelectedIndex &&
-                      locations[locationSelectedIndex].description}
-                  </Text>
-                </View>
+              <View style={styles.resumeTextContainer}>
+                <Text style={styles.cardTitle}>Mascota</Text>
+                <Text style={styles.resumeCardSubtitle}>
+                  {petSelectedIndex !== null ? pets[petSelectedIndex].name : ''}
+                </Text>
               </View>
-
-              <View style={styles.resumeRow}>
-                <View style={styles.locationIconContainer}>
-                  <Icon name={'time'} size={22} color={'#1E96FF'} />
-                </View>
-                <View style={styles.resumeTextContainer}>
-                  <Text style={styles.cardTitle}>Fecha</Text>
-                  <Text style={styles.resumeCardSubtitle}>{dateToShow}</Text>
-                </View>
-              </View>
-              <CustomButton
-                label="Confirmar"
-                onPress={onPressConfirmService}
-                style={styles.confirmServiceButton}
-                labelStyle={styles.confirmButtonLabel}
-              />
-              <TouchableOpacity onPress={onPressCancelModal}>
-                <Text style={styles.cancelModalButtonText}>Cancelar</Text>
-              </TouchableOpacity>
             </View>
-          </Animated.View>
-        </TouchableWithoutFeedback>
+            <View style={styles.resumeRow}>
+              <View style={styles.locationIconContainer}>
+                <Icon name={'location-sharp'} size={22} color={'#1E96FF'} />
+              </View>
+              <View style={styles.resumeTextContainer}>
+                <Text style={styles.cardTitle}>Direccion</Text>
+                <Text style={styles.resumeCardSubtitle}>
+                  {locationSelectedIndex &&
+                    locations[locationSelectedIndex].description}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.resumeRow}>
+              <View style={styles.locationIconContainer}>
+                <Icon name={'time'} size={22} color={'#1E96FF'} />
+              </View>
+              <View style={styles.resumeTextContainer}>
+                <Text style={styles.cardTitle}>Fecha</Text>
+                <Text style={styles.resumeCardSubtitle}>{dateToShow}</Text>
+              </View>
+            </View>
+            <CustomButton
+              label="Confirmar"
+              onPress={onPressConfirmService}
+              style={styles.confirmServiceButton}
+              labelStyle={styles.confirmButtonLabel}
+            />
+            <TouchableOpacity onPress={onPressCancelModal}>
+              <Text style={styles.cancelModalButtonText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
       )}
     </View>
   );
@@ -399,7 +402,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 20,
+  },
+  pressOutsideLayer: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
   },
   confirmServiceModal: {
     minHeight: 400,
@@ -413,7 +422,6 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
-    // marginBottom: 20,
   },
   resumeRow: {
     flexDirection: 'row',
@@ -425,7 +433,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   locationIconContainer: {
-    // padding: 12,
     width: 50,
     height: 50,
     backgroundColor: '#F0F0F0',
