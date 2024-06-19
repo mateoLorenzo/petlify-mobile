@@ -148,13 +148,13 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   const onPressContinue = () => {
-    hideModal(() => navigation.navigate('SelectPaymentMethodScreen' as never));
+    hideModal(() => navigation.navigate('ConfirmServiceScreen'));
     // setShowConfirmModal(true);
     // showModal();
   };
 
   const onPressConfirmService = () => {
-    hideModal(() => navigation.navigate('SelectPaymentMethodScreen' as never));
+    hideModal(() => navigation.navigate('ConfirmServiceScreen'));
     // navigation.navigate('SelectPaymentMethodScreen' as never);
   };
 
