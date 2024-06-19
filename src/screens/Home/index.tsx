@@ -138,7 +138,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     color: '#000',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
+    marginTop: 5,
   },
   buttonsContainer: {
     width: '100%',

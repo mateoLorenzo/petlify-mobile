@@ -10,8 +10,8 @@ const addCard = require('../../../assets/images/new-card.png');
 const mercadoPago = require('../../../assets/images/mercado-pago.png');
 
 const paymentMethods = [
-  {name: 'Tarjeta debito/credito', image: addCard},
   {name: 'MercadoPago', image: mercadoPago},
+  {name: 'Tarjeta debito/credito', image: addCard},
 ];
 
 const SelectPaymentMethodScreen = () => {
