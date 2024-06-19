@@ -148,8 +148,9 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   const onPressContinue = () => {
-    setShowConfirmModal(true);
-    showModal();
+    hideModal(() => navigation.navigate('SelectPaymentMethodScreen' as never));
+    // setShowConfirmModal(true);
+    // showModal();
   };
 
   const onPressConfirmService = () => {
@@ -267,12 +268,13 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
       <CustomButton
         label="Continuar"
         onPress={onPressContinue}
-        style={
-          isContinueButtonDisabled() === true
-            ? styles.continueButtonDisabled
-            : styles.continueButton
-        }
-        disabled={isContinueButtonDisabled()}
+        style={styles.continueButton}
+        // style={
+        //   isContinueButtonDisabled() === true
+        //     ? styles.continueButtonDisabled
+        //     : styles.continueButton
+        // }
+        // disabled={isContinueButtonDisabled()}
       />
       <TouchableOpacity onPress={onPressCancel}>
         <Text style={styles.cancelButtonText}>Cancelar</Text>
