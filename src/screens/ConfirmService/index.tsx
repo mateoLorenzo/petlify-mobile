@@ -94,8 +94,9 @@ const ConfirmServiceScreen = () => {
   };
 
   const navigateToAddNewCard = () => {
-    return;
+    // return;
     // navigation.navigate('AddNewCardScreen' as never);
+    navigation.navigate('PaymentSuccessScreen' as never);
   };
 
   const onPressNormal = () => {
@@ -428,7 +429,7 @@ const styles = StyleSheet.create({
   continueButton: {
     height: 55,
     marginBottom: 40,
-    backgroundColor: 'gray',
+    // backgroundColor: 'gray',
   },
   shadow: {
     shadowColor: '#1E96FF',

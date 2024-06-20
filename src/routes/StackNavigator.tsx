@@ -35,6 +35,8 @@ import NewLocationScreen from '../screens/NewLocation';
 import AddNewCardScreen from '../screens/AddNewCard';
 import ConfirmServiceScreen from '../screens/ConfirmService';
 import SelectPaymentMethodScreen from '../screens/SelectPaymentMethod';
+import PaymentSuccessScreen from '../screens/PaymentSuccess';
+import ServiceDetailScreen from '../screens/ServiceDetail';
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -62,6 +64,8 @@ export type RootStackParams = {
   ConfirmServiceScreen: undefined;
   SelectPaymentMethodScreen: undefined;
   AddNewCardScreen: undefined;
+  PaymentSuccessScreen: undefined;
+  ServiceDetailScreen: undefined;
 
   ComponentsScreen: undefined;
   CustomButtonScreen: undefined;
@@ -203,6 +207,16 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="SelectPaymentMethodScreen"
         component={SelectPaymentMethodScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PaymentSuccessScreen"
+        component={PaymentSuccessScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ServiceDetailScreen"
+        component={ServiceDetailScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
