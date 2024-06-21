@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {
   Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
@@ -32,24 +33,22 @@ const AddNewCardScreen = () => {
   const [cardError, setCardError] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvv, setCvv] = useState('');
-  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [expiryError, setExpiryError] = useState('');
   const [cvvError, setCvvError] = useState('');
-  const [nameError, setNameError] = useState('');
 
   const onPressSaveCard = () => {
     const expiryIsValid = validateExpiry();
     const cvvIsValid = validateCvv();
-    const nameIsValid = validateName();
     const cardIsValid = validateCardNumber();
 
-    if (expiryIsValid && cvvIsValid && nameIsValid && cardIsValid) {
+    if (expiryIsValid && cvvIsValid && cardIsValid) {
       console.log({
         cardNumber,
         cardType,
         expiry,
         cvv,
-        name,
+        description,
       });
       navigation.goBack();
     }
@@ -72,15 +71,6 @@ const AddNewCardScreen = () => {
       return false;
     }
     setCvvError('');
-    return true;
-  };
-
-  const validateName = () => {
-    if (name.trim().length <= 1) {
-      setNameError('Nombre inválido');
-      return false;
-    }
-    setNameError('');
     return true;
   };
 
@@ -107,96 +97,91 @@ const AddNewCardScreen = () => {
     setCvv(text.replace(/[^0-9]/g, '').slice(0, 4));
   };
 
-  const handleNameChange = (text: string) => {
-    setName(text);
-  };
-
   return (
     <DismissKeyboard>
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{...styles.backArrowButton, marginTop: top + 10}}>
-          <Icon name="arrow-back" size={25} color="#000" />
-        </TouchableOpacity>
-        <Text style={{...styles.title, marginTop: top + 10}}>
-          Cargar Nueva Tarjeta
-        </Text>
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidingContainer}
+          behavior="padding">
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{...styles.backArrowButton, marginTop: top + 10}}>
+            <Icon name="arrow-back" size={25} color="#000" />
+          </TouchableOpacity>
+          <Text style={{...styles.title, marginTop: top + 10}}>
+            Cargar Nueva Tarjeta
+          </Text>
 
-        <View style={styles.cardInputContainer}>
-          <Text style={styles.inputLabel}>Numero de Tarjeta</Text>
-          <CardInput
-            cardNumber={cardNumber}
-            setCardNumber={setCardNumber}
-            cardType={cardType}
-            setCardType={setCardType}
-            error={cardError}
-            setError={setCardError}
-          />
-        </View>
+          <View style={styles.cardInputContainer}>
+            <Text style={styles.inputLabel}>Numero de Tarjeta</Text>
+            <CardInput
+              cardNumber={cardNumber}
+              setCardNumber={setCardNumber}
+              cardType={cardType}
+              setCardType={setCardType}
+              error={cardError}
+              setError={setCardError}
+            />
+          </View>
 
-        <View style={styles.doubleFieldsContainer}>
-          <View style={styles.spacer}>
-            <Text style={styles.inputLabel}>Vencimiento</Text>
+          <View style={styles.doubleFieldsContainer}>
+            <View style={styles.spacer}>
+              <Text style={styles.inputLabel}>Vencimiento</Text>
+              <TextInput
+                style={styles.cardInput}
+                placeholder="MM/YY"
+                placeholderTextColor="#9B9B9B"
+                value={expiry}
+                onChangeText={handleExpiryChange}
+                onBlur={validateExpiry}
+                keyboardType="numeric"
+                maxLength={5}
+              />
+              {expiryError ? (
+                <Text style={styles.errorText}>{expiryError}</Text>
+              ) : null}
+            </View>
+            <View style={styles.cvvInputContainer}>
+              <Text style={styles.inputLabel}>CVV</Text>
+              <TextInput
+                style={styles.cardInput}
+                placeholder="123"
+                placeholderTextColor="#9B9B9B"
+                value={cvv}
+                onChangeText={handleCvvChange}
+                onBlur={validateCvv}
+                keyboardType="numeric"
+                maxLength={4}
+              />
+              {cvvError ? (
+                <Text style={styles.errorText}>{cvvError}</Text>
+              ) : null}
+            </View>
+          </View>
+
+          <View style={styles.cardInputContainer}>
+            <Text style={styles.inputLabel}>Descripcion (opcional)</Text>
             <TextInput
               style={styles.cardInput}
-              placeholder="MM/YY"
+              placeholder="Ej: Debito Brubank"
               placeholderTextColor="#9B9B9B"
-              value={expiry}
-              onChangeText={handleExpiryChange}
-              onBlur={validateExpiry}
-              keyboardType="numeric"
-              maxLength={5}
+              value={description}
+              onChangeText={setDescription}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
             />
-            {expiryError ? (
-              <Text style={styles.errorText}>{expiryError}</Text>
-            ) : null}
           </View>
-          <View style={styles.cvvInputContainer}>
-            <Text style={styles.inputLabel}>CVV</Text>
-            <TextInput
-              style={styles.cardInput}
-              placeholder="123"
-              placeholderTextColor="#9B9B9B"
-              value={cvv}
-              onChangeText={handleCvvChange}
-              onBlur={validateCvv}
-              keyboardType="numeric"
-              maxLength={4}
-            />
-            {cvvError ? <Text style={styles.errorText}>{cvvError}</Text> : null}
-          </View>
-        </View>
 
-        <View style={styles.cardInputContainer}>
-          <Text style={styles.inputLabel}>Nombre</Text>
-          <TextInput
-            style={styles.cardInput}
-            placeholder="John Wick"
-            placeholderTextColor="#9B9B9B"
-            value={name}
-            onChangeText={handleNameChange}
-            onBlur={validateName}
+          <View style={styles.spacer} />
+
+          <CustomButton
+            label="Guardar Tarjeta"
+            onPress={onPressSaveCard}
+            style={styles.saveCardButton}
           />
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-        </View>
-
-        <View style={styles.spacer} />
-
-        <View style={styles.cardInputContainer}>
-          <Text style={styles.inputLabel}>Descripcion (opcional)</Text>
-          <TextInput
-            style={styles.cardInput}
-            placeholder="Ej: Debito Brubank"
-            placeholderTextColor="#9B9B9B"
-          />
-        </View>
-
-        <CustomButton
-          label="Guardar Tarjeta"
-          onPress={onPressSaveCard}
-          style={styles.saveCardButton}
-        />
+        </KeyboardAvoidingView>
+        <View style={styles.bottomSpacer} />
       </View>
     </DismissKeyboard>
   );
@@ -209,9 +194,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#fff',
   },
+  keyboardAvoidingContainer: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+  },
   backArrowButton: {
     position: 'absolute',
-    left: 20,
+    left: 0,
     height: 40,
     width: 40,
     justifyContent: 'center',
@@ -264,12 +254,15 @@ const styles = StyleSheet.create({
   },
   saveCardButton: {
     height: 55,
-    marginBottom: 40,
+    marginBottom: 10,
   },
   errorText: {
     color: 'red',
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
+  },
+  bottomSpacer: {
+    marginBottom: 30,
   },
 });
 
