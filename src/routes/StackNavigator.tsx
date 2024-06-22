@@ -37,6 +37,7 @@ import ConfirmServiceScreen from '../screens/ConfirmService';
 import SelectPaymentMethodScreen from '../screens/SelectPaymentMethod';
 import PaymentSuccessScreen from '../screens/PaymentSuccess';
 import ServiceDetailScreen from '../screens/ServiceDetail';
+import {PaymentCard, PaymentMethod} from '../interfaces';
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -61,8 +62,8 @@ export type RootStackParams = {
   SelectDateScreen: undefined;
   SelectPetScreen: undefined;
   NewLocationScreen: undefined;
-  ConfirmServiceScreen: undefined;
-  SelectPaymentMethodScreen: undefined;
+  ConfirmServiceScreen: PaymentMethod | undefined;
+  SelectPaymentMethodScreen: PaymentCard | undefined;
   AddNewCardScreen: undefined;
   PaymentSuccessScreen: undefined;
   ServiceDetailScreen: undefined;

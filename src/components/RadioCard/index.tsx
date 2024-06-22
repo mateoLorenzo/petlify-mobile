@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {SvgProps} from 'react-native-svg'; // Importar SvgProps
 
 interface Props {
   name: string;
@@ -17,10 +18,11 @@ interface Props {
   onSelect: (index: number) => void;
   index: number;
   imageURL: ImageSourcePropType | undefined;
-  cardType: 'pet' | 'location';
+  cardType: 'pet' | 'location' | 'payment';
   locationDescription?: string;
   imageStyles?: ImageStyle;
   titleStyles?: TextStyle;
+  SvgIcon?: React.FC<SvgProps>;
 }
 
 export const RadioCard = ({
@@ -33,6 +35,7 @@ export const RadioCard = ({
   locationDescription,
   imageStyles,
   titleStyles,
+  SvgIcon,
 }: Props) => {
   return (
     <TouchableOpacity
@@ -41,14 +44,17 @@ export const RadioCard = ({
       onPress={() => onSelect(index)}>
       {cardType === 'pet' ? (
         <Image style={{...styles.petImage, ...imageStyles}} source={imageURL} />
-      ) : (
+      ) : cardType === 'location' ? (
         <View style={styles.locationIconContainer}>
           <Icon name={'location-sharp'} size={22} color={'#1E96FF'} />
         </View>
+      ) : (
+        SvgIcon && <SvgIcon width={50} height={50} />
       )}
       <View style={styles.cardTextContainer}>
         <Text style={{...styles.cardTitle, ...titleStyles}}>{name}</Text>
-        {cardType === 'location' && (
+        {/* {(cardType === 'location' || cardType === 'payment') && ( */}
+        {locationDescription && (
           <Text
             numberOfLines={1}
             ellipsizeMode="tail"

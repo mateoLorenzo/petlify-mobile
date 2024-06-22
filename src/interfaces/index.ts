@@ -1,4 +1,5 @@
 import {ImageSourcePropType} from 'react-native';
+import {SvgProps} from 'react-native-svg';
 
 export interface ScheduleDetails {
   serviceType: 'walk' | 'care';
@@ -19,4 +20,18 @@ export interface Pet {
 export interface Location {
   title: string;
   description: string;
+}
+
+export interface PaymentMethod {
+  name: string;
+  image: React.FC<SvgProps>;
+  description?: string;
+}
+
+export interface PaymentCard {
+  cardNumber: string;
+  expiry: string;
+  cvv: string;
+  description: string;
+  cardType: string;
 }

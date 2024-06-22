@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {
-  Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
@@ -8,24 +7,28 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomButton} from '../../components/CustomButton';
 import CardInput from '../../components/CardInput';
 import cardValidator from 'card-validator';
+import {DismissKeyboard} from '../../components/DismissKeyboard';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../routes/StackNavigator';
 
-const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
-  <TouchableOpacity
-    activeOpacity={1}
-    style={{flex: 1}}
-    onPress={() => Keyboard.dismiss()}>
-    {children}
-  </TouchableOpacity>
-);
+type DetailsScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParams,
+  'AddNewCardScreen'
+>;
+type DetailsScreenRouteProp = RouteProp<RootStackParams, 'AddNewCardScreen'>;
 
-const AddNewCardScreen = () => {
-  const navigation = useNavigation();
+type Props = {
+  navigation: DetailsScreenNavigationProp;
+  route: DetailsScreenRouteProp;
+};
+
+const AddNewCardScreen: React.FC<Props> = ({navigation}) => {
   const {top} = useSafeAreaInsets();
 
   const [cardNumber, setCardNumber] = useState('');
@@ -43,14 +46,14 @@ const AddNewCardScreen = () => {
     const cardIsValid = validateCardNumber();
 
     if (expiryIsValid && cvvIsValid && cardIsValid) {
-      console.log({
+      const cardInfo = {
         cardNumber,
-        cardType,
         expiry,
         cvv,
         description,
-      });
-      navigation.goBack();
+        cardType,
+      };
+      navigation.navigate('SelectPaymentMethodScreen', {...cardInfo});
     }
   };
 
@@ -163,7 +166,7 @@ const AddNewCardScreen = () => {
             <Text style={styles.inputLabel}>Descripcion (opcional)</Text>
             <TextInput
               style={styles.cardInput}
-              placeholder="Ej: Debito Brubank"
+              placeholder="Ej: Debito de Brubank"
               placeholderTextColor="#9B9B9B"
               value={description}
               onChangeText={setDescription}
@@ -263,6 +266,10 @@ const styles = StyleSheet.create({
   },
   bottomSpacer: {
     marginBottom: 30,
+  },
+  cardIcon: {
+    position: 'absolute',
+    right: 20,
   },
 });
 

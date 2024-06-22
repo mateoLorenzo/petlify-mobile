@@ -2,15 +2,31 @@ import React, {useRef, useState} from 'react';
 import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CustomButton} from '../../components/CustomButton';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Logo from '../../../assets/images/logo.svg';
 import LogoBlack from '../../../assets/images/logo-black.svg';
 import Cash from '../../../assets/images/cash.svg';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../routes/StackNavigator';
 
-const ConfirmServiceScreen = () => {
+type DetailsScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParams,
+  'ConfirmServiceScreen'
+>;
+type DetailsScreenRouteProp = RouteProp<
+  RootStackParams,
+  'ConfirmServiceScreen'
+>;
+
+type Props = {
+  navigation: DetailsScreenNavigationProp;
+  route: DetailsScreenRouteProp;
+};
+
+const ConfirmServiceScreen: React.FC<Props> = ({navigation, route}) => {
+  const selectedPaymentMethod = route.params;
   const {top} = useSafeAreaInsets();
-  const navigation = useNavigation();
   const [selectedServiceType, setSelectedServiceType] = useState<
     'normal' | 'premium'
   >('normal');
@@ -94,9 +110,7 @@ const ConfirmServiceScreen = () => {
   };
 
   const navigateToAddNewCard = () => {
-    // return;
-    // navigation.navigate('AddNewCardScreen' as never);
-    navigation.navigate('PaymentSuccessScreen' as never);
+    navigation.navigate('PaymentSuccessScreen');
   };
 
   const onPressNormal = () => {
@@ -108,8 +122,10 @@ const ConfirmServiceScreen = () => {
   };
 
   const onAddNewPaymentMethod = () => {
-    navigation.navigate('SelectPaymentMethodScreen' as never);
+    navigation.navigate('SelectPaymentMethodScreen');
   };
+
+  // const method = {"description": "Mas elegida", "image": [Function SvgComponent], "name": "MercadoPago"}
 
   return (
     <View style={{...styles.container}}>
@@ -247,12 +263,29 @@ const ConfirmServiceScreen = () => {
         </View>
       </View>
 
-      <TouchableOpacity
-        onPress={onAddNewPaymentMethod}
-        style={styles.paymentMethodButton}>
-        <Icon name="add-outline" size={25} style={styles.paymentMethodImage} />
-        <Text style={styles.paymentButtonText}>Agregar método de pago</Text>
-      </TouchableOpacity>
+      {selectedPaymentMethod ? (
+        <TouchableOpacity
+          onPress={onAddNewPaymentMethod}
+          style={styles.paymentMethodSelectedButton}>
+          <selectedPaymentMethod.image height={40} width={40} />
+          <Text style={styles.paymentMethodSelectedText}>
+            {selectedPaymentMethod.name}
+          </Text>
+          <View style={styles.spacer} />
+          <Icon name="chevron-forward" size={25} color="gray" />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={onAddNewPaymentMethod}
+          style={styles.paymentMethodButton}>
+          <Icon
+            name="add-outline"
+            size={25}
+            style={styles.paymentMethodImage}
+          />
+          <Text style={styles.paymentButtonText}>Agregar método de pago</Text>
+        </TouchableOpacity>
+      )}
 
       <CustomButton
         label="Confirmar"
@@ -384,6 +417,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     color: '#000',
   },
+  paymentMethodSelectedText: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 16,
+    marginLeft: 10,
+  },
   paymentMethodButton: {
     borderWidth: 1,
     borderColor: '#000',
@@ -392,6 +430,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 15,
+    marginVertical: 10,
+    flexDirection: 'row',
+  },
+  paymentMethodSelectedButton: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    width: '100%',
+    borderRadius: 5,
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
     marginVertical: 10,
     flexDirection: 'row',
   },
