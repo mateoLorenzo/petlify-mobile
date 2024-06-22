@@ -1,15 +1,24 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomButton} from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
+const {width} = Dimensions.get('window');
 const PaymentSuccessScreen = () => {
   const {top} = useSafeAreaInsets();
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
+      <LottieView
+        style={styles.animation}
+        source={require('../../../assets/animations/party12.json')}
+        autoPlay
+        speed={0.6}
+        loop={false}
+      />
       <View style={{...styles.checkContainer, marginTop: top + 20}}>
         <Icon name="checkmark-outline" size={60} color="#FFF" />
       </View>
@@ -100,6 +109,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 5,
     color: '#8A8A8A',
+  },
+  animation: {
+    width,
+    height: '100%',
+    position: 'absolute',
+    zIndex: -1,
   },
 });
 

@@ -65,6 +65,18 @@ const SelectPaymentMethodScreen: React.FC<Props> = ({navigation, route}) => {
     if (!route.params) {
       return;
     }
+
+    const cardAlreadyExists = paymentMethods.some(
+      method => method.name === route.params?.name,
+    );
+
+    if (cardAlreadyExists) {
+      const index = paymentMethods.findIndex(
+        method => method.name === route.params?.name,
+      );
+      setSelectedMethodIndex(index);
+      return;
+    }
     const {cardNumber, cardType, description} = route.params;
     const newCard = {
       name: description || cardNumber,

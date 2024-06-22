@@ -110,6 +110,9 @@ const ConfirmServiceScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   const navigateToAddNewCard = () => {
+    if (selectedPaymentMethod === undefined) {
+      return;
+    }
     navigation.navigate('PaymentSuccessScreen');
   };
 
@@ -125,7 +128,12 @@ const ConfirmServiceScreen: React.FC<Props> = ({navigation, route}) => {
     navigation.navigate('SelectPaymentMethodScreen');
   };
 
-  // const method = {"description": "Mas elegida", "image": [Function SvgComponent], "name": "MercadoPago"}
+  const onModifyPaymentMethod = () => {
+    if (selectedPaymentMethod !== undefined) {
+      const methodSelected = route.params;
+      navigation.navigate('SelectPaymentMethodScreen', methodSelected as never);
+    }
+  };
 
   return (
     <View style={{...styles.container}}>
@@ -265,7 +273,7 @@ const ConfirmServiceScreen: React.FC<Props> = ({navigation, route}) => {
 
       {selectedPaymentMethod ? (
         <TouchableOpacity
-          onPress={onAddNewPaymentMethod}
+          onPress={onModifyPaymentMethod}
           style={styles.paymentMethodSelectedButton}>
           <selectedPaymentMethod.image height={40} width={40} />
           <Text style={styles.paymentMethodSelectedText}>
@@ -290,7 +298,12 @@ const ConfirmServiceScreen: React.FC<Props> = ({navigation, route}) => {
       <CustomButton
         label="Confirmar"
         onPress={navigateToAddNewCard}
-        style={styles.continueButton}
+        style={{
+          ...styles.continueButton,
+          ...(selectedPaymentMethod
+            ? {backgroundColor: '#1E96FF'}
+            : {backgroundColor: 'gray'}),
+        }}
       />
     </View>
   );

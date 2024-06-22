@@ -34,4 +34,5 @@ export interface PaymentCard {
   cvv: string;
   description: string;
   cardType: string;
+  name?: string;
 }
