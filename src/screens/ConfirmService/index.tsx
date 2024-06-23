@@ -182,9 +182,9 @@ const ConfirmServiceScreen: React.FC<Props> = ({navigation, route}) => {
                 opacity: normalDetailOpacity,
               }}>
               <Text style={styles.cardDetailText}>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Voluptas repudiandae doloremque enim et quasi eos nisi magni
-                eveniet laborum repellendus?
+                Tu mascota disfrutará de un emocionante paseo junto a otros
+                amigos peludos, bajo la supervisión de un paseador profesional.
+                ¡Diversión y emoción garantizadas!
               </Text>
               <View style={styles.spacer} />
               <TouchableOpacity onPress={() => onPressNormalCardInfo('price')}>
@@ -235,9 +235,9 @@ const ConfirmServiceScreen: React.FC<Props> = ({navigation, route}) => {
                 opacity: premiumDetailOpacity,
               }}>
               <Text style={styles.cardDetailText}>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Voluptas repudiandae doloremque enim et quasi eos nisi magni
-                eveniet laborum repellendus?
+                Disfruta de un paseo personalizado para tu mascota. Un paseador
+                seleccionado se dedicará únicamente a tu mascota, garantizando
+                atención total y una experiencia de lujo.
               </Text>
               <View style={styles.spacer} />
               <TouchableOpacity onPress={() => onPressPremiumCardInfo('price')}>

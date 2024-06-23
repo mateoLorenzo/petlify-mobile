@@ -53,7 +53,6 @@ export const RadioCard = ({
       )}
       <View style={styles.cardTextContainer}>
         <Text style={{...styles.cardTitle, ...titleStyles}}>{name}</Text>
-        {/* {(cardType === 'location' || cardType === 'payment') && ( */}
         {locationDescription && (
           <Text
             numberOfLines={1}
