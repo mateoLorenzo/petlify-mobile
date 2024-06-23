@@ -109,13 +109,13 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
     }
   }, [startDaySelected, startHour, startMinute, endHour, endMinute]);
 
-  const showModal = () => {
-    Animated.timing(modalOpacity, {
-      toValue: 1,
-      duration: 150,
-      useNativeDriver: true,
-    }).start();
-  };
+  // const showModal = () => {
+  //   Animated.timing(modalOpacity, {
+  //     toValue: 1,
+  //     duration: 150,
+  //     useNativeDriver: true,
+  //   }).start();
+  // };
   const hideModal = (postAnimation?: () => void) => {
     Animated.timing(modalOpacity, {
       toValue: 0,
@@ -185,15 +185,15 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
       : 'rgba(0, 0, 0, 0.4)';
   };
 
-  const isContinueButtonDisabled = () => {
-    if (petSelectedIndex === null || locationSelectedIndex === null) {
-      return true;
-    }
-    if (!dateToShow) {
-      return true;
-    }
-    return false;
-  };
+  // const isContinueButtonDisabled = () => {
+  //   if (petSelectedIndex === null || locationSelectedIndex === null) {
+  //     return true;
+  //   }
+  //   if (!dateToShow) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
   return (
     <View style={styles.container}>
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     marginTop: 25,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
   },
   subtitle: {
     fontSize: 16,

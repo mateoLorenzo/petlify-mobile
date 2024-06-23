@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
   },
   serviceTypeCardsContainer: {
     flexDirection: 'row',
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   cardTitle: {
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
     fontSize: 16,
     marginTop: 10,
   },

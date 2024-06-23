@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   newTitle: {
     fontSize: 28,
     marginTop: 20,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
   },
   newSubtitle: {
     fontSize: 16,

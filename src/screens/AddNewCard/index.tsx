@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     marginTop: 20,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
     marginBottom: 40,
   },
   cardNumberInput: {

@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 26,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
   },
   backIconButton: {
     position: 'absolute',

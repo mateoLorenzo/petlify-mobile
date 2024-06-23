@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     marginTop: 10,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
   },
   subtitle: {
     fontSize: 16,
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   noSchedulesTitle: {
     fontSize: 18,
     marginTop: -40,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
     color: '#000',
   },
   noSchedulesSubtitle: {

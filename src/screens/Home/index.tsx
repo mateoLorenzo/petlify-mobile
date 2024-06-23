@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     marginTop: 10,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
+    color: '#000',
   },
   subtitle: {
     fontSize: 16,
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     marginBottom: 20,
-    marginTop: 5,
+    marginTop: Platform.OS === 'ios' ? 5 : 0,
   },
   buttonsContainer: {
     width: '100%',
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
   },
   serviceFeeTitle: {
     fontSize: 16,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
     width: '100%',
     textAlign: 'center',
   },
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
   },
   nextFeatureTitle: {
     fontSize: 14,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
     width: '100%',
     textAlign: 'center',
     marginTop: 10,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Logo from '../../../assets/images/logo.svg';
 import GoogleIcon from '../../../assets/images/google.svg';
@@ -65,11 +65,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     marginTop: 20,
-    fontFamily: 'Poppins-Semibold',
+    color: '#000',
+    fontFamily: 'Poppins-SemiBold',
   },
   subtitle: {
     fontSize: 16,
-    marginTop: 5,
+    marginTop: Platform.OS === 'ios' ? 5 : 0,
     marginBottom: 40,
     fontWeight: '100',
     fontFamily: 'Poppins-Regular',

@@ -3,6 +3,7 @@ import React, {useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -62,7 +63,12 @@ const Screen2 = ({onPress, goBack}: ScreenProps) => {
         <View style={[styles.stepDot, styles.doneStepDot]} />
         <View style={styles.stepDot} />
       </View>
-      <TouchableOpacity style={{...styles.goBackButton, top}} onPress={goBack}>
+      <TouchableOpacity
+        style={{
+          ...styles.goBackButton,
+          top: Platform.OS === 'ios' ? top : top + 20,
+        }}
+        onPress={goBack}>
         <Icon name="arrow-back" size={25} color="#000" />
       </TouchableOpacity>
       <Text style={styles.title}>¡Encuentra Cuidadores!</Text>
@@ -93,11 +99,16 @@ const Screen3 = ({goBack}: ScreenProps) => {
         <View style={[styles.stepDot, styles.doneStepDot]} />
         <View style={[styles.stepDot, styles.doneStepDot]} />
       </View>
-      <TouchableOpacity style={{...styles.goBackButton, top}} onPress={goBack}>
+      <TouchableOpacity
+        style={{
+          ...styles.goBackButton,
+          top: Platform.OS === 'ios' ? top : top + 20,
+        }}
+        onPress={goBack}>
         <Icon name="arrow-back" size={25} color="#000" />
       </TouchableOpacity>
-      <Text style={styles.title}>Proximamente</Text>
-      <Text style={styles.subtitle}>Adopcion</Text>
+      <Text style={{...styles.title}}>Proximamente</Text>
+      <Text style={{...styles.subtitle}}>Adopcion</Text>
       <Text style={styles.description}>
         Estamos trabajando para hacer de petlify una plataforma en donde puedas
         conectar con amigos peludos en busqueda de un hogar.
@@ -245,14 +256,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 20,
     fontFamily: 'Poppins-Bold',
+    color: '#000',
   },
   subtitle: {
     fontSize: 15,
-    marginTop: 10,
+    marginTop: Platform.OS === 'ios' ? 10 : 0,
     marginBottom: 10,
     textAlign: 'center',
     paddingHorizontal: 20,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Poppins-Regular',
     color: '#747474',
   },
   description: {
@@ -260,16 +272,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     paddingHorizontal: 20,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Poppins-Regular',
     color: '#747474',
   },
   launchText: {
     fontSize: 15,
-    marginTop: 30,
+    marginTop: 20,
     textAlign: 'center',
     paddingHorizontal: 20,
     fontFamily: 'Poppins-Medium',
-    color: '#747474',
+    color: '#000',
   },
   launchDate: {
     fontWeight: 'bold',

@@ -137,12 +137,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    // paddingHorizontal: 20,
   },
   title: {
     fontSize: 26,
     marginTop: 10,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
   },
   subtitle: {
     fontSize: 16,
@@ -155,7 +154,7 @@ const styles = StyleSheet.create({
   registerPetTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
     marginTop: 20,
   },
   registerPetSubtitle: {
@@ -206,7 +205,7 @@ const styles = StyleSheet.create({
   },
   petName: {
     fontSize: 18,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
   },
   petTopDescription: {
     fontSize: 14,
