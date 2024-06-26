@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  Dimensions,
-  Keyboard,
   Platform,
   StyleSheet,
   Text,
@@ -15,25 +13,17 @@ import MapView, {
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 
-const {width, height} = Dimensions.get('window');
-
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.02;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const INITIAL_LAT = 28.46254;
 const INITIAL_LNG = -81.397272;
-const INITIAL_POSITION = {
-  latitude: INITIAL_LAT,
-  longitude: INITIAL_LNG,
-  latitudeDelta: LATITUDE_DELTA,
-  longitudeDelta: LONGITUDE_DELTA,
-};
 
 const GOOGLE_API_KEY = 'AIzaSyCSu-CaK-Oaq7q42s-4GLQEFZCnBZ76MH8';
 
 const NewLocationScreen = () => {
   const [searchText, setSearchText] = React.useState('');
-  const [results, setResults] = React.useState<any>();
+  const [origin, setOrigin] = React.useState({
+    latitude: 60.157593,
+    longitude: 24.545464,
+  });
   const map = React.useRef<MapView | null>(null);
 
   const searchPlaces = async () => {
@@ -50,28 +40,11 @@ const NewLocationScreen = () => {
     try {
       const resp = await fetch(url);
       const json = await resp.json();
-      if (json && json.results && json.results.length) {
-        const coords = [];
-        for (const item of json.results) {
-          coords.push({
-            latitude: item.geometry.location.lat,
-            longitude: item.geometry.location.lng,
-          });
-        }
-        setResults(json.results);
-        if (coords.length) {
-          map.current?.fitToCoordinates(coords, {
-            edgePadding: {
-              top: 50,
-              right: 50,
-              bottom: 50,
-              left: 50,
-            },
-            animated: true,
-          });
-          Keyboard.dismiss();
-        }
-      }
+      const result = json.results[0].geometry.location;
+      setOrigin({
+        latitude: result.lat,
+        longitude: result.lng,
+      });
     } catch (error) {
       console.log('error', error);
     }
@@ -85,29 +58,17 @@ const NewLocationScreen = () => {
         provider={
           Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
         }
-        region={{
-          latitude: -35.441722,
-          longitude: -58.819361,
-          latitudeDelta: 0.015,
+        initialRegion={{
+          latitude: origin.latitude,
+          longitude: origin.longitude,
+          latitudeDelta: 0.035,
           longitudeDelta: 0.0121,
         }}>
-        {results &&
-          results.length &&
-          results.map((item, i) => {
-            const coord = {
-              latitude: item.geometry.location.lat,
-              longitude: item.geometry.location.lng,
-            };
-            return (
-              <Marker
-                key={`search-item${i}`}
-                coordinate={coord}
-                // title={item.name}
-                title={item.name}
-                description={''}
-              />
-            );
-          })}
+        <Marker
+          coordinate={origin}
+          draggable
+          onDragEnd={direction => setOrigin(direction.nativeEvent.coordinate)}
+        />
       </MapView>
       <View style={styles.searchInputContainer}>
         <TextInput
