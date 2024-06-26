@@ -1,54 +1,25 @@
 import React from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import MapView, {
   Marker,
   PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 
-const INITIAL_LAT = 28.46254;
-const INITIAL_LNG = -81.397272;
-
 const GOOGLE_API_KEY = 'AIzaSyCSu-CaK-Oaq7q42s-4GLQEFZCnBZ76MH8';
 
+interface mapsCoords {
+  lat: number;
+  lng: number;
+}
+
 const NewLocationScreen = () => {
-  const [searchText, setSearchText] = React.useState('');
   const [origin, setOrigin] = React.useState({
-    latitude: 60.157593,
-    longitude: 24.545464,
+    latitude: -35.441684,
+    longitude: -58.819489,
   });
   const map = React.useRef<MapView | null>(null);
-
-  const searchPlaces = async () => {
-    if (!searchText.trim().length) {
-      return;
-    }
-    const googleApisURL =
-      'https://maps.googleapis.com/maps/api/place/textsearch/json';
-    const input = searchText.trim();
-    const location = `${INITIAL_LAT},${INITIAL_LNG}&radius=5000`;
-
-    const url = `${googleApisURL}?query=${input}&location=${location}&key=${GOOGLE_API_KEY}`;
-
-    try {
-      const resp = await fetch(url);
-      const json = await resp.json();
-      const result = json.results[0].geometry.location;
-      setOrigin({
-        latitude: result.lat,
-        longitude: result.lng,
-      });
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -71,16 +42,31 @@ const NewLocationScreen = () => {
         />
       </MapView>
       <View style={styles.searchInputContainer}>
-        <TextInput
-          placeholder="Search place"
-          autoCapitalize="sentences"
-          style={styles.searchInput}
-          onChangeText={setSearchText}
-          value={searchText}
+        <GooglePlacesAutocomplete
+          placeholder="Search"
+          fetchDetails
+          enablePoweredByContainer={false}
+          onPress={(data, details = null) => {
+            const {lat, lng} = details?.geometry.location as mapsCoords;
+            setOrigin({
+              latitude: lat,
+              longitude: lng,
+            });
+            map.current?.animateToRegion({
+              latitude: lat,
+              longitude: lng,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.00821,
+            });
+          }}
+          textInputProps={{
+            style: styles.searchInput,
+          }}
+          query={{
+            key: GOOGLE_API_KEY,
+            language: 'en',
+          }}
         />
-        <TouchableOpacity style={styles.searchButton} onPress={searchPlaces}>
-          <Text style={styles.searchButtonText}>Search</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -104,6 +90,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     padding: 10,
+    flexDirection: 'row',
   },
   searchInput: {
     height: 40,

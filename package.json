@@ -21,6 +21,7 @@
     "react-native": "0.73.6",
     "react-native-calendars": "^1.1305.0",
     "react-native-element-dropdown": "^2.10.4",
+    "react-native-google-places-autocomplete": "^2.5.6",
     "react-native-image-crop-picker": "^0.40.3",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "^1.15.6",
