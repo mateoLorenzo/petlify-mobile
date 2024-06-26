@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   continueButton: {
-    height: 50,
+    height: 55,
     marginTop: 50,
   },
   continueButtonLabel: {
