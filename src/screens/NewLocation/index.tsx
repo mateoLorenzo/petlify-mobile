@@ -1,13 +1,17 @@
-import React from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useRef} from 'react';
+import {Animated, Dimensions} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import MapView, {
   Marker,
   PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const GOOGLE_API_KEY = 'AIzaSyCSu-CaK-Oaq7q42s-4GLQEFZCnBZ76MH8';
+const {height} = Dimensions.get('window');
 
 interface mapsCoords {
   lat: number;
@@ -16,10 +20,32 @@ interface mapsCoords {
 
 const NewLocationScreen = () => {
   const [origin, setOrigin] = React.useState({
-    latitude: -35.441684,
-    longitude: -58.819489,
+    latitude: -34.913854,
+    longitude: -65.318303,
   });
   const map = React.useRef<MapView | null>(null);
+  const navigation = useNavigation();
+  const modalHeight = useRef(new Animated.Value(0.95)).current;
+  const autocompleteRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (autocompleteRef.current) {
+      autocompleteRef.current.setAddressText('');
+      autocompleteRef.current.focus();
+    }
+  }, []);
+
+  const toggleModalHeight = (animation: 'expand' | 'reduce') => {
+    Animated.timing(modalHeight, {
+      toValue: animation === 'expand' ? 0.95 : 0.25,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const goBack = () => {
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
@@ -32,8 +58,8 @@ const NewLocationScreen = () => {
         initialRegion={{
           latitude: origin.latitude,
           longitude: origin.longitude,
-          latitudeDelta: 0.035,
-          longitudeDelta: 0.0121,
+          latitudeDelta: 9.0,
+          longitudeDelta: 9.0,
         }}>
         <Marker
           coordinate={origin}
@@ -41,13 +67,29 @@ const NewLocationScreen = () => {
           onDragEnd={direction => setOrigin(direction.nativeEvent.coordinate)}
         />
       </MapView>
-      <View style={styles.searchInputContainer}>
+      <Animated.View
+        style={{
+          ...styles.modal,
+          height: modalHeight.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0%', '100%'],
+          }),
+        }}>
+        <View style={styles.modalTopLine} />
+        <View style={styles.titleRow}>
+          <TouchableOpacity onPress={goBack} style={styles.iconContainer}>
+            <Icon name={'arrow-back'} size={20} color={'#000'} />
+          </TouchableOpacity>
+          <Text style={styles.modalTitle}>Ingrese su direccion</Text>
+        </View>
         <GooglePlacesAutocomplete
-          placeholder="Search"
+          placeholder="Buscar"
+          ref={autocompleteRef}
           fetchDetails
           enablePoweredByContainer={false}
           onPress={(data, details = null) => {
             const {lat, lng} = details?.geometry.location as mapsCoords;
+            toggleModalHeight('reduce');
             setOrigin({
               latitude: lat,
               longitude: lng,
@@ -61,13 +103,22 @@ const NewLocationScreen = () => {
           }}
           textInputProps={{
             style: styles.searchInput,
+            onFocus: () => toggleModalHeight('expand'),
           }}
+          renderRow={item => (
+            <>
+              <View style={styles.locationIconContainer}>
+                <Icon name={'location-sharp'} size={16} color={'#1E96FF'} />
+              </View>
+              <Text style={styles.itemDescription}>{item.description}</Text>
+            </>
+          )}
           query={{
             key: GOOGLE_API_KEY,
-            language: 'en',
+            language: 'es',
           }}
         />
-      </View>
+      </Animated.View>
     </View>
   );
 };
@@ -77,41 +128,63 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    padding: 20,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  searchInputContainer: {
-    position: 'absolute',
-    top: 40,
-    backgroundColor: 'white',
-    width: '100%',
-    borderRadius: 10,
-    alignItems: 'center',
-    padding: 10,
-    flexDirection: 'row',
-  },
   searchInput: {
-    height: 40,
-    borderColor: 'gray',
+    borderColor: '#8F8F8F',
     borderWidth: 1,
     width: '100%',
-    padding: 10,
+    paddingVertical: 17,
+    paddingHorizontal: 20,
     borderRadius: 5,
     fontFamily: 'Poppins-Regular',
     marginBottom: 10,
   },
-  searchButton: {
-    paddingVertical: 10,
-    width: '100%',
-    alignItems: 'center',
-    backgroundColor: 'lightseagreen',
-    borderRadius: 5,
+  locationIconContainer: {
+    marginLeft: -10,
+    marginRight: 10,
+    padding: 8,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 100,
   },
-  searchButtonText: {
+  itemDescription: {
     fontFamily: 'Poppins-Regular',
-    color: '#FFF',
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D9D9D9',
+  },
+  modal: {
+    minHeight: height * 0.25,
+    width: '100%',
+    backgroundColor: '#FFF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
+  modalTopLine: {
+    width: 80,
+    height: 4,
+    backgroundColor: '#D9D9D9',
+    borderRadius: 10,
+  },
+  titleRow: {
+    marginVertical: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  iconContainer: {
+    position: 'absolute',
+    left: 20,
+  },
+  modalTitle: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 18,
   },
 });
 
