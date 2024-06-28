@@ -11,18 +11,114 @@ import MapView, {
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const GOOGLE_API_KEY = 'AIzaSyCSu-CaK-Oaq7q42s-4GLQEFZCnBZ76MH8';
-const {height} = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 interface mapsCoords {
   lat: number;
   lng: number;
 }
 
+const mapStyle = [
+  {
+    elementType: 'geometry',
+    stylers: [{color: '#242f3e'}],
+  },
+  {
+    elementType: 'labels.text.stroke',
+    stylers: [{color: '#242f3e'}],
+  },
+  {
+    elementType: 'labels.text.fill',
+    stylers: [{color: '#746855'}],
+  },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.fill',
+    stylers: [{color: '#d59563'}],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
+    stylers: [{color: '#d59563'}],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'geometry',
+    stylers: [{color: '#263c3f'}],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.fill',
+    stylers: [{color: '#6b9a76'}],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry',
+    stylers: [{color: '#38414e'}],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.stroke',
+    stylers: [{color: '#212a37'}],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.fill',
+    stylers: [{color: '#9ca5b3'}],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry',
+    stylers: [{color: '#746855'}],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry.stroke',
+    stylers: [{color: '#1f2835'}],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'labels.text.fill',
+    stylers: [{color: '#f3d19c'}],
+  },
+  {
+    featureType: 'transit',
+    elementType: 'geometry',
+    stylers: [{color: '#2f3948'}],
+  },
+  {
+    featureType: 'transit.station',
+    elementType: 'labels.text.fill',
+    stylers: [{color: '#d59563'}],
+  },
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [{color: '#17263c'}],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{color: '#515c6d'}],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.stroke',
+    stylers: [{color: '#17263c'}],
+  },
+];
+
 const NewLocationScreen = () => {
   const [origin, setOrigin] = React.useState({
     latitude: -34.913854,
     longitude: -65.318303,
   });
+  const initialRegion = {
+    latitude: origin.latitude,
+    longitude: origin.longitude,
+    latitudeDelta: 9.0,
+    longitudeDelta: 9.0,
+  };
   const map = React.useRef<MapView | null>(null);
   const navigation = useNavigation();
   const modalHeight = useRef(new Animated.Value(0.95)).current;
@@ -50,17 +146,13 @@ const NewLocationScreen = () => {
   return (
     <View style={styles.container}>
       <MapView
-        ref={map}
-        style={styles.map}
         provider={
           Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
         }
-        initialRegion={{
-          latitude: origin.latitude,
-          longitude: origin.longitude,
-          latitudeDelta: 9.0,
-          longitudeDelta: 9.0,
-        }}>
+        customMapStyle={mapStyle}
+        ref={map}
+        style={styles.map}
+        initialRegion={initialRegion}>
         <Marker
           coordinate={origin}
           draggable
@@ -106,12 +198,17 @@ const NewLocationScreen = () => {
             onFocus: () => toggleModalHeight('expand'),
           }}
           renderRow={item => (
-            <>
+            <View style={styles.itemRow}>
               <View style={styles.locationIconContainer}>
                 <Icon name={'location-sharp'} size={16} color={'#1E96FF'} />
               </View>
-              <Text style={styles.itemDescription}>{item.description}</Text>
-            </>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.itemDescription}>
+                {item.description}
+              </Text>
+            </View>
           )}
           query={{
             key: GOOGLE_API_KEY,
@@ -142,18 +239,28 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     marginBottom: 10,
   },
+  itemRow: {
+    flexDirection: 'row',
+    width: width - 70,
+    overflow: 'hidden',
+    paddingBottom: 1,
+  },
   locationIconContainer: {
-    marginLeft: -10,
+    marginLeft: 0,
     marginRight: 10,
     padding: 8,
     backgroundColor: '#F0F0F0',
     borderRadius: 100,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   itemDescription: {
     fontFamily: 'Poppins-Regular',
     paddingVertical: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9D9D9',
+    width: width - 75 - 40,
+    overflow: 'hidden',
   },
   modal: {
     minHeight: height * 0.25,
