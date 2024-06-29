@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useContext} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {RadioCard} from '../../components/RadioCard';
 import {useNavigation} from '@react-navigation/native';
@@ -21,7 +21,11 @@ const LocationScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{...styles.titleContainer, marginTop: top + 20}}>
+      <View
+        style={{
+          ...styles.titleContainer,
+          marginTop: Platform.OS === 'ios' ? top + 20 : top + 40,
+        }}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backArrowButton}>
@@ -41,6 +45,7 @@ const LocationScreen = () => {
           locationDescription={location.description}
         />
       ))}
+      <View style={styles.spacer} />
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={onPressNewAddress}
@@ -48,7 +53,6 @@ const LocationScreen = () => {
         <Icon name="add-outline" size={30} color="#1E96FF" />
         <Text style={styles.registerButtonText}>Nueva Direccion</Text>
       </TouchableOpacity>
-      <View style={styles.spacer} />
       <CustomButton
         label="Continuar"
         onPress={() => navigation.goBack()}
@@ -81,6 +85,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
+    color: '#000',
   },
   backArrowButton: {
     position: 'absolute',
@@ -91,14 +96,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionShadow: {
-    shadowColor: '#ADADAD',
+    shadowColor: '#757575',
     shadowOffset: {
       width: 0,
       height: 0,
     },
     shadowOpacity: 2,
-    shadowRadius: 3,
-    borderRadius: 10,
+    shadowRadius: 1,
+    borderRadius: 5,
   },
   spacer: {
     flex: 1,
@@ -114,6 +119,9 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
+
+    borderWidth: Platform.OS === 'android' ? 1 : 0,
+    borderColor: Platform.OS === 'android' ? '#D2D2D2' : 'transparent',
   },
   registerButtonText: {
     fontFamily: 'Poppins-Medium',
@@ -122,7 +130,7 @@ const styles = StyleSheet.create({
     color: '#1E96FF',
   },
   continueButton: {
-    marginTop: 20,
+    marginTop: 10,
     height: 55,
     marginBottom: 40,
   },

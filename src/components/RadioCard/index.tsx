@@ -3,6 +3,7 @@ import {
   Image,
   ImageSourcePropType,
   ImageStyle,
+  Platform,
   StyleSheet,
   Text,
   TextStyle,
@@ -81,6 +82,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 15,
     alignItems: 'center',
+    borderWidth: Platform.OS === 'android' ? 1 : 0,
+    borderColor: Platform.OS === 'android' ? '#D2D2D2' : 'transparent',
   },
   optionShadow: {
     shadowColor: '#ADADAD',
@@ -109,6 +112,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontFamily: 'Poppins-Medium',
     fontSize: 16,
+    color: '#000',
   },
   locationDescription: {
     fontFamily: 'Poppins-Regular',

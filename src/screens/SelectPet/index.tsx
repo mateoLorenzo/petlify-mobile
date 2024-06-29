@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useContext} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomButton} from '../../components/CustomButton';
@@ -17,7 +17,11 @@ const SelectPetScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{...styles.titleContainer, marginTop: top + 20}}>
+      <View
+        style={{
+          ...styles.titleContainer,
+          marginTop: Platform.OS === 'ios' ? top + 20 : top + 40,
+        }}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backArrowButton}>
@@ -36,6 +40,7 @@ const SelectPetScreen = () => {
           cardType="pet"
         />
       ))}
+      <View style={styles.spacer} />
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => navigation.navigate('RegisterPetScreen' as never)}
@@ -43,7 +48,6 @@ const SelectPetScreen = () => {
         <Icon name="add-outline" size={30} color="#1E96FF" />
         <Text style={styles.registerButtonText}>Registrar Mascota</Text>
       </TouchableOpacity>
-      <View style={styles.spacer} />
       <CustomButton
         label="Continuar"
         onPress={() => navigation.goBack()}
@@ -76,6 +80,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
+    color: '#000',
   },
   backArrowButton: {
     position: 'absolute',
@@ -83,16 +88,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  optionButton: {
-    width: '100%',
-    flexDirection: 'row',
-    minHeight: 50,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    marginTop: 10,
-    padding: 15,
     alignItems: 'center',
   },
   optionShadow: {
@@ -103,17 +98,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 2,
     shadowRadius: 1,
-    borderRadius: 10,
-  },
-  petImage: {
-    width: 50,
-    height: 50,
     borderRadius: 5,
-    marginRight: 10,
-  },
-  petName: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 16,
   },
   spacer: {
     flex: 1,
@@ -122,13 +107,14 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     minHeight: 50,
-    borderRadius: 5,
     backgroundColor: 'white',
     marginTop: 20,
     paddingHorizontal: 20,
     paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: Platform.OS === 'android' ? 1 : 0,
+    borderColor: Platform.OS === 'android' ? '#D2D2D2' : 'transparent',
   },
   registerButtonText: {
     fontFamily: 'Poppins-Medium',
@@ -137,7 +123,7 @@ const styles = StyleSheet.create({
     color: '#1E96FF',
   },
   continueButton: {
-    marginTop: 20,
+    marginTop: 10,
     height: 55,
     marginBottom: 40,
   },

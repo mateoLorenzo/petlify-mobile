@@ -21,6 +21,7 @@ import {PetlifyContext} from '../../context/PetlifyContext';
 import {locations, pets} from '../../data';
 import {formatDateTimeString, getCompleteDate} from '../../utils';
 import {SvgProps} from 'react-native-svg';
+import {Platform} from 'react-native';
 
 const {width, height} = Dimensions.get('window');
 
@@ -165,7 +166,7 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
   const screenTitles = {
     walk: {
       title: '¡Solicita tu Paseo!',
-      subtitle: 'Te aseguramos Seguridad y Diversion',
+      subtitle: 'Diversion y Aventura para tu mascota',
     },
     care: {
       title: '¡Solicita tu Cuidado!',
@@ -197,7 +198,7 @@ const ServiceRequestScreen: React.FC<Props> = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <Logo height={100} width={100} style={{marginTop}} />
+      <Logo height={100} width={100} style={{marginTop: marginTop + 20}} />
       <Text style={styles.title}>{screenTitles[serviceSelected].title}</Text>
       <Text style={styles.subtitle}>
         {screenTitles[serviceSelected].subtitle}
@@ -350,6 +351,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     marginTop: 25,
     fontFamily: 'Poppins-SemiBold',
+    color: '#000',
   },
   subtitle: {
     fontSize: 16,
@@ -373,6 +375,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 4,
     backgroundColor: 'white',
+    borderWidth: Platform.OS === 'android' ? 1 : 0,
+    borderColor: Platform.OS === 'android' ? '#D2D2D2' : 'transparent',
   },
   cardImage: {
     width: 50,
@@ -385,10 +389,25 @@ const styles = StyleSheet.create({
   textContainer: {
     marginLeft: 10,
     flex: 1,
+    // backgroundColor: 'red',
   },
   cardTitle: {
     fontSize: 16,
     fontFamily: 'Poppins-Medium',
+    color: '#000000',
+    // backgroundColor: 'blue',
+    height: 22,
+  },
+  cardSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+    color: '#8A8A8A',
+    // backgroundColor: 'red',
+    // marginBottom: -5,
+  },
+  cardSubtitleSelected: {
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
     color: '#000000',
   },
   spacer: {
@@ -400,6 +419,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginBottom: 10,
+    marginTop: 30,
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -430,16 +450,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'Poppins-Regular',
     color: '#000',
-  },
-  cardSubtitle: {
-    fontSize: 12,
-    fontFamily: 'Poppins-Regular',
-    color: '#8A8A8A',
-  },
-  cardSubtitleSelected: {
-    fontSize: 12,
-    fontFamily: 'Poppins-Regular',
-    color: '#000000',
+    // marginTop: 10,
   },
   resumeCardSubtitle: {
     fontSize: 12,
@@ -458,6 +469,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     marginTop: 15,
     fontSize: 14,
+    color: '#000',
   },
   modalContainer: {
     width,

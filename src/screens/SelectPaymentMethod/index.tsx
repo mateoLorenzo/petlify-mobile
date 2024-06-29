@@ -111,10 +111,10 @@ const SelectPaymentMethodScreen: React.FC<Props> = ({navigation, route}) => {
     <View style={{...styles.container}}>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        style={{...styles.backArrowButton, marginTop: top + 10}}>
+        style={{...styles.backArrowButton, marginTop: top + 20}}>
         <Icon name="arrow-back" size={25} color="#000" />
       </TouchableOpacity>
-      <Text style={{...styles.title, marginTop: top + 10}}>Metodo de Pago</Text>
+      <Text style={{...styles.title, marginTop: top + 20}}>Metodo de Pago</Text>
       <Text style={styles.subtitle}>Elige tu metodo de pago mas comodo</Text>
 
       {paymentMethods.map((method, index) => (
@@ -173,9 +173,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
-    marginTop: 20,
+    fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
+    color: '#000',
   },
   subtitle: {
     fontSize: 16,

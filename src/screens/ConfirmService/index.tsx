@@ -137,7 +137,7 @@ const ConfirmServiceScreen: React.FC<Props> = ({navigation, route}) => {
 
   return (
     <View style={{...styles.container}}>
-      <View style={{...styles.titleContainer, marginTop: top + 10}}>
+      <View style={{...styles.titleContainer, marginTop: top + 20}}>
         <TouchableOpacity
           style={{...styles.backArrowButton}}
           onPress={() => navigation.goBack()}>
@@ -332,6 +332,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
+    color: '#000',
   },
   serviceTypeCardsContainer: {
     flexDirection: 'row',
@@ -482,6 +483,7 @@ const styles = StyleSheet.create({
   detailTitle: {
     fontFamily: 'Poppins-Medium',
     fontSize: 16,
+    color: '#000',
   },
   detailSubtitle: {
     fontFamily: 'Poppins-Regular',
@@ -491,7 +493,6 @@ const styles = StyleSheet.create({
   continueButton: {
     height: 55,
     marginBottom: 40,
-    // backgroundColor: 'gray',
   },
   shadow: {
     shadowColor: '#1E96FF',

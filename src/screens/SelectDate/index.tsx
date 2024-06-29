@@ -2,7 +2,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -60,8 +67,14 @@ const SelectDateScreen = () => {
   };
 
   return (
-    <View style={{...styles.container}}>
-      <View style={{...styles.titleContainer, marginTop: top + 20}}>
+    <ScrollView
+      contentContainerStyle={styles.alignItems}
+      style={{...styles.container}}>
+      <View
+        style={{
+          ...styles.titleContainer,
+          marginTop: Platform.OS === 'ios' ? top + 20 : top + 40,
+        }}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backArrowButton}>
@@ -124,14 +137,16 @@ const SelectDateScreen = () => {
         }}
         disabled={serviceDateIsSelected() === false}
       />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  alignItems: {
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
-    alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: 'white',
   },
@@ -147,6 +162,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
+    color: '#000',
   },
   serviceDateText: {
     fontSize: 16,

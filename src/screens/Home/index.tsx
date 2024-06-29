@@ -49,7 +49,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.scrollViewContainer}>
-      <Logo height={100} width={100} style={{marginTop}} />
+      <Logo height={100} width={100} style={{marginTop: marginTop + 20}} />
 
       <Text style={styles.title}>¡Hola Mateo!</Text>
       <Text style={styles.subtitle}>
@@ -227,12 +227,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     width: '100%',
     textAlign: 'center',
+    color: '#000',
   },
   serviceFeeSubtitle: {
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
     marginVertical: 10,
     textAlign: 'center',
+    color: '#000',
   },
   divisorContainer: {
     flexDirection: 'row',
