@@ -68,7 +68,11 @@ const ProfileEditScreen = () => {
       <KeyboardAvoidingView
         style={styles.flex1}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={{...styles.container, paddingTop: top}}>
+        <View
+          style={{
+            ...styles.container,
+            paddingTop: Platform.OS === 'ios' ? top : top + 20,
+          }}>
           <TouchableOpacity style={styles.goBackButton} onPress={goBack}>
             <Icon name="arrow-back" size={25} color="#000" />
           </TouchableOpacity>
@@ -185,16 +189,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    height: 65,
+    height: 55,
     marginBottom: 10,
-    borderRadius: 10,
   },
   buttonText: {
-    fontSize: 18,
     fontFamily: 'Poppins-Regular',
   },
   buttonSpacer: {
-    height: 40,
+    height: Platform.OS === 'android' ? 10 : 40,
   },
 
   flex1: {

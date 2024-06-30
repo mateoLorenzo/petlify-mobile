@@ -55,7 +55,7 @@ const PetCard = ({name, age, gender, breed, image}: Pet) => {
   const navigation = useNavigation();
 
   const onPressEdit = () => {
-    navigation.navigate('UpdatePetScreen' as never);
+    navigation.navigate('RegisterPetScreen' as never);
   };
 
   return (

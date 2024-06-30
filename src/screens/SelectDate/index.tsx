@@ -105,14 +105,14 @@ const SelectDateScreen = () => {
 
       <View style={styles.timePickersContainer}>
         <TimePicker
-          label={`Hora de partida ${startHour}:${startMinute}`}
+          label={`Partida ${startHour}:${startMinute}`}
           hourSelected={startHour}
           minuteSelected={startMinute}
           setHourSelected={setStartHour}
           setMinuteSelected={setStartMinute}
         />
         <TimePicker
-          label={`Hora de regreso ${endHour}:${endMinute}`}
+          label={`Regreso ${endHour}:${endMinute}`}
           hourSelected={endHour}
           minuteSelected={endMinute}
           setHourSelected={setEndHour}
@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins-Medium',
     marginBottom: 10,
+    color: '#000',
   },
   calendarBox: {
     width: '100%',

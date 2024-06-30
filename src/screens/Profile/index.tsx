@@ -4,6 +4,8 @@ import {
   Animated,
   Dimensions,
   Image,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -88,7 +90,12 @@ const ProfileScreen = () => {
   };
 
   return (
-    <View style={{...styles.container, paddingTop: top}}>
+    <ScrollView
+      contentContainerStyle={styles.alignCenter}
+      style={{
+        ...styles.container,
+        paddingTop: Platform.OS === 'android' ? top + 20 : top,
+      }}>
       <Text style={styles.title}>Perfil</Text>
       <TouchableOpacity
         style={styles.imageContainer}
@@ -106,7 +113,6 @@ const ProfileScreen = () => {
               <Icon name="person-circle-outline" size={25} color="#707070" />
               <Text style={styles.infoRowText}>Mateo Lorenzo</Text>
             </View>
-            {/* <Icon name="chevron-forward-outline" size={25} color="#707070" /> */}
           </View>
 
           <View style={styles.rowsDivisor} />
@@ -115,7 +121,6 @@ const ProfileScreen = () => {
               <Icon name="mail-outline" size={25} color="#707070" />
               <Text style={styles.infoRowText}>mateolorenzo.dev@gmail.com</Text>
             </View>
-            {/* <Icon name="chevron-forward-outline" size={25} color="#707070" /> */}
           </View>
           <View style={styles.rowsDivisor} />
 
@@ -169,14 +174,16 @@ const ProfileScreen = () => {
           </Animated.View>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  alignCenter: {
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
-    alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: 'white',
   },

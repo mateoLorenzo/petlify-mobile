@@ -1,6 +1,6 @@
 import React from 'react';
 import {Picker} from '@react-native-picker/picker';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Platform} from 'react-native';
 
 interface Props {
   label: string;
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     width: '100%',
     fontFamily: 'Poppins-Regular',
+    color: '#000',
   },
   pickerContainer: {
     flexDirection: 'row',
@@ -69,7 +70,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   picker: {
-    width: 80,
+    // width: 100,
+    width: Platform.OS === 'ios' ? 80 : 100,
   },
   pickerItem: {
     fontSize: 14,

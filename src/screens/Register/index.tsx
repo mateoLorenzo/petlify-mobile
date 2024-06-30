@@ -4,6 +4,7 @@ import {
   Dimensions,
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -21,6 +22,7 @@ import {useRegisterForm} from '../../hooks/useFormValidations';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomButton} from '../../components/CustomButton';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const formFields = ['name', 'lastName', 'email', 'password', 'confirmPassword'];
 type screenTypes = 'register' | 'login';
@@ -37,6 +39,8 @@ const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
 );
 
 const RegisterScreen = () => {
+  const {top} = useSafeAreaInsets();
+
   const {
     control,
     handleSubmit,
@@ -152,7 +156,11 @@ const RegisterScreen = () => {
         style={styles.contentContainer}
         keyboardVerticalOffset={10}>
         <DismissKeyboard>
-          <View style={styles.titleContainer}>
+          <View
+            style={{
+              ...styles.titleContainer,
+              marginTop: Platform.OS === 'ios' ? top + 10 : top + 40,
+            }}>
             <TouchableOpacity
               style={styles.backButton}
               onPress={() => navigation.goBack()}>
@@ -370,7 +378,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     width: '100%',
     justifyContent: 'center',
-    marginTop: 30,
+    // marginTop: 30,
     backgroundColor: 'red',
     marginBottom: 20,
   },

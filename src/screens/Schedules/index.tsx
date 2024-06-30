@@ -5,6 +5,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -84,8 +85,10 @@ const SchedulesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Logo height={100} width={100} style={{marginTop}} />
-      <Text style={styles.title}>Mis Agendas</Text>
+      {/* <Logo height={100} width={100} style={{marginTop}} /> */}
+      <Text style={{...styles.title, marginTop: marginTop + 20}}>
+        Mis Agendas
+      </Text>
       {userHasSchedules ? (
         <Text style={styles.subtitle}>
           Aqui podrás ver tus servicios agendados y el historial de los que ya
@@ -191,16 +194,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 26,
-    marginTop: 10,
     fontFamily: 'Poppins-SemiBold',
+    color: '#000',
+    width: '100%',
   },
   subtitle: {
     fontSize: 16,
     fontWeight: '100',
     fontFamily: 'Poppins-Regular',
     color: '#000',
-    textAlign: 'center',
     marginBottom: 10,
+    width: '100%',
+    marginTop: Platform.OS === 'android' ? -5 : 0,
   },
   sadDogImage: {
     marginTop: 50,

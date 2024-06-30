@@ -1,5 +1,12 @@
 import React, {useRef, useState} from 'react';
-import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Animated,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CustomButton} from '../../components/CustomButton';
 import {RouteProp} from '@react-navigation/native';
@@ -352,14 +359,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'lightgray',
     backgroundColor: '#FFF',
-    height: 200,
+    minHeight: 200,
+    overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
   },
   cardContentContainer: {
     alignItems: 'center',
     width: '100%',
     paddingTop: 15,
     borderRadius: 10,
-    height: 200,
+    minHeight: 200,
   },
   infoButton: {
     position: 'absolute',
@@ -377,6 +385,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     fontSize: 16,
     marginTop: 10,
+    color: '#000',
   },
   cardSubtitle: {
     fontFamily: 'Poppins-Regular',
@@ -390,8 +399,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     paddingVertical: 15,
-    borderBottomLeftRadius: 9,
-    borderBottomRightRadius: 9,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+
+    position: 'absolute',
+    bottom: 0,
   },
   cardPrice: {
     fontFamily: 'Poppins-Regular',
@@ -503,6 +515,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 5,
     borderRadius: 15,
+    borderColor: Platform.OS === 'android' ? '#000' : 'transparent',
   },
   blackShadow: {
     shadowColor: '#000',

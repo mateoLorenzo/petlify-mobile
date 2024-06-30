@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'center',
     marginTop: 10,
+    color: '#000',
   },
   nextFeatureSubtitle: {
     fontSize: 12,
@@ -304,6 +305,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     paddingHorizontal: 10,
+    color: '#000',
   },
   nextFeatureBottomSubtitle: {
     fontSize: 12,
@@ -311,6 +313,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlign: 'center',
     paddingHorizontal: 10,
+    color: '#000',
   },
 });
 
