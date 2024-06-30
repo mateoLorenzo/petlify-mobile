@@ -38,6 +38,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     fontSize: 26,
     marginTop: 30,
+    color: '#000',
   },
   subtitle: {
     fontFamily: 'Poppins-Regular',
@@ -83,6 +84,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 16,
     marginTop: 10,
+    color: '#000',
   },
   dogImage: {
     width: 90,
@@ -155,7 +157,6 @@ export const styles = StyleSheet.create({
     fontSize: 40,
     fontFamily: 'Poppins-Medium',
     width: '100%',
-    height: 50,
     textAlign: 'center',
     marginTop: 120,
   },

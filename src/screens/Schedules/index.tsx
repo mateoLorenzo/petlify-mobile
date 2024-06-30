@@ -85,7 +85,6 @@ const SchedulesScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* <Logo height={100} width={100} style={{marginTop}} /> */}
       <Text style={{...styles.title, marginTop: marginTop + 20}}>
         Mis Agendas
       </Text>
@@ -245,7 +244,6 @@ const styles = StyleSheet.create({
   servicesDoneButton: {
     height: 55,
     marginBottom: 10,
-    borderRadius: 10,
     backgroundColor: '#FFF',
     borderColor: '#1E96FF',
     borderWidth: 1,
@@ -261,7 +259,6 @@ const styles = StyleSheet.create({
   newServiceButton: {
     height: 55,
     marginBottom: 10,
-    borderRadius: 10,
   },
   newServiceButtonText: {
     fontSize: 14,

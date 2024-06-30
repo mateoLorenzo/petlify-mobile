@@ -78,12 +78,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 16,
     marginLeft: 10,
+    color: '#000',
   },
   petName: {
     fontFamily: 'Poppins-Regular',
     fontSize: 12,
     marginLeft: 10,
     marginTop: -2,
+    color: 'gray',
   },
   spacer: {
     flex: 1,
@@ -106,6 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 4,
   },
   cardBottomSection: {
     width: '100%',

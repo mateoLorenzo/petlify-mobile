@@ -213,7 +213,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontFamily: 'Poppins-SemiBold',
-    // marginBottom: 40,
     marginBottom: Platform.OS === 'ios' ? 40 : 20,
     color: '#000',
   },

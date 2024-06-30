@@ -87,12 +87,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop: -2,
   },
-
-  editButton: {
-    backgroundColor: '#1E96FF',
-    padding: 10,
-    borderRadius: 10,
-  },
   editButtonText: {
     color: '#000',
     fontFamily: 'Poppins-Regular',
@@ -119,6 +113,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 10,
+    elevation: 4,
   },
   cardBottomSection: {
     width: '100%',

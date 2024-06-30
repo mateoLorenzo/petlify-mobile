@@ -10,7 +10,6 @@ import {
   View,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import Logo from '../../../assets/images/logo.svg';
 import PetHome from '../../../assets/images/pet-house.svg';
 import {CustomButton} from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
@@ -93,9 +92,7 @@ const PetDetailScreen = () => {
   };
 
   return (
-    <View style={{...styles.container, paddingTop: top}}>
-      <Logo height={100} width={100} />
-
+    <View style={{...styles.container, paddingTop: top + 20}}>
       <Text style={styles.title}>Mis Mascotas</Text>
       <Text style={styles.subtitle}>
         Aqui puedes ver tus mascotas registradas
@@ -140,16 +137,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 26,
-    marginTop: 10,
     fontFamily: 'Poppins-SemiBold',
+    paddingHorizontal: 20,
+    width: '100%',
+    color: '#000',
   },
   subtitle: {
     fontSize: 16,
     fontWeight: '100',
     fontFamily: 'Poppins-Regular',
     color: '#000',
-    textAlign: 'center',
     marginBottom: 10,
+    width: '100%',
+    paddingHorizontal: 20,
   },
   registerPetTitle: {
     fontSize: 18,
@@ -258,7 +258,6 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     height: 55,
-    borderRadius: 10,
   },
   registerButtonText: {
     color: '#fff',

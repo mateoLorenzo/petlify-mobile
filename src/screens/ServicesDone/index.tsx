@@ -66,8 +66,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 26,
+    fontSize: 24,
     fontFamily: 'Poppins-SemiBold',
+    color: '#000',
   },
   backIconButton: {
     position: 'absolute',

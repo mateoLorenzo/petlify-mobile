@@ -391,6 +391,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginLeft: 40,
     position: 'absolute',
+    color: '#000',
   },
   sectionsContainer: {
     alignItems: 'center',
