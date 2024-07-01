@@ -1,5 +1,11 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Logo from '../../../assets/images/logo.svg';
 import {CustomButton} from '../../components/CustomButton';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,7 +26,10 @@ const WelcomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <Logo height={100} width={100} style={styles.image} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ComponentsNavigator' as never)}>
+          <Logo height={100} width={100} style={styles.image} />
+        </TouchableOpacity>
 
         <Text style={styles.title}>¡Bienvenido a Petlify!</Text>
         <Text style={styles.subtitle}>Mejoramos la vida de tu mascota y</Text>

@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -46,17 +46,18 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
   },
-  petBoxesContainer: {
+  sectionsContainer: {
     flexDirection: 'row',
-    height: 250,
     justifyContent: 'flex-start',
     alignSelf: 'flex-start',
+    height: 250,
   },
   kindSectionContainer: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-end',
+    height: 250,
   },
   petTypeContainer: {
     backgroundColor: 'white',
@@ -64,12 +65,13 @@ export const styles = StyleSheet.create({
     marginHorizontal: 8,
     width: 170,
     height: 170,
+    elevation: 10,
   },
   customBorder: {
     width: '100%',
     height: '100%',
     position: 'absolute',
-    borderRadius: 5,
+    borderRadius: 10,
     borderWidth: 2,
     borderColor: '#1E96FF',
   },
@@ -103,7 +105,7 @@ export const styles = StyleSheet.create({
   raceSectionContainer: {
     width: '100%',
     alignItems: 'center',
-    height: 400,
+    // zIndex: 10,
   },
   raceSubtitle: {
     fontFamily: 'Poppins-Regular',
@@ -122,6 +124,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'flex-end',
+    height: 250,
   },
   ageSectionContainer: {
     width: '100%',
@@ -132,7 +135,8 @@ export const styles = StyleSheet.create({
   },
   ageContainer: {
     alignItems: 'center',
-    marginHorizontal: 50,
+    width: 150,
+    marginHorizontal: 10,
   },
   agePickerContainer: {
     flexDirection: 'row',
@@ -152,6 +156,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     flexDirection: 'row',
+    height: 250,
   },
   nameInput: {
     fontSize: 40,
@@ -164,6 +169,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    height: 250,
   },
   addImageContainer: {
     borderRadius: 100,
@@ -216,13 +222,15 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 4,
+
+    borderWidth: Platform.OS === 'android' ? 1 : 0,
+    borderColor: Platform.OS === 'android' ? 'lightgray' : 'transparent',
   },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '90%',
     marginBottom: 20,
-    // backgroundColor: 'red',
   },
   continueButton: {
     paddingHorizontal: 25,
@@ -245,9 +253,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     marginTop: 28,
-    // marginBottom: 10,
-    // marginVertical: 20,
-    // flex: 1,
   },
   completeStepperItem: {
     width: 10,

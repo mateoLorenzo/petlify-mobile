@@ -8,6 +8,7 @@ import ProfileScreen from '../screens/Profile';
 import SchedulesScreen from '../screens/Schedules';
 import {
   GestureResponderEvent,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -40,7 +41,7 @@ function renderTabButton({
   closeModal,
 }: CustomTabBarButtonProps) {
   const focused = accessibilityState?.selected;
-  const color = focused ? '#1E96FF' : 'gray';
+  const color = focused ? '#1E96FF' : '#373737';
 
   const pressHandler = (e: GestureResponderEvent) => {
     onPress && onPress(e);
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
   },
   tabBarStyles: {
     paddingTop: 10,
-    height: 100,
+    height: Platform.OS === 'ios' ? 100 : 80,
     flexDirection: 'column',
     borderWidth: 0,
     shadowColor: '#757575',

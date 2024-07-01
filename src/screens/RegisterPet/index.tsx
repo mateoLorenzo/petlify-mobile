@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -24,7 +25,6 @@ const dogImage = require('../../../assets/images/dog.png');
 const catImage = require('../../../assets/images/cat.png');
 const maleImage = require('../../../assets/images/male.png');
 const femaleImage = require('../../../assets/images/female.png');
-const addIcon = require('../../../assets/images/add.png');
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 
@@ -255,7 +255,8 @@ const RegisterPetScreen = () => {
       <KeyboardAvoidingView
         style={styles.flex1}
         enabled={currentStep !== 4}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
+        behavior={'padding'}>
         <DismissKeyboard>
           <TouchableOpacity
             style={styles.backButtonContainer}
@@ -279,8 +280,9 @@ const RegisterPetScreen = () => {
 
           <Animated.View
             style={{
-              ...styles.petBoxesContainer,
+              ...styles.sectionsContainer,
               transform: [{translateX: petContentPosition}],
+              height: currentStep === 1 ? 250 : 'auto',
             }}>
             <View style={styles.nameSectionContainer}>
               <Text style={styles.subtitle}>¿Cómo se llama tu mascota?</Text>
@@ -402,18 +404,14 @@ const RegisterPetScreen = () => {
               </Text>
               <View>
                 <View style={styles.agePickerContainer}>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles.ageContainer}>
+                  <View style={styles.ageContainer}>
                     <Text style={styles.ageNumber}>{yearSelected}</Text>
                     <Text style={styles.ageText}>Años</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles.ageContainer}>
+                  </View>
+                  <View style={styles.ageContainer}>
                     <Text style={styles.ageNumber}>{monthSelected}</Text>
                     <Text style={styles.ageText}>Meses</Text>
-                  </TouchableOpacity>
+                  </View>
                 </View>
                 <AgePicker
                   yearSelected={yearSelected}
@@ -435,7 +433,7 @@ const RegisterPetScreen = () => {
                   style={styles.addImageCircle}
                   onPress={choosePhotoFromGallery}>
                   {selectedImage === initialImage ? (
-                    <Image source={addIcon} style={styles.addImageIcon} />
+                    <Icon name="add-outline" size={50} color="#1E96FF" />
                   ) : (
                     <Image
                       source={{uri: selectedImage}}

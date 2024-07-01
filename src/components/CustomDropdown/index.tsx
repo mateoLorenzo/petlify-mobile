@@ -4,6 +4,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   FlatList,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -20,7 +21,6 @@ interface Props {
   onChangeText: (text: string) => void;
   onOpen?: () => void;
   onClose?: () => void;
-  // breedSearched?: string;
 }
 
 export const CustomDropdown = ({
@@ -30,8 +30,7 @@ export const CustomDropdown = ({
   onChangeText,
   onOpen,
   onClose,
-}: // breedSearched,
-Props) => {
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [paddingBottom, setPaddingBottom] = useState(0);
   const removeTextOpacity = useRef(new Animated.Value(0)).current;
@@ -211,7 +210,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 2,
-    borderRadius: 15,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    borderWidth: Platform.OS === 'android' ? 2 : 0,
+    borderColor: Platform.OS === 'android' ? 'lightgray' : 'transparent',
   },
   buttonContainer: {
     backgroundColor: 'white',

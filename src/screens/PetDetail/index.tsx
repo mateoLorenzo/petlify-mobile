@@ -195,7 +195,6 @@ const styles = StyleSheet.create({
   petCardImage: {
     height: 80,
     width: 80,
-    backgroundColor: 'red',
     borderRadius: 10,
   },
   petInfoContainer: {

@@ -1,6 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface IComponentButtonProps {
@@ -22,9 +29,12 @@ const ComponentButton = ({name, onPress}: IComponentButtonProps) => {
 
 const ComponentsScreen = () => {
   const navigation = useNavigation();
+  const {top} = useSafeAreaInsets();
   return (
-    <View style={styles.screenContainer}>
-      <Text style={styles.title}>Laboratory</Text>
+    <ScrollView
+      contentContainerStyle={styles.screenContentContainer}
+      style={styles.screenContainer}>
+      <Text style={{...styles.title, marginTop: top}}>Laboratory</Text>
       <ComponentButton
         name="Custom Button"
         onPress={() => navigation.navigate('CustomButtonScreen' as never)}
@@ -69,24 +79,27 @@ const ComponentsScreen = () => {
         name="Services Done Animation"
         onPress={() => navigation.navigate('ServicesDoneScreen' as never)}
       />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  screenContentContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   screenContainer: {
     backgroundColor: 'white',
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     paddingHorizontal: 20,
   },
   title: {
     fontSize: 28,
     fontFamily: 'Poppins-SemiBold',
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: 'center',
     width: '100%',
+    color: '#000',
   },
   button: {
     marginVertical: 5,

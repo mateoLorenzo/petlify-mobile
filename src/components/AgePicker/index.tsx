@@ -1,6 +1,6 @@
 import React from 'react';
 import {Picker} from '@react-native-picker/picker';
-import {StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 
 interface Props {
   yearSelected: string;
@@ -21,7 +21,7 @@ export const AgePicker = ({
   const totalMonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.pickerContainer}>
         <Picker
           selectedValue={yearSelected}
           style={styles.pickerWidth}
@@ -32,7 +32,7 @@ export const AgePicker = ({
         </Picker>
       </View>
 
-      <View>
+      <View style={styles.pickerContainer}>
         <Picker
           selectedValue={monthSelected}
           style={styles.pickerWidth}
@@ -51,7 +51,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  pickerContainer: {
+    width: Platform.OS === 'android' ? 150 : undefined,
+    marginHorizontal: 10,
+    alignItems: 'center',
+  },
   pickerWidth: {
-    width: 150,
+    width: Platform.OS === 'android' ? 100 : 150,
   },
 });
