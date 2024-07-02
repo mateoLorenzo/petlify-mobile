@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
 import {Alert, StyleSheet, View, AppState, Text, TextInput} from 'react-native';
-// import {supabase} from '../lib/supabase';
 import {supabase} from '../../../lib/supabase';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CustomButton} from '../../../components/CustomButton';
-// import {Button, Input} from '@rneui/themed';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
