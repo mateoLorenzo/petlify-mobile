@@ -38,6 +38,7 @@ import SelectPaymentMethodScreen from '../screens/SelectPaymentMethod';
 import PaymentSuccessScreen from '../screens/PaymentSuccess';
 import ServiceDetailScreen from '../screens/ServiceDetail';
 import {PaymentCard, PaymentMethod} from '../interfaces';
+import SupabaseTestScreen from '../screens/Tests/SupabaseTest';
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -78,6 +79,7 @@ export type RootStackParams = {
   ImagePickerScreen: undefined;
   CustomDropdown: undefined;
   BottomNavScreen: undefined;
+  SupabaseTestScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParams>();
@@ -285,6 +287,11 @@ const ComponentsNavigator = () => {
       <Stack.Screen
         name="ServicesDoneScreen"
         component={ServicesDoneAnimationScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SupabaseTestScreen"
+        component={SupabaseTestScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

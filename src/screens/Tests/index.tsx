@@ -79,6 +79,10 @@ const ComponentsScreen = () => {
         name="Services Done Animation"
         onPress={() => navigation.navigate('ServicesDoneScreen' as never)}
       />
+      <ComponentButton
+        name="Supabase"
+        onPress={() => navigation.navigate('SupabaseTestScreen' as never)}
+      />
     </ScrollView>
   );
 };
@@ -87,6 +91,7 @@ const styles = StyleSheet.create({
   screenContentContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 100,
   },
   screenContainer: {
     backgroundColor: 'white',
