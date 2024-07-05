@@ -20,6 +20,7 @@ AppState.addEventListener('change', state => {
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const {top} = useSafeAreaInsets();
 
@@ -81,6 +82,14 @@ export default function Auth() {
         placeholder="Password"
         autoCapitalize={'none'}
       />
+      <TextInput
+        style={styles.input}
+        placeholderTextColor={'gray'}
+        onChangeText={setUsername}
+        value={username}
+        placeholder="Username"
+        autoCapitalize={'sentences'}
+      />
       <View style={styles.buttonsContainer}>
         <CustomButton
           disabled={loading}
@@ -91,7 +100,7 @@ export default function Auth() {
         />
         <CustomButton
           disabled={loading}
-          onPress={() => signUpWithEmail()}
+          onPress={signUpWithEmail}
           containerStyle={styles.registerButton}
           style={{
             ...styles.button,
