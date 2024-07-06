@@ -100,7 +100,7 @@ const RegisterScreen = () => {
   const navigation = useNavigation();
 
   const registerUser = async () => {
-    setLoading(true);
+    // setLoading(true);
     const {data, error} = await supabase.auth.signUp({
       email: emailValue,
       password: passwordValue,
@@ -112,7 +112,7 @@ const RegisterScreen = () => {
       },
     });
     console.log('data', data);
-    setLoading(false);
+    // setLoading(false);
     if (error) {
       return Alert.alert(error.message);
     }
@@ -133,13 +133,13 @@ const RegisterScreen = () => {
   };
 
   const loginUser = async () => {
-    setLoading(true);
+    // setLoading(true);
     const {error, data} = await supabase.auth.signInWithPassword({
       email: emailValue,
       password: passwordValue,
     });
 
-    setLoading(false);
+    // setLoading(false);
     if (error) {
       return Alert.alert(error.message);
     }
@@ -359,7 +359,7 @@ const RegisterScreen = () => {
             </Animated.View>
           </View>
           <View style={styles.spacer} />
-          {loading && <Text>Loading...</Text>}
+          {/* {loading && <Text>Loading...</Text>} */}
           <CustomButton
             loading={loading}
             label={
