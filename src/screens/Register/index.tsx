@@ -1,5 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {
+  Alert,
   Animated,
   Dimensions,
   Keyboard,
@@ -23,6 +24,8 @@ import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomButton} from '../../components/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {supabase} from '../../lib/supabase';
+import {useWatch} from 'react-hook-form';
 
 const formFields = ['name', 'lastName', 'email', 'password', 'confirmPassword'];
 type screenTypes = 'register' | 'login';
@@ -40,6 +43,7 @@ const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
 
 const RegisterScreen = () => {
   const {top} = useSafeAreaInsets();
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -61,6 +65,11 @@ const RegisterScreen = () => {
   const loginSectionPosition = useRef(new Animated.Value(width)).current;
   const registerSectionOpacity = useRef(new Animated.Value(1)).current;
   const loginSectionOpacity = useRef(new Animated.Value(0)).current;
+
+  const nameValue = useWatch({control, name: 'name'});
+  const lastNameValue = useWatch({control, name: 'lastName'});
+  const emailValue = useWatch({control, name: 'email'});
+  const passwordValue = useWatch({control, name: 'password'});
 
   const changeAuthSection = () => {
     Animated.timing(registerSectionPosition, {
@@ -90,14 +99,27 @@ const RegisterScreen = () => {
 
   const navigation = useNavigation();
 
-  const onPressRegister = () => {
-    navigation.navigate('RegisterPhoneScreen' as never);
-  };
-  const onPressLogin = () => {
+  const registerUser = async () => {
+    setLoading(true);
+    const {data, error} = await supabase.auth.signUp({
+      email: emailValue,
+      password: passwordValue,
+      options: {
+        data: {
+          name: nameValue,
+          lastName: lastNameValue,
+        },
+      },
+    });
+    console.log('data', data);
+    setLoading(false);
+    if (error) {
+      return Alert.alert(error.message);
+    }
     navigation.navigate('HomeScreen' as never);
   };
 
-  const validateRegisterFields = async () => {
+  const onPressRegister = async () => {
     const result = await trigger([
       'name',
       'lastName',
@@ -106,16 +128,32 @@ const RegisterScreen = () => {
       'confirmPassword',
     ]);
     if (result) {
-      handleSubmit(onPressRegister)();
+      handleSubmit(registerUser)();
     }
   };
-  const validateLoginFields = async () => {
+
+  const loginUser = async () => {
+    setLoading(true);
+    const {error, data} = await supabase.auth.signInWithPassword({
+      email: emailValue,
+      password: passwordValue,
+    });
+
+    setLoading(false);
+    if (error) {
+      return Alert.alert(error.message);
+    }
+    console.log('data', data);
+    navigation.navigate('HomeScreen' as never);
+  };
+
+  const onPressLogin = async () => {
     const result = await trigger(['email', 'password']);
 
     if (result) {
-      onPressLogin();
+      loginUser();
     } else {
-      handleSubmit(onPressLogin)();
+      handleSubmit(loginUser)();
     }
   };
 
@@ -159,7 +197,7 @@ const RegisterScreen = () => {
           <View
             style={{
               ...styles.titleContainer,
-              marginTop: Platform.OS === 'ios' ? top + 10 : top + 40,
+              marginTop: Platform.OS === 'ios' ? top + 0 : top + 40,
             }}>
             <TouchableOpacity
               style={styles.backButton}
@@ -321,15 +359,15 @@ const RegisterScreen = () => {
             </Animated.View>
           </View>
           <View style={styles.spacer} />
+          {loading && <Text>Loading...</Text>}
           <CustomButton
+            loading={loading}
             label={
               currentScreen === 'register' ? 'Registrarme' : 'Iniciar Sesion'
             }
             style={styles.registerButton}
             onPress={
-              currentScreen === 'register'
-                ? validateRegisterFields
-                : validateLoginFields
+              currentScreen === 'register' ? onPressRegister : onPressLogin
             }
           />
         </DismissKeyboard>
@@ -361,6 +399,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'white',
+    overflow: 'hidden',
   },
   container: {
     flex: 1,
