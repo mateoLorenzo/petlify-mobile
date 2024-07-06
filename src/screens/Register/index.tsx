@@ -112,7 +112,7 @@ const RegisterScreen = () => {
       },
     });
     console.log('data', data);
-    // setLoading(false);
+    setLoading(false);
     if (error) {
       return Alert.alert(error.message);
     }
