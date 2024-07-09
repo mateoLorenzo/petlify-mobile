@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>GIDClientID</key>
+	<string>190649997221-vi8aus39vouh9qphs4rt3o2bbsmvpr00.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.190649997221-vi8aus39vouh9qphs4rt3o2bbsmvpr00</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -31,12 +42,21 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Petlify necesita su permiso para acceder a la galeria.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Petlify necesita su permiso para acceder a la camara.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Petlify necesita su permiso para acceder a la galeria.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Poppins-Regular.ttf</string>
+		<string>Poppins-Bold.ttf</string>
+		<string>Poppins-Medium.ttf</string>
+		<string>Poppins-SemiBold.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>AntDesign.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -51,14 +71,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Poppins-Regular.ttf</string>
-		<string>Poppins-Bold.ttf</string>
-		<string>Poppins-Medium.ttf</string>
-		<string>Poppins-SemiBold.ttf</string>
-		<string>Ionicons.ttf</string>
-		<string>AntDesign.ttf</string>
-	</array>
 </dict>
 </plist>

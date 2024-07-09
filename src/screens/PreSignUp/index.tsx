@@ -6,10 +6,35 @@ import GoogleIcon from '../../../assets/images/google.svg';
 import FacebookIcon from '../../../assets/images/facebook.svg';
 import EmailIcon from '../../../assets/images/email.svg';
 import {useNavigation} from '@react-navigation/native';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {supabase} from '../../lib/supabase';
 
 const PreSignUpScreen = () => {
   const {top} = useSafeAreaInsets();
   const navigation = useNavigation();
+
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const {idToken} = await GoogleSignin.signIn();
+
+      if (idToken) {
+        const {data, error} = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: idToken,
+        });
+        console.log('after supabase', data, Boolean(data));
+        console.log('error', error, Boolean(error));
+
+        if (data) {
+          navigation.navigate('HomeScreen' as never);
+        }
+      }
+    } catch (apiError) {
+      console.log('ApiError', apiError);
+    }
+  };
+
   return (
     <View style={{...styles.container, paddingTop: top}}>
       <Logo height={100} width={100} style={styles.logo} />
@@ -19,7 +44,7 @@ const PreSignUpScreen = () => {
       <TouchableOpacity
         style={styles.socialButton}
         activeOpacity={0.6}
-        onPress={() => navigation.navigate('BottomTabNavigator' as never)}>
+        onPress={handleGoogleLogin}>
         <GoogleIcon height={22} width={22} />
         <Text style={styles.socialButtonText}>Ingresar Con Google</Text>
       </TouchableOpacity>
@@ -63,13 +88,14 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   title: {
-    fontSize: 26,
+    fontSize: 22,
     marginTop: 20,
     color: '#000',
     fontFamily: 'Poppins-SemiBold',
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     marginTop: Platform.OS === 'ios' ? 5 : 0,
     marginBottom: 40,
     fontWeight: '100',

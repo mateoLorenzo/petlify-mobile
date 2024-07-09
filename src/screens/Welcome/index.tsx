@@ -74,14 +74,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     textAlign: 'center',
     marginTop: 30,
     fontFamily: 'Poppins-SemiBold',
     color: 'black',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'center',
     fontFamily: 'Poppins-Medium',
     color: '#5E4F4F',
