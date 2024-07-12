@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">petlify</string>
+    <string name="facebook_app_id">1597480390821820</string>
+    <string name="facebook_client_token">3218890c25fd52f1c1f3d39678dd23c8</string>
 </resources>
