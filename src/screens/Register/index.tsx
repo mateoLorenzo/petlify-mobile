@@ -141,7 +141,7 @@ const RegisterScreen = () => {
       return Alert.alert(error.message);
     }
     console.log('data', data);
-    navigation.navigate('HomeScreen' as never);
+    navigation.navigate('BottomTabNavigator' as never);
   };
 
   const onPressLogin = async () => {

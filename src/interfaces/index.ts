@@ -11,12 +11,6 @@ export interface ScheduleDetails {
   time: string;
 }
 
-export interface Pet {
-  name: string;
-  age?: number;
-  image: ImageSourcePropType;
-}
-
 export interface Location {
   title: string;
   description: string;
@@ -35,4 +29,16 @@ export interface PaymentCard {
   description: string;
   cardType: string;
   name?: string;
+}
+
+export interface Pet {
+  name: string;
+  // age?: number;
+  years?: number;
+  months?: number;
+  image: ImageSourcePropType;
+  type: 'dog' | 'cat';
+  breed?: string;
+  size?: 'small' | 'medium' | 'large';
+  gender?: 'male' | 'female';
 }

@@ -1,4 +1,4 @@
-import {Location, Pet, ScheduleDetails} from '../interfaces';
+import {Location, ScheduleDetails} from '../interfaces';
 
 const matumoto = require('../../assets/images/matumoto.png');
 const lucy = require('../../assets/images/lucy.jpeg');
@@ -28,7 +28,7 @@ export const schedules: ScheduleDetails[] = [
   },
 ];
 
-export const pets: Pet[] = [
+export const pets: any[] = [
   {name: 'Lucy', image: lucy},
   {name: 'Anastasia', image: anastasia},
   {name: 'Rocco', image: {uri: roccoImage}},

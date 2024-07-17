@@ -5,6 +5,7 @@ import {
   Animated,
   Dimensions,
   Image,
+  ImageSourcePropType,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -27,6 +28,8 @@ const maleImage = require('../../../assets/images/male.png');
 const femaleImage = require('../../../assets/images/female.png');
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import {Pet} from '../../interfaces';
+import {supabase} from '../../lib/supabase';
 
 const steps = [1, 2, 3, 4, 5, 6];
 const {width: screenWidth} = Dimensions.get('window');
@@ -195,7 +198,33 @@ const RegisterPetScreen = () => {
     });
   };
 
-  const onPressContinue = () => {
+  const savePetToSupabase = async (pet: Pet) => {
+    try {
+      const {data, error} = await supabase.from('pets').insert({
+        name: pet.name,
+        years: pet.years,
+        months: pet.months,
+        image: pet.image,
+        type: pet.type,
+        breed: pet.breed,
+        size: pet.size,
+        gender: pet.gender,
+      });
+
+      if (error) {
+        console.error('Error inserting pet:', error);
+        return false;
+      }
+
+      console.log('Pet inserted successfully:', data);
+      return true;
+    } catch (error) {
+      console.error('Error saving pet:', error);
+      return false;
+    }
+  };
+
+  const onPressContinue = async () => {
     if (currentStep === 1 && !petName?.length) {
       return;
     }
@@ -219,7 +248,23 @@ const RegisterPetScreen = () => {
           months: parseInt(monthSelected),
         },
       };
+
+      console.log('updatedPetInfo', updatedPetInfo);
+
+      const dataToSave: Pet = {
+        name: updatedPetInfo.petName,
+        years: updatedPetInfo.petAge.years,
+        months: updatedPetInfo.petAge.months,
+        image: updatedPetInfo.petPhoto as ImageSourcePropType,
+        type: updatedPetInfo.petType as 'dog' | 'cat',
+        breed: updatedPetInfo.petRace,
+        size: 'small',
+        gender: updatedPetInfo.petGender,
+      };
+
       setPetInfo(updatedPetInfo);
+      console.log('dataToSave', dataToSave);
+      await savePetToSupabase(dataToSave);
       return navigate('BottomTabNavigator' as never);
     }
     if (currentStep === 1 && petName?.length > 0) {
