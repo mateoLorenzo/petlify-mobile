@@ -76,7 +76,7 @@ export const fieldValueIsValid = (
 };
 
 export const dogBreeds = [
-  'Ninguna en especifico',
+  'Otra...',
   'Bulldog',
   'Bull Terrier',
   'Cairn Terrier',

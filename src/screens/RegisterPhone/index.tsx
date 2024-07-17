@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   Animated,
   Dimensions,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -20,16 +19,8 @@ import {phoneRegex} from '../../constants';
 import {useNavigation} from '@react-navigation/native';
 import {useAnimation} from '../../hooks/useAnimation';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {DismissKeyboard} from '../../components/DismissKeyboard';
 const {width: screenWidth} = Dimensions.get('window');
-
-const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
-  <TouchableOpacity
-    activeOpacity={1}
-    style={styles.container}
-    onPress={() => Keyboard.dismiss()}>
-    {children}
-  </TouchableOpacity>
-);
 
 const RegisterPhoneScreen = () => {
   const {
@@ -119,7 +110,7 @@ const RegisterPhoneScreen = () => {
       <KeyboardAvoidingView
         style={styles.flex1}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <DismissKeyboard>
+        <DismissKeyboard style={styles.container}>
           <Logo height={100} width={100} style={styles.logo} />
           <Animated.View
             style={{

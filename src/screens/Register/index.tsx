@@ -118,7 +118,7 @@ const RegisterScreen = () => {
     if (error) {
       return Alert.alert(error.message);
     }
-    navigation.navigate('HomeScreen' as never);
+    navigation.navigate('RegisterPhoneScreen' as never);
   };
 
   const onPressRegister = async () => {
