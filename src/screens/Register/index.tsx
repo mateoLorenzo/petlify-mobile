@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useState} from 'react';
 import {
   Alert,
@@ -9,6 +10,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -25,7 +27,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomButton} from '../../components/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {supabase} from '../../lib/supabase';
-import {useWatch} from 'react-hook-form';
+import {Controller, useWatch} from 'react-hook-form';
 
 const formFields = ['name', 'lastName', 'email', 'password', 'confirmPassword'];
 type screenTypes = 'register' | 'login';
@@ -44,6 +46,7 @@ const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
 const RegisterScreen = () => {
   const {top} = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
 
   const {
     control,
@@ -338,16 +341,45 @@ const RegisterScreen = () => {
                   validate: emailIsValid,
                 }}
               />
-              <CustomTextInput
-                name="password"
+
+              <Controller
                 control={control}
-                placeholderTextColor={'#8F8F8F'}
-                placeholder="Password"
-                autoCapitalize="none"
-                isPasswordField
-                containerStyle={styles.passwordInput}
+                name="password"
                 rules={{required: 'Debes poner tu contraseña!'}}
+                render={({
+                  field: {onChange, onBlur, value},
+                  fieldState: {error},
+                }) => (
+                  <View style={styles.passwordInputContainer}>
+                    <TextInput
+                      style={{
+                        ...styles.passwordInput,
+                        borderColor: error ? 'red' : 'lightgray',
+                      }}
+                      placeholder="Contraseña"
+                      placeholderTextColor="#8F8F8F"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      secureTextEntry={showPassword}
+                    />
+                    <TouchableOpacity
+                      style={styles.eyeIconContainer}
+                      onPress={() => setShowPassword(!showPassword)}
+                      activeOpacity={0.5}>
+                      <Icon
+                        size={25}
+                        color="#8F8F8F"
+                        name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                      />
+                    </TouchableOpacity>
+                    {error && (
+                      <Text style={styles.errorText}>{error.message}</Text>
+                    )}
+                  </View>
+                )}
               />
+
               <TouchableOpacity activeOpacity={0.5}>
                 <Text style={styles.forgotPasswordText}>
                   Olvidé mi contraseña
@@ -436,8 +468,30 @@ const styles = StyleSheet.create({
     marginTop: 20,
     position: 'absolute',
   },
-  passwordInput: {
+  passwordInputContainer: {
     marginTop: 10,
+  },
+  passwordInput: {
+    width: '100%',
+    height: 55,
+    borderWidth: 1,
+    borderRadius: 3,
+    paddingHorizontal: 20,
+    fontFamily: 'Poppins-Regular',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+    alignSelf: 'flex-start',
+  },
+  eyeIconContainer: {
+    position: 'absolute',
+    right: 0,
+    width: 70,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   forgotPasswordText: {
     textAlign: 'right',
