@@ -1,6 +1,5 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from '../screens/Login';
 import RegisterScreen from '../screens/Register';
 import ComponentsScreen from '../screens/Tests';
 import CustomButtonScreen from '../screens/Tests/Button';
@@ -44,7 +43,6 @@ export type RootStackParams = {
   WelcomeScreen: undefined;
   OnboardingScreens: undefined;
   PreSignUpScreen: undefined;
-  loginScreen: undefined;
   RegisterScreen: undefined;
   RegisterPhoneScreen: undefined;
   ComponentsNavigator: undefined;
@@ -100,11 +98,6 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="PreSignUpScreen"
         component={PreSignUpScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="loginScreen"
-        component={LoginScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen

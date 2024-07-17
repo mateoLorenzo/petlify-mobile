@@ -86,7 +86,7 @@ const ProfileScreen = () => {
 
   const logout = () => {
     moveDownModal();
-    hideLayerAnimation(() => navigate('loginScreen' as never));
+    hideLayerAnimation(() => navigate('PreSignUpScreen' as never));
   };
 
   return (

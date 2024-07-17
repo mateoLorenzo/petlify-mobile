@@ -36,7 +36,7 @@ const PreSignUpScreen = () => {
         console.log('error', error, Boolean(error));
 
         if (data) {
-          navigation.navigate('HomeScreen' as never);
+          navigation.navigate('BottomTabNavigator' as never);
         }
       }
     } catch (apiError) {
@@ -53,16 +53,26 @@ const PreSignUpScreen = () => {
   };
 
   const fetchAccessToken = () => {
-    AccessToken.getCurrentAccessToken().then(data => {
-      if (data) {
-        const accessToken = data.accessToken;
-        fetchUserInfo(accessToken);
-      }
-    });
+    AccessToken.getCurrentAccessToken()
+      .then(async data => {
+        if (data) {
+          const accessToken = data.accessToken;
+
+          fetchUserInfo(accessToken);
+        } else {
+          console.log('No access token found');
+        }
+      })
+      .catch(error => {
+        console.log('Error fetching access token:', error);
+      });
   };
 
   const fetchUserInfo = (accessToken: string) => {
-    const responseInfoCallback = (responseError: any, responseResult: any) => {
+    const responseInfoCallback = async (
+      responseError: any,
+      responseResult: any,
+    ) => {
       if (responseError) {
         console.log('responseError', responseError);
         Alert.alert('Error fetching data: ' + responseError.toString());
