@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
   Animated,
   Dimensions,
   Image,
@@ -17,7 +18,7 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useAnimation} from '../../hooks/useAnimation';
-import {Controller, useForm, useWatch} from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
 import {AgePicker} from '../../components/AgePicker';
 import {styles} from './styles';
 import {CustomDropdown} from '../../components/CustomDropdown';
@@ -46,27 +47,25 @@ const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
 );
 
 interface PetData {
-  petName: string;
-  petType: 'dog' | 'cat' | undefined;
-  petGender: 'male' | 'female' | undefined;
-  petRace: string;
-  petAge: {
-    years: number;
-    months: number;
-  };
-  petPhoto: string;
+  name: string;
+  type: 'dog' | 'cat' | undefined;
+  gender: 'male' | 'female' | undefined;
+  breed: string;
+  years: string;
+  months: string;
+  size: 'small' | 'medium' | 'large' | undefined;
+  image: string | ImageSourcePropType;
 }
 
 const initialPetData: PetData = {
-  petName: '',
-  petType: undefined,
-  petGender: undefined,
-  petRace: '',
-  petAge: {
-    years: 0,
-    months: 0,
-  },
-  petPhoto: '',
+  name: '',
+  type: undefined,
+  gender: undefined,
+  size: undefined,
+  breed: '',
+  years: '1',
+  months: '1',
+  image: '/',
 };
 
 const RegisterPetScreen = () => {
@@ -76,23 +75,17 @@ const RegisterPetScreen = () => {
   const [contentActualPosition, setContentActualPosition] = useState(0);
   const [petInfo, setPetInfo] = useState<PetData>(initialPetData);
   const [continueButtonColor, setContinueButtonColor] = useState('gray');
-  const [yearSelected, setYearSelected] = useState('0');
-  const [monthSelected, setMonthSelected] = useState('1');
-  const [selectedImage, setSelectedImage] = useState(initialImage);
-  const [breedSelected, setBreedSelected] = useState('');
   const [breedsList, setBreedsList] = useState(dogBreeds);
+  const [loading, setLoading] = useState(true);
 
   const nameInputRef = useRef<TextInput>(null);
   const dropdownPaddingTop = useRef(new Animated.Value(60)).current;
   const {control} = useForm();
-  const petName = useWatch({control, name: 'petName'});
   const {navigate, goBack} = useNavigation();
 
   const {
     showBorder,
     hideBorder,
-    reduceStepWidth,
-    expandStepWidth,
     movePetContentLeft,
     movePetContentRight,
     maleBorderOpacity,
@@ -140,44 +133,76 @@ const RegisterPetScreen = () => {
     );
   };
 
+  const antiCorruptionLayer = (petData: Pet) => {
+    console.log('inside anti corruption', petData);
+    setPetInfo({
+      name: petData.name,
+      type: petData.type,
+      gender: petData.gender,
+      breed: petData.breed || '',
+      years: petData.years?.toString() || '0',
+      months: petData.months?.toString() || '0',
+      image: petData.image,
+      size: petData.size,
+    });
+  };
+
+  const getPet = async () => {
+    const lucyID = '93635bd0-3321-4d55-a638-2046310dc29c';
+    const {data} = await supabase
+      .from('pets')
+      .select('*')
+      .eq('id', lucyID)
+      .single();
+
+    console.log('data from getPet', data);
+    antiCorruptionLayer(data);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    if (petInfo.petType === 'dog') {
+    // TODO: Receive pet from params
+    getPet();
+  }, []);
+
+  useEffect(() => {
+    if (petInfo.type === 'dog') {
       showBorder('dog');
       hideBorder('cat');
     }
-    if (petInfo.petType === 'cat') {
+    if (petInfo.type === 'cat') {
       showBorder('cat');
       hideBorder('dog');
     }
-    if (petInfo.petGender === 'male') {
+    if (petInfo.gender === 'male') {
       showBorder('male');
       hideBorder('female');
     }
-    if (petInfo.petGender === 'female') {
+    if (petInfo.gender === 'female') {
       showBorder('female');
       hideBorder('male');
     }
-  }, [petInfo.petType, petInfo.petGender]);
+  }, [petInfo.type, petInfo.gender]);
 
   const updatePetType = (type: 'dog' | 'cat') => {
-    setPetInfo({...petInfo, petType: type});
+    setPetInfo({...petInfo, type: type});
   };
 
   const updateGender = (gender: 'male' | 'female') => {
-    setPetInfo({...petInfo, petGender: gender});
+    setPetInfo({...petInfo, gender: gender});
   };
 
   useEffect(() => {
     if (currentStep === 1) {
       focusInput();
     }
-    if (currentStep === 1 && petName?.length) {
+    if (currentStep === 1 && petInfo.name.length) {
       setContinueButtonColor('#1E96FF');
-    } else if (currentStep === 2 && petInfo.petType !== undefined) {
+    } else if (currentStep === 2 && petInfo.type !== undefined) {
       setContinueButtonColor('#1E96FF');
-    } else if (currentStep === 3 && petInfo.petGender !== undefined) {
+    } else if (currentStep === 3 && petInfo.gender !== undefined) {
       setContinueButtonColor('#1E96FF');
-    } else if (currentStep === 4 && breedSelected.length > 0) {
+    } else if (currentStep === 4 && petInfo.breed.length > 0) {
       setContinueButtonColor('#1E96FF');
     } else if (currentStep === 5) {
       setContinueButtonColor('#1E96FF');
@@ -186,7 +211,7 @@ const RegisterPetScreen = () => {
     } else {
       setContinueButtonColor('gray');
     }
-  }, [currentStep, petInfo, petName, breedSelected]);
+  }, [currentStep, petInfo]);
 
   const choosePhotoFromGallery = () => {
     ImagePicker.openPicker({
@@ -194,29 +219,24 @@ const RegisterPetScreen = () => {
       height: 400,
       cropping: true,
     }).then(image => {
-      setSelectedImage(image.path);
+      setPetInfo({...petInfo, image: image.path});
     });
   };
 
   const savePetToSupabase = async (pet: Pet) => {
     try {
-      const {data, error} = await supabase.from('pets').insert({
-        name: pet.name,
-        years: pet.years,
-        months: pet.months,
-        image: pet.image,
-        type: pet.type,
-        breed: pet.breed,
-        size: pet.size,
-        gender: pet.gender,
-      });
+      const lucyID = '93635bd0-3321-4d55-a638-2046310dc29c';
+
+      const {data, error} = await supabase
+        .from('pets')
+        .update(pet)
+        .eq('id', lucyID);
+      console.log('data', data);
 
       if (error) {
         console.error('Error inserting pet:', error);
         return false;
       }
-
-      console.log('Pet inserted successfully:', data);
       return true;
     } catch (error) {
       console.error('Error saving pet:', error);
@@ -225,55 +245,38 @@ const RegisterPetScreen = () => {
   };
 
   const onPressContinue = async () => {
-    if (currentStep === 1 && !petName?.length) {
+    if (currentStep === 1 && !petInfo.name?.length) {
       return;
     }
-    if (currentStep === 2 && petInfo.petType === undefined) {
+    if (currentStep === 2 && petInfo.type === undefined) {
       return;
     }
-    if (currentStep === 3 && petInfo.petGender === undefined) {
+    if (currentStep === 3 && petInfo.gender === undefined) {
       return;
     }
-    if (currentStep === 4 && breedSelected.length === 0) {
+    if (currentStep === 4 && petInfo.breed.length === 0) {
       return;
     }
     if (currentStep === 6) {
-      const updatedPetInfo = {
-        ...petInfo,
-        petName: petName,
-        petPhoto: selectedImage,
-        petRace: breedSelected,
-        petAge: {
-          years: parseInt(yearSelected),
-          months: parseInt(monthSelected),
-        },
+      const dataToSave = {
+        name: petInfo.name,
+        years: parseInt(petInfo.years, 10),
+        months: parseInt(petInfo.months, 10),
+        image: petInfo.image as ImageSourcePropType,
+        type: petInfo.type as 'dog' | 'cat',
+        breed: petInfo.breed,
+        size: 'small' as 'small' | 'medium' | 'large',
+        gender: petInfo.gender,
       };
 
-      console.log('updatedPetInfo', updatedPetInfo);
-
-      const dataToSave: Pet = {
-        name: updatedPetInfo.petName,
-        years: updatedPetInfo.petAge.years,
-        months: updatedPetInfo.petAge.months,
-        image: updatedPetInfo.petPhoto as ImageSourcePropType,
-        type: updatedPetInfo.petType as 'dog' | 'cat',
-        breed: updatedPetInfo.petRace,
-        size: 'small',
-        gender: updatedPetInfo.petGender,
-      };
-
-      setPetInfo(updatedPetInfo);
-      console.log('dataToSave', dataToSave);
       await savePetToSupabase(dataToSave);
       return navigate('BottomTabNavigator' as never);
     }
-    if (currentStep === 1 && petName?.length > 0) {
+    if (currentStep === 1 && petInfo.name.length > 0) {
       Keyboard.dismiss();
     }
     setCompletedSteps([...completedSteps, currentStep]);
     setUncompletedSteps(uncompletedSteps.filter(step => step !== currentStep));
-    reduceStepWidth(currentStep);
-    expandStepWidth(currentStep + 1);
     movePetContentLeft(contentActualPosition);
     setContentActualPosition(contentActualPosition - screenWidth);
     setCurrentStep(currentStep + 1);
@@ -288,11 +291,25 @@ const RegisterPetScreen = () => {
     }
     setCompletedSteps(completedSteps.filter(step => step !== currentStep));
     setUncompletedSteps([...uncompletedSteps, currentStep]);
-    reduceStepWidth(currentStep);
-    expandStepWidth(currentStep - 1);
     setCurrentStep(currentStep - 1);
     movePetContentRight(contentActualPosition);
     setContentActualPosition(contentActualPosition + screenWidth);
+  };
+
+  const onChangeName = (text: string) => {
+    setPetInfo({...petInfo, name: text});
+  };
+
+  const onChangeBreed = (breed: string) => {
+    setPetInfo({...petInfo, breed: breed});
+  };
+
+  const onChangeYear = (newYear: string) => {
+    setPetInfo({...petInfo, years: newYear});
+  };
+
+  const onChangeMonth = (newMonth: string) => {
+    setPetInfo({...petInfo, months: newMonth});
   };
 
   return (
@@ -331,28 +348,37 @@ const RegisterPetScreen = () => {
             }}>
             <View style={styles.nameSectionContainer}>
               <Text style={styles.subtitle}>¿Cómo se llama tu mascota?</Text>
-              <Controller
-                name="petName"
-                rules={{required: 'Ingresa el nombre de tu mascota'}}
-                control={control}
-                render={({field: {value, onChange}}) => (
-                  <TextInput
-                    ref={nameInputRef}
-                    value={value}
-                    autoCorrect={false}
-                    placeholder="Lucy"
-                    autoComplete="off"
-                    spellCheck={false}
-                    style={styles.nameInput}
-                    onChangeText={text => onChange(text)}
-                  />
-                )}
-              />
+              {loading === true ? (
+                <ActivityIndicator
+                  style={{marginTop: 130}}
+                  size="small"
+                  color="#1E96FF"
+                />
+              ) : (
+                <Controller
+                  name="petName"
+                  rules={{required: 'Ingresa el nombre de tu mascota'}}
+                  control={control}
+                  render={() => (
+                    <TextInput
+                      ref={nameInputRef}
+                      value={petInfo.name}
+                      autoCorrect={false}
+                      placeholderTextColor={'lightgray'}
+                      placeholder="Lucy"
+                      autoComplete="off"
+                      spellCheck={false}
+                      style={styles.nameInput}
+                      onChangeText={onChangeName}
+                    />
+                  )}
+                />
+              )}
             </View>
 
-            <View style={styles.kindSectionContainer}>
+            <View style={styles.typeSectionContainer}>
               <Text style={styles.subtitle}>
-                ¿A qué especie pertenece {petName}?
+                ¿A qué especie pertenece {petInfo.name}?
               </Text>
               <View style={[styles.petTypeContainer, styles.shadow]}>
                 <TouchableOpacity
@@ -388,7 +414,7 @@ const RegisterPetScreen = () => {
 
             <View style={styles.genderSectionContainer}>
               <Text style={styles.subtitle}>
-                ¿A qué genero pertenece {petName}?
+                ¿A qué genero pertenece {petInfo.name}?
               </Text>
 
               <View style={[styles.petTypeContainer, styles.shadow]}>
@@ -425,7 +451,7 @@ const RegisterPetScreen = () => {
 
             <View style={styles.raceSectionContainer}>
               <Text style={styles.raceSubtitle}>
-                ¿A que raza pertenece {petName}?
+                ¿A que raza pertenece {petInfo.name}?
               </Text>
               <Animated.View
                 style={{
@@ -434,8 +460,8 @@ const RegisterPetScreen = () => {
                 }}>
                 <CustomDropdown
                   onChangeText={onChangeText}
-                  breedSelected={breedSelected}
-                  setBreedSelected={setBreedSelected}
+                  breedSelected={petInfo.breed}
+                  setBreedSelected={onChangeBreed}
                   breedsList={breedsList}
                   onOpen={reduceDropdownPadding}
                   onClose={expandDropdownPadding}
@@ -445,24 +471,24 @@ const RegisterPetScreen = () => {
 
             <View style={styles.ageSectionContainer}>
               <Text style={styles.subtitle}>
-                ¿Cuantos años tiene {petName}?
+                ¿Cuantos años tiene {petInfo.name}?
               </Text>
               <View>
                 <View style={styles.agePickerContainer}>
                   <View style={styles.ageContainer}>
-                    <Text style={styles.ageNumber}>{yearSelected}</Text>
+                    <Text style={styles.ageNumber}>{petInfo.years}</Text>
                     <Text style={styles.ageText}>Años</Text>
                   </View>
                   <View style={styles.ageContainer}>
-                    <Text style={styles.ageNumber}>{monthSelected}</Text>
+                    <Text style={styles.ageNumber}>{petInfo.months}</Text>
                     <Text style={styles.ageText}>Meses</Text>
                   </View>
                 </View>
                 <AgePicker
-                  yearSelected={yearSelected}
-                  monthSelected={monthSelected}
-                  setYearSelected={setYearSelected}
-                  setMonthSelected={setMonthSelected}
+                  yearSelected={petInfo.years}
+                  monthSelected={petInfo.months}
+                  setYearSelected={onChangeYear}
+                  setMonthSelected={onChangeMonth}
                 />
               </View>
             </View>
@@ -477,11 +503,11 @@ const RegisterPetScreen = () => {
                   activeOpacity={0.5}
                   style={styles.addImageCircle}
                   onPress={choosePhotoFromGallery}>
-                  {selectedImage === initialImage ? (
+                  {petInfo.image === initialImage ? (
                     <Icon name="add-outline" size={50} color="#1E96FF" />
                   ) : (
                     <Image
-                      source={{uri: selectedImage}}
+                      source={{uri: petInfo.image as string}}
                       style={styles.petImage}
                       resizeMode="cover"
                     />

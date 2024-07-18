@@ -113,43 +113,6 @@ export const useAnimation = () => {
     }).start();
   };
 
-  const getStepWidth = (stepIndex: number) => {
-    if (stepIndex === 1) {
-      return stepOneWidth;
-    }
-    if (stepIndex === 2) {
-      return stepTwoWidth;
-    }
-    if (stepIndex === 3) {
-      return stepThreeWidth;
-    }
-    if (stepIndex === 4) {
-      return stepFourWidth;
-    }
-    if (stepIndex === 5) {
-      return stepFiveWidth;
-    }
-    return stepSixWidth;
-  };
-
-  const reduceStepWidth = (stepIndex: number) => {
-    const stepToUpdate = getStepWidth(stepIndex);
-    Animated.timing(stepToUpdate, {
-      toValue: screenWidth * 0.1,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const expandStepWidth = (stepIndex: number) => {
-    const stepToUpdate = getStepWidth(stepIndex);
-    Animated.timing(stepToUpdate, {
-      toValue: screenWidth * 0.3,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  };
-
   const getBorderToUpdate = (border: 'dog' | 'cat' | 'male' | 'female') => {
     if (border === 'dog') {
       return dogBorderOpacity;
@@ -310,9 +273,6 @@ export const useAnimation = () => {
     showRightContent,
     hideRightContent,
     showLeftContent,
-    getStepWidth,
-    reduceStepWidth,
-    expandStepWidth,
     showBorder,
     hideBorder,
     movePetContentLeft,

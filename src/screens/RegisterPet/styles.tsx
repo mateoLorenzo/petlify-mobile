@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     height: 250,
   },
-  kindSectionContainer: {
+  typeSectionContainer: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',

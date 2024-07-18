@@ -33,7 +33,6 @@ export interface PaymentCard {
 
 export interface Pet {
   name: string;
-  // age?: number;
   years?: number;
   months?: number;
   image: ImageSourcePropType;
@@ -41,4 +40,5 @@ export interface Pet {
   breed?: string;
   size?: 'small' | 'medium' | 'large';
   gender?: 'male' | 'female';
+  id?: string;
 }
