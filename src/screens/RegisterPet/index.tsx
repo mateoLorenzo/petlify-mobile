@@ -48,7 +48,7 @@ const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
 
 interface PetData {
   name: string;
-  type: 'dog' | 'cat' | undefined;
+  type: 'dog' | 'cat' | null;
   gender: 'male' | 'female' | undefined;
   breed: string;
   years: string;
@@ -59,7 +59,7 @@ interface PetData {
 
 const initialPetData: PetData = {
   name: '',
-  type: undefined,
+  type: null,
   gender: undefined,
   size: undefined,
   breed: '',
@@ -226,7 +226,6 @@ const RegisterPetScreen = () => {
   const savePetToSupabase = async (pet: Pet) => {
     try {
       const lucyID = '93635bd0-3321-4d55-a638-2046310dc29c';
-
       const {data, error} = await supabase
         .from('pets')
         .update(pet)
@@ -244,6 +243,19 @@ const RegisterPetScreen = () => {
     }
   };
 
+  const formatDataForSupabase = (petData: PetData): Pet => {
+    return {
+      name: petData.name,
+      years: parseInt(petData.years, 10),
+      months: parseInt(petData.months, 10),
+      image: petData.image as ImageSourcePropType,
+      type: petData.type,
+      breed: petData.breed,
+      size: petData.size,
+      gender: petData.gender,
+    };
+  };
+
   const onPressContinue = async () => {
     if (currentStep === 1 && !petInfo.name?.length) {
       return;
@@ -258,23 +270,13 @@ const RegisterPetScreen = () => {
       return;
     }
     if (currentStep === 6) {
-      const dataToSave = {
-        name: petInfo.name,
-        years: parseInt(petInfo.years, 10),
-        months: parseInt(petInfo.months, 10),
-        image: petInfo.image as ImageSourcePropType,
-        type: petInfo.type as 'dog' | 'cat',
-        breed: petInfo.breed,
-        size: 'small' as 'small' | 'medium' | 'large',
-        gender: petInfo.gender,
-      };
-
-      await savePetToSupabase(dataToSave);
+      await savePetToSupabase(formatDataForSupabase(petInfo));
       return navigate('BottomTabNavigator' as never);
     }
     if (currentStep === 1 && petInfo.name.length > 0) {
       Keyboard.dismiss();
     }
+    savePetToSupabase(formatDataForSupabase(petInfo));
     setCompletedSteps([...completedSteps, currentStep]);
     setUncompletedSteps(uncompletedSteps.filter(step => step !== currentStep));
     movePetContentLeft(contentActualPosition);
