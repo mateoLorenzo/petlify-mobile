@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   FlatList,
@@ -63,6 +64,7 @@ const PetDetailScreen = () => {
   const {top} = useSafeAreaInsets();
   const navigation = useNavigation();
   const [pets, setPets] = useState<Pet[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const onPressRegisterPet = () => {
     navigation.navigate('RegisterPetScreen' as never);
@@ -80,10 +82,12 @@ const PetDetailScreen = () => {
     }
 
     setPets(data as Pet[]);
+    setLoading(false);
   };
 
   useFocusEffect(
     React.useCallback(() => {
+      setLoading(true);
       console.log('inside MyMascotas');
       getPets();
     }, []),
@@ -96,7 +100,11 @@ const PetDetailScreen = () => {
         Aqui puedes ver tus mascotas registradas
       </Text>
 
-      {pets.length === 0 ? (
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="gray" />
+        </View>
+      ) : pets.length === 0 ? (
         <>
           <PetHome height={200} width={200} style={{marginTop: 40}} />
           <Text style={styles.registerPetTitle}>¡Registra tu Mascota!</Text>
@@ -115,7 +123,7 @@ const PetDetailScreen = () => {
         />
       )}
 
-      <View style={styles.spacer} />
+      {loading === false && <View style={styles.spacer} />}
 
       <CustomButton
         label="Registrar Mascota"
@@ -148,6 +156,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '100%',
     paddingHorizontal: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   registerPetTitle: {
     fontSize: 18,
