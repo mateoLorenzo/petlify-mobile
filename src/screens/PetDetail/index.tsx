@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -12,55 +13,30 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PetHome from '../../../assets/images/pet-house.svg';
 import {CustomButton} from '../../components/CustomButton';
-import {useNavigation} from '@react-navigation/native';
-
-const lucyImage = require('../../../assets/images/lucy.jpeg');
-const anastasiaImage = require('../../../assets/images/anastasia.jpeg');
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {supabase} from '../../lib/supabase';
+import {Pet} from '../../interfaces';
 
 const {width} = Dimensions.get('window');
 
-interface Pet {
-  name: string;
-  age: number;
-  gender: string;
-  breed: string;
-  totalWalks: number;
-  totalCares: number;
-  image?: any;
-}
-
-const pets: Pet[] = [
-  {
-    name: 'Lucy',
-    age: 7,
-    gender: 'Hembra',
-    breed: 'Golden Retriever',
-    totalWalks: 5,
-    totalCares: 2,
-    image: lucyImage,
-  },
-  {
-    name: 'Anastasia',
-    age: 5,
-    gender: 'Hembra',
-    breed: 'Munchkin gris',
-    totalWalks: 0,
-    totalCares: 5,
-    image: anastasiaImage,
-  },
-];
-
-const PetCard = ({name, age, gender, breed, image}: Pet) => {
+const PetCard = ({name, years: age, gender, breed, image}: Pet) => {
   const navigation = useNavigation();
 
   const onPressEdit = () => {
     navigation.navigate('RegisterPetScreen' as never);
   };
 
+  const genericPetImage =
+    'https://static.vecteezy.com/system/resources/previews/022/047/226/non_2x/black-animal-paw-print-vector.jpg';
+
   return (
     <View style={styles.petCardContainer}>
       <View style={styles.petCardTopSection}>
-        <Image source={image} style={styles.petCardImage} />
+        {image ? (
+          <Image source={image} style={styles.petCardImage} />
+        ) : (
+          <Image source={{uri: genericPetImage}} style={styles.petCardImage} />
+        )}
         <View style={styles.petInfoContainer}>
           <Text style={styles.petName}>{name}</Text>
           <View>
@@ -86,10 +62,32 @@ const PetCard = ({name, age, gender, breed, image}: Pet) => {
 const PetDetailScreen = () => {
   const {top} = useSafeAreaInsets();
   const navigation = useNavigation();
+  const [pets, setPets] = useState<Pet[]>([]);
 
   const onPressRegisterPet = () => {
     navigation.navigate('RegisterPetScreen' as never);
   };
+  const getPets = async () => {
+    const ownerID = '4';
+
+    const {data, error} = await supabase
+      .from('pets')
+      .select('*')
+      .eq('owner_id', ownerID);
+
+    if (error) {
+      return Alert.alert('Error', error.message);
+    }
+
+    setPets(data as Pet[]);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('inside MyMascotas');
+      getPets();
+    }, []),
+  );
 
   return (
     <View style={{...styles.container, paddingTop: top + 20}}>

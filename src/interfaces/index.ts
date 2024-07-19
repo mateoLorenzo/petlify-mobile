@@ -36,9 +36,11 @@ export interface Pet {
   years?: number;
   months?: number;
   image: ImageSourcePropType;
-  type: 'dog' | 'cat';
+  type: 'dog' | 'cat' | null;
   breed?: string;
   size?: 'small' | 'medium' | 'large';
   gender?: 'male' | 'female';
   id?: string;
+  walks?: number | null;
+  cares?: number | null;
 }
