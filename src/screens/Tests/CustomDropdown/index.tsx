@@ -17,7 +17,7 @@ const CustomDropdownScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>¡Registremos Tu Mascota!</Text>
+      <Text style={styles.title}>¡Test Registremos Tu Mascota!</Text>
       <Text style={styles.subtitle}>¿A qué raza pertenece?</Text>
       <CustomDropdown
         breedSelected={breedSelected}

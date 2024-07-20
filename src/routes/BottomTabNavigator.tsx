@@ -12,12 +12,21 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PetDetailScreen from '../screens/PetDetail';
 import {PetlifyContext} from '../context/PetlifyContext';
 
-const Tab = createBottomTabNavigator();
+export type BottomTabParams = {
+  HomeScreen: undefined;
+  SchedulesScreen: undefined;
+  PetDetailScreen: undefined;
+  ProfileScreen: undefined;
+  NewServiceScreen: undefined;
+};
+
+const Tab = createBottomTabNavigator<BottomTabParams>();
 
 const renderAddButton = (onPress: () => void) => {
   return (
@@ -25,6 +34,10 @@ const renderAddButton = (onPress: () => void) => {
       <Icon name="add-outline" size={25} color="#FFF" />
     </TouchableOpacity>
   );
+};
+
+const NullComponent = () => {
+  return <View />;
 };
 
 interface CustomTabBarButtonProps extends BottomTabBarButtonProps {
@@ -79,7 +92,7 @@ export const BottomTabNavigator = () => {
       sceneContainerStyle={styles.containerStyle}>
       <Tab.Screen
         name="HomeScreen"
-        component={HomeScreen}
+        component={HomeScreen as unknown as React.ComponentType}
         options={{
           tabBarButton: props =>
             renderTabButton({
@@ -105,8 +118,8 @@ export const BottomTabNavigator = () => {
       />
       <Tab.Screen
         options={{tabBarButton: () => renderAddButton(openNewServiceModal)}}
-        name="new"
-        component={SchedulesScreen}
+        name="NewServiceScreen"
+        component={NullComponent}
       />
       <Tab.Screen
         options={{
@@ -118,8 +131,8 @@ export const BottomTabNavigator = () => {
               closeModal: () => closeNewServiceModal(),
             }),
         }}
-        name="PetScreen"
-        component={PetDetailScreen}
+        name="PetDetailScreen"
+        component={PetDetailScreen as unknown as React.ComponentType}
       />
       <Tab.Screen
         options={{

@@ -44,3 +44,15 @@ export interface Pet {
   walks?: number | null;
   cares?: number | null;
 }
+
+// Interface for data needed for libraries and info displayed in register pet screen
+export interface PetData {
+  name: string;
+  type: 'dog' | 'cat' | null;
+  gender: 'male' | 'female' | undefined;
+  breed: string;
+  years: string;
+  months: string;
+  size: 'small' | 'medium' | 'large' | undefined;
+  image: string | ImageSourcePropType;
+}

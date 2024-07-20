@@ -2,72 +2,50 @@ import React, {useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Dimensions,
   FlatList,
-  Image,
-  Platform,
-  StyleSheet,
+  ImageSourcePropType,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PetHome from '../../../assets/images/pet-house.svg';
 import {CustomButton} from '../../components/CustomButton';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {RouteProp, useFocusEffect} from '@react-navigation/native';
 import {supabase} from '../../lib/supabase';
 import {Pet} from '../../interfaces';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {BottomTabParams} from '../../routes/BottomTabNavigator';
+import {RootStackParams} from '../../routes/StackNavigator';
+import {PetCard} from '../../components/PetCard';
+import {styles} from './styles';
 
-const {width} = Dimensions.get('window');
+type PetDetailScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParams,
+  'RegisterPetScreen'
+>;
+type PetDetailScreenRouteProp = RouteProp<BottomTabParams, 'PetDetailScreen'>;
 
-const PetCard = ({name, years: age, gender, breed, image}: Pet) => {
-  const navigation = useNavigation();
-
-  const onPressEdit = () => {
-    navigation.navigate('RegisterPetScreen' as never);
-  };
-
-  const genericPetImage =
-    'https://static.vecteezy.com/system/resources/previews/022/047/226/non_2x/black-animal-paw-print-vector.jpg';
-
-  return (
-    <View style={styles.petCardContainer}>
-      <View style={styles.petCardTopSection}>
-        {image ? (
-          <Image source={image} style={styles.petCardImage} />
-        ) : (
-          <Image source={{uri: genericPetImage}} style={styles.petCardImage} />
-        )}
-        <View style={styles.petInfoContainer}>
-          <Text style={styles.petName}>{name}</Text>
-          <View>
-            <Text style={styles.petTopDescription}>
-              {age} Años | {gender}
-            </Text>
-            <Text style={styles.petBottomDescription}>{breed}</Text>
-          </View>
-        </View>
-        <View style={styles.spacer} />
-        <TouchableOpacity style={styles.editButton} onPress={onPressEdit}>
-          <Text style={styles.editButtonText}>Actualizar</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.serviceStatsContainer}>
-        <Text style={styles.totalWalks}>Paseos: 5</Text>
-        <Text style={styles.totalCares}>Cuidados: 2</Text>
-      </View>
-    </View>
-  );
+type Props = {
+  navigation: PetDetailScreenNavigationProp;
+  route: PetDetailScreenRouteProp;
+  name: string;
+  years: number;
+  gender: string;
+  breed: string;
+  image: ImageSourcePropType;
 };
 
-const PetDetailScreen = () => {
+const PetDetailScreen: React.FC<Props> = ({navigation}) => {
   const {top} = useSafeAreaInsets();
-  const navigation = useNavigation();
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const onPressEdit = () => {
+    navigation.navigate('RegisterPetScreen', {actionType: 'edit'});
+  };
+
   const onPressRegisterPet = () => {
-    navigation.navigate('RegisterPetScreen' as never);
+    navigation.navigate('RegisterPetScreen', {actionType: 'register'});
   };
   const getPets = async () => {
     const ownerID = '4';
@@ -117,7 +95,9 @@ const PetDetailScreen = () => {
         <FlatList
           data={pets}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => <PetCard {...item} />}
+          renderItem={({item}) => (
+            <PetCard onPressEdit={onPressEdit} {...item} />
+          )}
           contentContainerStyle={styles.petsListContainer}
           style={styles.petsList}
         />
@@ -135,144 +115,5 @@ const PetDetailScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 26,
-    fontFamily: 'Poppins-SemiBold',
-    paddingHorizontal: 20,
-    width: '100%',
-    color: '#000',
-  },
-  subtitle: {
-    fontSize: 16,
-    fontWeight: '100',
-    fontFamily: 'Poppins-Regular',
-    color: '#000',
-    marginBottom: 10,
-    width: '100%',
-    paddingHorizontal: 20,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  registerPetTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'Poppins-SemiBold',
-    marginTop: 20,
-  },
-  registerPetSubtitle: {
-    fontSize: 16,
-    fontWeight: '100',
-    fontFamily: 'Poppins-Regular',
-    color: '#000',
-    textAlign: 'center',
-    marginTop: 5,
-  },
-  petCardContainer: {
-    marginBottom: 20,
-    width: '100%',
-    borderRadius: 10,
-    backgroundColor: '#AEAEAE',
-
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.2,
-        shadowRadius: 6,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  petCardTopSection: {
-    width: '100%',
-    height: 100,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    borderRadius: 10,
-    padding: 10,
-  },
-  petCardImage: {
-    height: 80,
-    width: 80,
-    borderRadius: 10,
-  },
-  petInfoContainer: {
-    marginLeft: 10,
-    justifyContent: 'space-between',
-    height: '100%',
-  },
-  petName: {
-    fontSize: 18,
-    fontFamily: 'Poppins-SemiBold',
-  },
-  petTopDescription: {
-    fontSize: 14,
-    fontFamily: 'Poppins-Regular',
-    color: '#626364',
-  },
-  petBottomDescription: {
-    fontSize: 14,
-    fontFamily: 'Poppins-Regular',
-    color: '#626364',
-  },
-  petsListContainer: {
-    width: '100%',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-  },
-  petsList: {
-    width: '100%',
-  },
-  spacer: {
-    flex: 1,
-  },
-  editButton: {
-    backgroundColor: '#1E96FF',
-    padding: 10,
-    borderRadius: 10,
-  },
-  editButtonText: {
-    color: '#fff',
-    fontFamily: 'Poppins-Regular',
-    fontSize: 12,
-  },
-  serviceStatsContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  totalWalks: {
-    fontFamily: 'Poppins-Medium',
-    color: 'white',
-    marginRight: 20,
-  },
-  totalCares: {
-    fontFamily: 'Poppins-Medium',
-    color: 'white',
-  },
-  registerButtonContainer: {
-    marginBottom: 10,
-    width: width - 40,
-  },
-  registerButton: {
-    height: 55,
-  },
-  registerButtonText: {
-    color: '#fff',
-    fontSize: 14,
-  },
-});
 
 export default PetDetailScreen;

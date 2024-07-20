@@ -28,34 +28,15 @@ const catImage = require('../../../assets/images/cat.png');
 const maleImage = require('../../../assets/images/male.png');
 const femaleImage = require('../../../assets/images/female.png');
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
-import {Pet} from '../../interfaces';
+import {RouteProp} from '@react-navigation/native';
+import {Pet, PetData} from '../../interfaces';
 import {supabase} from '../../lib/supabase';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../routes/StackNavigator';
+import {DismissKeyboard} from '../../components/DismissKeyboard';
 
 const steps = [1, 2, 3, 4, 5, 6];
 const {width: screenWidth} = Dimensions.get('window');
-const initialImage =
-  'https://cdn.motor1.com/images/mgl/BbKZZ/s3/2019-aston-martin-dbs-superleggera.jpg';
-
-const DismissKeyboard = ({children}: {children: React.ReactNode}) => (
-  <TouchableOpacity
-    activeOpacity={1}
-    style={styles.container}
-    onPress={() => Keyboard.dismiss()}>
-    {children}
-  </TouchableOpacity>
-);
-
-interface PetData {
-  name: string;
-  type: 'dog' | 'cat' | null;
-  gender: 'male' | 'female' | undefined;
-  breed: string;
-  years: string;
-  months: string;
-  size: 'small' | 'medium' | 'large' | undefined;
-  image: string | ImageSourcePropType;
-}
 
 const initialPetData: PetData = {
   name: '',
@@ -68,7 +49,18 @@ const initialPetData: PetData = {
   image: '/',
 };
 
-const RegisterPetScreen = () => {
+type DetailsScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParams,
+  'RegisterPetScreen'
+>;
+type DetailsScreenRouteProp = RouteProp<RootStackParams, 'RegisterPetScreen'>;
+
+type Props = {
+  navigation: DetailsScreenNavigationProp;
+  route: DetailsScreenRouteProp;
+};
+
+const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [uncompletedSteps, setUncompletedSteps] = useState([2, 3, 4, 5, 6]);
@@ -81,7 +73,6 @@ const RegisterPetScreen = () => {
   const nameInputRef = useRef<TextInput>(null);
   const dropdownPaddingTop = useRef(new Animated.Value(60)).current;
   const {control} = useForm();
-  const {navigate, goBack} = useNavigation();
 
   const {
     showBorder,
@@ -271,7 +262,7 @@ const RegisterPetScreen = () => {
     }
     if (currentStep === 6) {
       await savePetToSupabase(formatDataForSupabase(petInfo));
-      return navigate('BottomTabNavigator' as never);
+      return navigation.navigate('BottomTabNavigator');
     }
     if (currentStep === 1 && petInfo.name.length > 0) {
       Keyboard.dismiss();
@@ -286,7 +277,7 @@ const RegisterPetScreen = () => {
 
   const onPressBack = () => {
     if (currentStep === 1) {
-      return goBack();
+      return navigation.goBack();
     }
     if (currentStep === 2) {
       focusInput();
@@ -321,7 +312,7 @@ const RegisterPetScreen = () => {
         enabled={currentStep !== 4}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
         behavior={'padding'}>
-        <DismissKeyboard>
+        <DismissKeyboard style={styles.container}>
           <TouchableOpacity
             style={styles.backButtonContainer}
             onPress={onPressBack}>
@@ -505,14 +496,14 @@ const RegisterPetScreen = () => {
                   activeOpacity={0.5}
                   style={styles.addImageCircle}
                   onPress={choosePhotoFromGallery}>
-                  {petInfo.image === initialImage ? (
-                    <Icon name="add-outline" size={50} color="#1E96FF" />
-                  ) : (
+                  {petInfo.image ? (
                     <Image
                       source={{uri: petInfo.image as string}}
                       style={styles.petImage}
                       resizeMode="cover"
                     />
+                  ) : (
+                    <Icon name="add-outline" size={50} color="#1E96FF" />
                   )}
                 </TouchableOpacity>
               </View>
