@@ -40,8 +40,8 @@ const PetDetailScreen: React.FC<Props> = ({navigation}) => {
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const onPressEdit = () => {
-    navigation.navigate('RegisterPetScreen', {actionType: 'edit'});
+  const onPressEdit = (pet: Pet) => {
+    navigation.navigate('RegisterPetScreen', {actionType: 'edit', pet});
   };
 
   const onPressRegisterPet = () => {
@@ -96,7 +96,7 @@ const PetDetailScreen: React.FC<Props> = ({navigation}) => {
           data={pets}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
-            <PetCard onPressEdit={onPressEdit} {...item} />
+            <PetCard onPressEdit={() => onPressEdit(item)} {...item} />
           )}
           contentContainerStyle={styles.petsListContainer}
           style={styles.petsList}

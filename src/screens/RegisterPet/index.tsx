@@ -2,7 +2,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  ActivityIndicator,
   Animated,
   Dimensions,
   Image,
@@ -68,7 +67,6 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
   const [petInfo, setPetInfo] = useState<PetData>(initialPetData);
   const [continueButtonColor, setContinueButtonColor] = useState('gray');
   const [breedsList, setBreedsList] = useState(dogBreeds);
-  const [loading, setLoading] = useState(true);
 
   const nameInputRef = useRef<TextInput>(null);
   const dropdownPaddingTop = useRef(new Animated.Value(60)).current;
@@ -138,22 +136,10 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
     });
   };
 
-  const getPet = async () => {
-    const lucyID = '93635bd0-3321-4d55-a638-2046310dc29c';
-    const {data} = await supabase
-      .from('pets')
-      .select('*')
-      .eq('id', lucyID)
-      .single();
-
-    console.log('data from getPet', data);
-    antiCorruptionLayer(data);
-    setLoading(false);
-  };
-
   useEffect(() => {
-    // TODO: Receive pet from params
-    getPet();
+    if (route.params.pet) {
+      antiCorruptionLayer(route.params.pet);
+    }
   }, []);
 
   useEffect(() => {
@@ -341,32 +327,24 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
             }}>
             <View style={styles.nameSectionContainer}>
               <Text style={styles.subtitle}>¿Cómo se llama tu mascota?</Text>
-              {loading === true ? (
-                <ActivityIndicator
-                  style={{marginTop: 130}}
-                  size="small"
-                  color="#1E96FF"
-                />
-              ) : (
-                <Controller
-                  name="petName"
-                  rules={{required: 'Ingresa el nombre de tu mascota'}}
-                  control={control}
-                  render={() => (
-                    <TextInput
-                      ref={nameInputRef}
-                      value={petInfo.name}
-                      autoCorrect={false}
-                      placeholderTextColor={'lightgray'}
-                      placeholder="Lucy"
-                      autoComplete="off"
-                      spellCheck={false}
-                      style={styles.nameInput}
-                      onChangeText={onChangeName}
-                    />
-                  )}
-                />
-              )}
+              <Controller
+                name="petName"
+                rules={{required: 'Ingresa el nombre de tu mascota'}}
+                control={control}
+                render={() => (
+                  <TextInput
+                    ref={nameInputRef}
+                    value={petInfo.name}
+                    autoCorrect={false}
+                    placeholderTextColor={'lightgray'}
+                    placeholder="Lucy"
+                    autoComplete="off"
+                    spellCheck={false}
+                    style={styles.nameInput}
+                    onChangeText={onChangeName}
+                  />
+                )}
+              />
             </View>
 
             <View style={styles.typeSectionContainer}>
