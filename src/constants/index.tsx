@@ -99,6 +99,21 @@ export const dogBreeds = [
   'Shih Tzu',
 ];
 
+export const catBreeds = [
+  'Siamés',
+  'Persa',
+  'Mestizo (Gato doméstico de pelo corto)',
+  'Maine Coon',
+  'Bengala',
+  'Ragdoll',
+  'Exótico de Pelo Corto',
+  'Británico de Pelo Corto',
+  'Abisinio',
+  'Sphynx',
+  'Bosque de Noruega',
+  'Siberiano',
+];
+
 export const weekdays: string[] = [
   'Domingo',
   'Lunes',

@@ -21,7 +21,7 @@ import {Controller, useForm} from 'react-hook-form';
 import {AgePicker} from '../../components/AgePicker';
 import {styles} from './styles';
 import {CustomDropdown} from '../../components/CustomDropdown';
-import {dogBreeds} from '../../constants';
+import {catBreeds, dogBreeds} from '../../constants';
 const dogImage = require('../../../assets/images/dog.png');
 const catImage = require('../../../assets/images/cat.png');
 const maleImage = require('../../../assets/images/male.png');
@@ -116,7 +116,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
 
   const onChangeText = (text: string) => {
     setBreedsList(
-      dogBreeds.filter((breed: string) =>
+      breedsList.filter((breed: string) =>
         breed.toLowerCase().includes(text.toLowerCase()),
       ),
     );
@@ -126,7 +126,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
     console.log('inside anti corruption', petData);
     setPetInfo({
       name: petData.name,
-      type: petData.type,
+      type: petData.type === 'dog' ? 'perro' : 'gato',
       gender: petData.gender,
       breed: petData.breed || '',
       years: petData.years?.toString() || '0',
@@ -143,11 +143,11 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
   }, []);
 
   useEffect(() => {
-    if (petInfo.type === 'dog') {
+    if (petInfo.type === 'perro') {
       showBorder('dog');
       hideBorder('cat');
     }
-    if (petInfo.type === 'cat') {
+    if (petInfo.type === 'gato') {
       showBorder('cat');
       hideBorder('dog');
     }
@@ -160,14 +160,6 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
       hideBorder('male');
     }
   }, [petInfo.type, petInfo.gender]);
-
-  const updatePetType = (type: 'dog' | 'cat') => {
-    setPetInfo({...petInfo, type: type});
-  };
-
-  const updateGender = (gender: 'male' | 'female') => {
-    setPetInfo({...petInfo, gender: gender});
-  };
 
   useEffect(() => {
     if (currentStep === 1) {
@@ -226,7 +218,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
       years: parseInt(petData.years, 10),
       months: parseInt(petData.months, 10),
       image: petData.image as ImageSourcePropType,
-      type: petData.type,
+      type: petData.type === 'perro' ? 'dog' : 'cat',
       breed: petData.breed,
       size: petData.size,
       gender: petData.gender,
@@ -277,6 +269,27 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
 
   const onChangeName = (text: string) => {
     setPetInfo({...petInfo, name: text});
+  };
+
+  const onChangeType = (type: 'perro' | 'gato') => {
+    setPetInfo({...petInfo, type: type, breed: ''});
+    if (type === 'gato') {
+      setBreedsList(catBreeds);
+    } else {
+      setBreedsList(dogBreeds);
+    }
+  };
+
+  const onChangeGender = (gender: 'male' | 'female') => {
+    setPetInfo({...petInfo, gender: gender});
+    if (gender === 'male') {
+      showBorder('male');
+      hideBorder('female');
+    }
+    if (gender === 'female') {
+      showBorder('female');
+      hideBorder('male');
+    }
   };
 
   const onChangeBreed = (breed: string) => {
@@ -355,7 +368,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
                 <TouchableOpacity
                   activeOpacity={0.3}
                   style={styles.petTypeBox}
-                  onPress={() => updatePetType('dog')}>
+                  onPress={() => onChangeType('perro')}>
                   <Image source={dogImage} style={styles.dogImage} />
                   <Text style={styles.petTypeText}>Perro</Text>
                 </TouchableOpacity>
@@ -376,7 +389,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
                 <TouchableOpacity
                   activeOpacity={0.3}
                   style={styles.petTypeBox}
-                  onPress={() => updatePetType('cat')}>
+                  onPress={() => onChangeType('gato')}>
                   <Image source={catImage} style={styles.catImage} />
                   <Text style={styles.petTypeText}>Gato</Text>
                 </TouchableOpacity>
@@ -392,7 +405,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
                 <TouchableOpacity
                   activeOpacity={0.3}
                   style={styles.petTypeBox}
-                  onPress={() => updateGender('male')}>
+                  onPress={() => onChangeGender('male')}>
                   <Image source={maleImage} />
                   <Text style={styles.petTypeText}>Macho</Text>
                 </TouchableOpacity>
@@ -407,7 +420,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
                 <TouchableOpacity
                   activeOpacity={0.3}
                   style={styles.petTypeBox}
-                  onPress={() => updateGender('female')}>
+                  onPress={() => onChangeGender('female')}>
                   <Image source={femaleImage} />
                   <Text style={styles.petTypeText}>Hembra</Text>
                 </TouchableOpacity>
@@ -422,7 +435,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
 
             <View style={styles.raceSectionContainer}>
               <Text style={styles.raceSubtitle}>
-                ¿A que raza pertenece {petInfo.name}?
+                ¿A que raza de {petInfo.type} pertenece {petInfo.name}?
               </Text>
               <Animated.View
                 style={{

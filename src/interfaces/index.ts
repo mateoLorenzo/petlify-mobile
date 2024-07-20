@@ -48,7 +48,7 @@ export interface Pet {
 // Interface for data needed for libraries and info displayed in register pet screen
 export interface PetData {
   name: string;
-  type: 'dog' | 'cat' | null;
+  type: 'perro' | 'gato' | null;
   gender: 'male' | 'female' | undefined;
   breed: string;
   years: string;
