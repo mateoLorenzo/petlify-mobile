@@ -82,7 +82,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'flex-start',
-    borderRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
     padding: 10,
   },
   petCardImage: {
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
   editButton: {
     backgroundColor: '#1E96FF',
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 6,
   },
   editButtonText: {
     color: '#fff',
