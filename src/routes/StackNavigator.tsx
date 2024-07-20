@@ -36,7 +36,7 @@ import ConfirmServiceScreen from '../screens/ConfirmService';
 import SelectPaymentMethodScreen from '../screens/SelectPaymentMethod';
 import PaymentSuccessScreen from '../screens/PaymentSuccess';
 import ServiceDetailScreen from '../screens/ServiceDetail';
-import {PaymentCard, PaymentMethod} from '../interfaces';
+import {PaymentCard, PaymentMethod, Pet} from '../interfaces';
 import SupabaseTestScreen from '../screens/Tests/SupabaseTest';
 
 export type RootStackParams = {
@@ -47,7 +47,10 @@ export type RootStackParams = {
   RegisterPhoneScreen: undefined;
   ComponentsNavigator: undefined;
   RegisterPetInvitationScreen: undefined;
-  RegisterPetScreen: undefined;
+  RegisterPetScreen: {
+    actionType: 'register' | 'edit';
+    pet?: Pet;
+  };
   HomeScreen: undefined;
   ProfileScreen: undefined;
   ProfileEditScreen: undefined;
