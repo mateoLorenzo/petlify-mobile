@@ -14,6 +14,8 @@ export type ChangePassword = {
   confirmPassword: string;
 };
 
+export type petSizes = 'small' | 'medium' | 'large' | 'extra_large';
+
 export type RegisterFormFields = keyof RegisterFormData | keyof ChangePassword; // 'name' | 'lastName' | 'email' | 'password' | 'phone'
 export type fieldsColors = 'green' | 'gray' | 'red';
 export type grayOrBlue = '#9B9B9B' | '#1E96FF'; // 'gray' | 'blue'

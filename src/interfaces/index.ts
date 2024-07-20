@@ -38,8 +38,8 @@ export interface Pet {
   image: ImageSourcePropType;
   type: 'dog' | 'cat' | null;
   breed?: string;
-  size?: 'small' | 'medium' | 'large';
-  gender?: 'male' | 'female';
+  size: 'small' | 'medium' | 'large' | 'extra_large' | undefined;
+  gender: 'male' | 'female' | undefined;
   id?: string;
   walks?: number | null;
   cares?: number | null;
@@ -48,11 +48,11 @@ export interface Pet {
 // Interface for data needed for libraries and info displayed in register pet screen
 export interface PetData {
   name: string;
-  type: 'perro' | 'gato' | null;
+  type: 'perro' | 'gato' | undefined;
   gender: 'male' | 'female' | undefined;
   breed: string;
   years: string;
   months: string;
-  size: 'small' | 'medium' | 'large' | undefined;
+  size: 'small' | 'medium' | 'large' | 'extra_large' | undefined;
   image: string | ImageSourcePropType;
 }

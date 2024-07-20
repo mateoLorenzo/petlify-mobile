@@ -75,12 +75,38 @@ export const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#1E96FF',
   },
+  sizeRow: {
+    flexDirection: 'row',
+  },
+  sizeBoxContainer: {
+    width: 150,
+  },
+  sizeBox: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 20,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    borderRadius: 10,
+    zIndex: 5,
+  },
+  sizeTitle: {
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+  },
+  sizeText: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    marginTop: 2,
+  },
   petTypeBox: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 10,
     zIndex: 5,
     height: '100%',
+    borderWidth: 1,
+    borderColor: 'lightgray',
   },
   petTypeText: {
     fontFamily: 'Poppins-Medium',

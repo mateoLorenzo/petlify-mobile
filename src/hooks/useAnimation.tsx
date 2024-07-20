@@ -21,6 +21,10 @@ export const useAnimation = () => {
   const catBorderOpacity = useRef(new Animated.Value(0)).current;
   const maleBorderOpacity = useRef(new Animated.Value(0)).current;
   const femaleBorderOpacity = useRef(new Animated.Value(0)).current;
+  const smallSizeBorderOpacity = useRef(new Animated.Value(0)).current;
+  const mediumSizeBorderOpacity = useRef(new Animated.Value(0)).current;
+  const largeSizeBorderOpacity = useRef(new Animated.Value(0)).current;
+  const extraLargeSizeBorderOpacity = useRef(new Animated.Value(0)).current;
   const petContentPosition = useRef(new Animated.Value(0)).current;
 
   const arrowIconOrientation = useRef(new Animated.Value(0)).current;
@@ -144,6 +148,33 @@ export const useAnimation = () => {
     }).start();
   };
 
+  const getSizeBorderToUpdate = (
+    size: 'small' | 'medium' | 'large' | 'extra_large',
+  ) => {
+    if (size === 'small') {
+      return smallSizeBorderOpacity;
+    }
+    if (size === 'medium') {
+      return mediumSizeBorderOpacity;
+    }
+    if (size === 'large') {
+      return largeSizeBorderOpacity;
+    }
+    return extraLargeSizeBorderOpacity;
+  };
+
+  const updateSizeBorder = (
+    size: 'small' | 'medium' | 'large' | 'extra_large',
+    action: 'show' | 'hide',
+  ) => {
+    const borderToUpdate = getSizeBorderToUpdate(size);
+    Animated.timing(borderToUpdate, {
+      toValue: action === 'show' ? 1 : 0,
+      duration: 150,
+      useNativeDriver: false,
+    }).start();
+  };
+
   const movePetContentLeft = (contentActualPosition: number) => {
     Animated.timing(petContentPosition, {
       toValue: contentActualPosition - screenWidth,
@@ -252,6 +283,10 @@ export const useAnimation = () => {
     catBorderOpacity,
     maleBorderOpacity,
     femaleBorderOpacity,
+    smallSizeBorderOpacity,
+    mediumSizeBorderOpacity,
+    largeSizeBorderOpacity,
+    extraLargeSizeBorderOpacity,
     petContentPosition,
     arrowIconOrientation,
     dropdownHeight,
@@ -275,6 +310,7 @@ export const useAnimation = () => {
     showLeftContent,
     showBorder,
     hideBorder,
+    updateSizeBorder,
     movePetContentLeft,
     movePetContentRight,
     rotateArrowIcon,

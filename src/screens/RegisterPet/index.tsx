@@ -21,7 +21,7 @@ import {Controller, useForm} from 'react-hook-form';
 import {AgePicker} from '../../components/AgePicker';
 import {styles} from './styles';
 import {CustomDropdown} from '../../components/CustomDropdown';
-import {catBreeds, dogBreeds} from '../../constants';
+import {catBreeds, dogBreeds, petSizes} from '../../constants';
 const dogImage = require('../../../assets/images/dog.png');
 const catImage = require('../../../assets/images/cat.png');
 const maleImage = require('../../../assets/images/male.png');
@@ -39,7 +39,7 @@ const {width: screenWidth} = Dimensions.get('window');
 
 const initialPetData: PetData = {
   name: '',
-  type: null,
+  type: undefined,
   gender: undefined,
   size: undefined,
   breed: '',
@@ -77,11 +77,16 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
     hideBorder,
     movePetContentLeft,
     movePetContentRight,
+    updateSizeBorder,
     maleBorderOpacity,
     femaleBorderOpacity,
     petContentPosition,
     dogBorderOpacity,
     catBorderOpacity,
+    smallSizeBorderOpacity,
+    mediumSizeBorderOpacity,
+    largeSizeBorderOpacity,
+    extraLargeSizeBorderOpacity,
   } = useAnimation();
 
   const focusInput = () => {
@@ -143,6 +148,13 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
   }, []);
 
   useEffect(() => {
+    const sizes: petSizes[] = ['small', 'medium', 'large', 'extra_large'];
+    sizes.forEach(size => {
+      updateSizeBorder(size, petInfo.size === size ? 'show' : 'hide');
+    });
+  }, [petInfo.size]);
+
+  useEffect(() => {
     if (petInfo.type === 'perro') {
       showBorder('dog');
       hideBorder('cat');
@@ -171,9 +183,9 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
       setContinueButtonColor('#1E96FF');
     } else if (currentStep === 3 && petInfo.gender !== undefined) {
       setContinueButtonColor('#1E96FF');
-    } else if (currentStep === 4 && petInfo.breed.length > 0) {
+    } else if (currentStep === 4 && petInfo.size !== undefined) {
       setContinueButtonColor('#1E96FF');
-    } else if (currentStep === 5) {
+    } else if (currentStep === 5 && petInfo.breed.length > 0) {
       setContinueButtonColor('#1E96FF');
     } else if (currentStep === 6) {
       setContinueButtonColor('#1E96FF');
@@ -235,7 +247,10 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
     if (currentStep === 3 && petInfo.gender === undefined) {
       return;
     }
-    if (currentStep === 4 && petInfo.breed.length === 0) {
+    if (currentStep === 4 && petInfo.size === undefined) {
+      return;
+    }
+    if (currentStep === 5 && petInfo.breed.length === 0) {
       return;
     }
     if (currentStep === 6) {
@@ -290,6 +305,10 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
       showBorder('female');
       hideBorder('male');
     }
+  };
+
+  const onChangeSize = (size: 'small' | 'medium' | 'large' | 'extra_large') => {
+    setPetInfo({...petInfo, size: size});
   };
 
   const onChangeBreed = (breed: string) => {
@@ -430,6 +449,83 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
                     opacity: femaleBorderOpacity,
                   }}
                 />
+              </View>
+            </View>
+
+            <View style={styles.genderSectionContainer}>
+              <Text style={styles.subtitle}>
+                ¿Qué tamaño tiene {petInfo.name}?
+              </Text>
+
+              <View>
+                <View style={styles.sizeRow}>
+                  <View style={styles.sizeBoxContainer}>
+                    <TouchableOpacity
+                      activeOpacity={0.3}
+                      onPress={() => onChangeSize('small')}
+                      style={styles.sizeBox}>
+                      <Text style={styles.sizeTitle}>Pequeño</Text>
+                      <Text style={styles.sizeText}>0 - 7kg</Text>
+                    </TouchableOpacity>
+                    <Animated.View
+                      style={{
+                        ...styles.customBorder,
+                        opacity: smallSizeBorderOpacity,
+                      }}
+                    />
+                  </View>
+                  <View style={{width: 15}} />
+                  <TouchableOpacity
+                    style={styles.sizeBoxContainer}
+                    activeOpacity={0.3}
+                    onPress={() => onChangeSize('medium')}>
+                    <View style={styles.sizeBox}>
+                      <Text style={styles.sizeTitle}>Mediano</Text>
+                      <Text style={styles.sizeText}>8 - 20kg</Text>
+                    </View>
+
+                    <Animated.View
+                      style={{
+                        ...styles.customBorder,
+                        opacity: mediumSizeBorderOpacity,
+                      }}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{height: 15}} />
+                <View style={styles.sizeRow}>
+                  <TouchableOpacity
+                    activeOpacity={0.3}
+                    style={styles.sizeBoxContainer}
+                    onPress={() => onChangeSize('large')}>
+                    <View style={styles.sizeBox}>
+                      <Text style={styles.sizeTitle}>Grande</Text>
+                      <Text style={styles.sizeText}>21 - 40kg</Text>
+                    </View>
+                    <Animated.View
+                      style={{
+                        ...styles.customBorder,
+                        opacity: largeSizeBorderOpacity,
+                      }}
+                    />
+                  </TouchableOpacity>
+                  <View style={{width: 15}} />
+                  <TouchableOpacity
+                    activeOpacity={0.3}
+                    style={styles.sizeBoxContainer}
+                    onPress={() => onChangeSize('extra_large')}>
+                    <View style={styles.sizeBox}>
+                      <Text style={styles.sizeTitle}>Muy Grande</Text>
+                      <Text style={styles.sizeText}>+45kg</Text>
+                    </View>
+                    <Animated.View
+                      style={{
+                        ...styles.customBorder,
+                        opacity: extraLargeSizeBorderOpacity,
+                      }}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
 
