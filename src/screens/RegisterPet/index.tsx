@@ -34,7 +34,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../routes/StackNavigator';
 import {DismissKeyboard} from '../../components/DismissKeyboard';
 
-const steps = [1, 2, 3, 4, 5, 6];
+const steps = [1, 2, 3, 4, 5, 6, 7];
 const {width: screenWidth} = Dimensions.get('window');
 
 const initialPetData: PetData = {
@@ -45,7 +45,7 @@ const initialPetData: PetData = {
   breed: '',
   years: '1',
   months: '1',
-  image: '/',
+  image: undefined,
 };
 
 type DetailsScreenNavigationProp = NativeStackNavigationProp<
@@ -128,7 +128,6 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   const antiCorruptionLayer = (petData: Pet) => {
-    console.log('inside anti corruption', petData);
     setPetInfo({
       name: petData.name,
       type: petData.type === 'dog' ? 'perro' : 'gato',
@@ -189,6 +188,8 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
       setContinueButtonColor('#1E96FF');
     } else if (currentStep === 6) {
       setContinueButtonColor('#1E96FF');
+    } else if (currentStep === 7) {
+      setContinueButtonColor('#1E96FF');
     } else {
       setContinueButtonColor('gray');
     }
@@ -204,13 +205,13 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
     });
   };
 
-  const savePetToSupabase = async (pet: Pet) => {
+  const updatePet = async (pet: Pet) => {
     try {
-      const lucyID = '93635bd0-3321-4d55-a638-2046310dc29c';
+      const petID = route.params.pet?.id;
       const {data, error} = await supabase
         .from('pets')
         .update(pet)
-        .eq('id', lucyID);
+        .eq('id', petID);
       console.log('data', data);
 
       if (error) {
@@ -224,6 +225,11 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
     }
   };
 
+  const registerNewPet = async (pet: Pet) => {
+    const {data, error} = await supabase.from('pets').insert(pet);
+    console.log('data', data, 'error', error);
+  };
+
   const formatDataForSupabase = (petData: PetData): Pet => {
     return {
       name: petData.name,
@@ -234,6 +240,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
       breed: petData.breed,
       size: petData.size,
       gender: petData.gender,
+      owner_id: '4', //TODO: get owner id from user when updating table users
     };
   };
 
@@ -253,14 +260,20 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
     if (currentStep === 5 && petInfo.breed.length === 0) {
       return;
     }
-    if (currentStep === 6) {
-      await savePetToSupabase(formatDataForSupabase(petInfo));
+    if (currentStep === 7) {
+      if (route.params.actionType === 'register') {
+        await registerNewPet(formatDataForSupabase(petInfo));
+      } else {
+        await updatePet(formatDataForSupabase(petInfo));
+      }
       return navigation.navigate('BottomTabNavigator');
     }
     if (currentStep === 1 && petInfo.name.length > 0) {
       Keyboard.dismiss();
     }
-    savePetToSupabase(formatDataForSupabase(petInfo));
+    if (route.params.actionType === 'update') {
+      await updatePet(formatDataForSupabase(petInfo));
+    }
     setCompletedSteps([...completedSteps, currentStep]);
     setUncompletedSteps(uncompletedSteps.filter(step => step !== currentStep));
     movePetContentLeft(contentActualPosition);

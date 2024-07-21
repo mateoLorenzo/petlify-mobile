@@ -41,7 +41,7 @@ const PetDetailScreen: React.FC<Props> = ({navigation}) => {
   const [loading, setLoading] = useState(true);
 
   const onPressEdit = (pet: Pet) => {
-    navigation.navigate('RegisterPetScreen', {actionType: 'edit', pet});
+    navigation.navigate('RegisterPetScreen', {actionType: 'update', pet});
   };
 
   const onPressRegisterPet = () => {

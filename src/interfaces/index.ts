@@ -41,6 +41,7 @@ export interface Pet {
   size: 'small' | 'medium' | 'large' | 'extra_large' | undefined;
   gender: 'male' | 'female' | undefined;
   id?: string;
+  owner_id?: string;
   walks?: number | null;
   cares?: number | null;
 }
@@ -54,5 +55,5 @@ export interface PetData {
   years: string;
   months: string;
   size: 'small' | 'medium' | 'large' | 'extra_large' | undefined;
-  image: string | ImageSourcePropType;
+  image: string | ImageSourcePropType | undefined;
 }

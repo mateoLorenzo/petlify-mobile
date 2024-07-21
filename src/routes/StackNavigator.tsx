@@ -48,7 +48,7 @@ export type RootStackParams = {
   ComponentsNavigator: undefined;
   RegisterPetInvitationScreen: undefined;
   RegisterPetScreen: {
-    actionType: 'register' | 'edit';
+    actionType: 'register' | 'update';
     pet?: Pet;
   };
   HomeScreen: undefined;
