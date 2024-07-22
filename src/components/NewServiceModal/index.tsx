@@ -10,16 +10,37 @@ import {
   View,
 } from 'react-native';
 import {PetlifyContext} from '../../context/PetlifyContext';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParams} from '../../routes/StackNavigator';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 const walker = require('../../../assets/images/paseo.png');
 const sitter = require('../../../assets/images/cuidado.png');
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
+type NavigationProp = NativeStackNavigationProp<
+  RootStackParams,
+  'ServiceRequestScreen'
+>;
+
 export const NewServiceModal = () => {
+  const navigation = useNavigation<NavigationProp>();
   const blackLayerOpacity = useRef(new Animated.Value(0)).current;
   const modalPosition = useRef(new Animated.Value(screenHeight)).current;
   const {isOpenServiceModal, setIsOpenServiceModal} =
     useContext(PetlifyContext);
+
+  const onPressWalkService = () => {
+    hideBlackLayer(() => {
+      navigation.navigate('ServiceRequestScreen', {service: 'walk'});
+    });
+  };
+
+  const onPressCareService = () => {
+    hideBlackLayer(() => {
+      navigation.navigate('ServiceRequestScreen', {service: 'care'});
+    });
+  };
 
   useEffect(() => {
     if (isOpenServiceModal) {
@@ -67,9 +88,12 @@ export const NewServiceModal = () => {
     showModalAnimation();
   };
 
-  const hideBlackLayer = () => {
+  const hideBlackLayer = (onFinish?: () => void) => {
     hideModalAnimation();
-    hideLayerAnimation(() => setIsOpenServiceModal(false));
+    hideLayerAnimation(() => {
+      setIsOpenServiceModal(false);
+      onFinish && onFinish();
+    });
   };
 
   return isOpenServiceModal ? (
@@ -79,7 +103,7 @@ export const NewServiceModal = () => {
         <TouchableOpacity
           style={styles.flex1}
           activeOpacity={1}
-          onPress={hideBlackLayer}
+          onPress={() => hideBlackLayer()}
         />
       </Animated.View>
       <Animated.View
@@ -93,14 +117,14 @@ export const NewServiceModal = () => {
           ¡Imagina lo contenta que se pondra Lucy!
         </Text>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={onPressWalkService}>
             <Image source={walker} style={styles.serviceImage} />
             <View style={styles.imageLayerContainer}>
               <View style={styles.imageBlackLayer} />
               <Text style={styles.serviceText}>Paseo</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={onPressCareService}>
             <Image source={sitter} style={styles.serviceImage} />
             <View style={styles.imageLayerContainer}>
               <View style={styles.imageBlackLayer} />

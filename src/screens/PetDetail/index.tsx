@@ -48,7 +48,7 @@ const PetDetailScreen: React.FC<Props> = ({navigation}) => {
     navigation.navigate('RegisterPetScreen', {actionType: 'register'});
   };
   const getPets = async () => {
-    const ownerID = '4';
+    const ownerID = '17e9b275-fcb3-4391-99ab-54f299a969bd'; //TODO: Get ownerID from data in store
 
     const {data, error} = await supabase
       .from('pets')
