@@ -141,7 +141,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    if (route.params.pet) {
+    if (route.params?.pet) {
       antiCorruptionLayer(route.params.pet);
     }
   }, []);
@@ -231,7 +231,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   const formatDataForSupabase = (petData: PetData): Pet => {
-    return {
+    const petFormatted: Pet = {
       name: petData.name,
       years: parseInt(petData.years, 10),
       months: parseInt(petData.months, 10),
@@ -242,6 +242,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
       gender: petData.gender,
       owner_id: '4', //TODO: get owner id from user when updating table users
     };
+    return petFormatted;
   };
 
   const onPressContinue = async () => {

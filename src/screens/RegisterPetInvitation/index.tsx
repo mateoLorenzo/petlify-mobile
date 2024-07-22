@@ -4,9 +4,25 @@ import LinearGradient from 'react-native-linear-gradient';
 import {CustomButton} from '../../components/CustomButton';
 const petImage = require('../../../assets/images/register-pet.jpg');
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../routes/StackNavigator';
 
-const RegisterPetInvitationScreen = () => {
+type DetailsScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParams,
+  'RegisterPetInvitationScreen'
+>;
+type DetailsScreenRouteProp = RouteProp<
+  RootStackParams,
+  'RegisterPetInvitationScreen'
+>;
+
+type Props = {
+  navigation: DetailsScreenNavigationProp;
+  route: DetailsScreenRouteProp;
+};
+
+const RegisterPetInvitationScreen: React.FC<Props> = ({navigation}) => {
   const imageGradient = [
     'rgba(255, 255, 255, 1)',
     'rgba(255, 255, 255, .7)',
@@ -14,7 +30,15 @@ const RegisterPetInvitationScreen = () => {
     'rgba(255, 255, 255, 0)',
   ];
 
-  const {navigate} = useNavigation();
+  const onPressContinue = () => {
+    navigation.navigate('RegisterPetScreen', {
+      actionType: 'register',
+    });
+  };
+
+  const onPressOmit = () => {
+    navigation.navigate('HomeScreen');
+  };
 
   return (
     <View style={styles.screenContainer}>
@@ -41,12 +65,12 @@ const RegisterPetInvitationScreen = () => {
 
       <View style={styles.buttonsContainer}>
         <CustomButton
-          onPress={() => navigate('RegisterPetScreen' as never)}
+          onPress={onPressContinue}
           style={styles.registerButton}
           label="Continuar"
           labelStyle={styles.registerButtonText}
         />
-        <TouchableOpacity onPress={() => navigate('HomeScreen' as never)}>
+        <TouchableOpacity onPress={onPressOmit}>
           <Text style={styles.omitButtonText}>Omitir</Text>
         </TouchableOpacity>
       </View>
@@ -115,7 +139,7 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     width: '80%',
-    backgroundColor: '#1976D2',
+    backgroundColor: '#1E96FF',
     height: 50,
   },
   registerButtonText: {
