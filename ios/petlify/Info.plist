@@ -10,20 +10,8 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.190649997221-vi8aus39vouh9qphs4rt3o2bbsmvpr00</string>
-				<string>fb1597480390821820</string>
 			</array>
 		</dict>
-	</array>
-	<key>FacebookAppID</key>
-	<string>1597480390821820</string>	
-	<key>FacebookClientToken</key>
-	<string>5945385267c07c11320f48ad3ca29476</string>
-	<key>FacebookDisplayName</key>
-	<string>Petlify</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>fbapi</string>
-		<string>fb-messenger-share-api</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
