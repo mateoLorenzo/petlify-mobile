@@ -40,7 +40,8 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
   const {top: marginTop} = useSafeAreaInsets();
 
   const onPressCheckFees = () => {
-    navigation.navigate('ServicesFeesScreen' as never);
+    // navigation.navigate('ServicesFeesScreen' as never);
+    navigation.navigate('HomeScreen2' as never);
   };
 
   const onPressWalkService = () => {

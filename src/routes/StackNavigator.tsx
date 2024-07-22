@@ -38,6 +38,7 @@ import PaymentSuccessScreen from '../screens/PaymentSuccess';
 import ServiceDetailScreen from '../screens/ServiceDetail';
 import {PaymentCard, PaymentMethod, Pet} from '../interfaces';
 import SupabaseTestScreen from '../screens/Tests/SupabaseTest';
+import HomeScreen2 from '../screens/Home2';
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -52,6 +53,7 @@ export type RootStackParams = {
     pet?: Pet;
   };
   HomeScreen: undefined;
+  HomeScreen2: undefined;
   ProfileScreen: undefined;
   ProfileEditScreen: undefined;
   BottomTabNavigator: undefined;
@@ -134,6 +136,11 @@ export const StackNavigator = ({initialRouteName}: navigatorProps) => {
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="HomeScreen2"
+        component={HomeScreen2}
         options={{headerShown: false}}
       />
       <Stack.Screen
