@@ -28,6 +28,7 @@ import {CustomButton} from '../../components/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {supabase} from '../../lib/supabase';
 import {Controller, useWatch} from 'react-hook-form';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const formFields = ['name', 'lastName', 'email', 'password', 'confirmPassword'];
 type screenTypes = 'register' | 'login';
@@ -114,10 +115,16 @@ const RegisterScreen = () => {
       },
     });
     console.log('data', data);
-    setLoading(false);
     if (error) {
       return Alert.alert(error.message);
     }
+
+    const accessToken = data.session?.access_token;
+    if (accessToken) {
+      await AsyncStorage.setItem('accessToken', accessToken);
+    }
+
+    setLoading(false);
     navigation.navigate('RegisterPhoneScreen' as never);
   };
 
@@ -144,6 +151,9 @@ const RegisterScreen = () => {
       return Alert.alert(error.message);
     }
     console.log('data', data);
+    const accessToken = data.session?.access_token;
+    AsyncStorage.setItem('accessToken', accessToken);
+
     navigation.navigate('BottomTabNavigator' as never);
   };
 

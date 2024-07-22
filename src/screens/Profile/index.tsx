@@ -15,6 +15,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 const myImage = require('../../../assets/images/matumoto.png');
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 const ProfileScreen = () => {
@@ -86,6 +87,7 @@ const ProfileScreen = () => {
 
   const logout = () => {
     moveDownModal();
+    AsyncStorage.removeItem('accessToken');
     hideLayerAnimation(() => navigate('PreSignUpScreen' as never));
   };
 

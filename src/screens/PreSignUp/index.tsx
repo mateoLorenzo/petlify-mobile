@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Logo from '../../../assets/images/logo.svg';
 import GoogleIcon from '../../../assets/images/google.svg';
@@ -14,9 +7,8 @@ import EmailIcon from '../../../assets/images/email.svg';
 import {useNavigation} from '@react-navigation/native';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {supabase} from '../../lib/supabase';
-import {AccessToken, GraphRequest, LoginManager} from 'react-native-fbsdk-next';
-import {GraphRequestManager} from 'react-native-fbsdk-next';
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PreSignUpScreen = () => {
   const {top} = useSafeAreaInsets();
@@ -36,6 +28,10 @@ const PreSignUpScreen = () => {
         console.log('error', error, Boolean(error));
 
         if (data) {
+          const accessToken = data.session?.access_token;
+          if (accessToken) {
+            AsyncStorage.setItem('accessToken', accessToken);
+          }
           navigation.navigate('BottomTabNavigator' as never);
         }
       }
@@ -44,70 +40,8 @@ const PreSignUpScreen = () => {
     }
   };
 
-  const handleLoginResult = (result: any) => {
-    if (result.isCancelled) {
-      console.log('Login cancelled');
-    } else {
-      fetchAccessToken();
-    }
-  };
-
-  const fetchAccessToken = () => {
-    AccessToken.getCurrentAccessToken()
-      .then(async data => {
-        if (data) {
-          const accessToken = data.accessToken;
-
-          fetchUserInfo(accessToken);
-        } else {
-          console.log('No access token found');
-        }
-      })
-      .catch(error => {
-        console.log('Error fetching access token:', error);
-      });
-  };
-
-  const fetchUserInfo = (accessToken: string) => {
-    const responseInfoCallback = async (
-      responseError: any,
-      responseResult: any,
-    ) => {
-      if (responseError) {
-        console.log('responseError', responseError);
-        Alert.alert('Error fetching data: ' + responseError.toString());
-      } else {
-        console.log('responseResult', responseResult);
-        Alert.alert(
-          'Success fetching data! \n',
-          `Name: ${responseResult?.name} \n id: ${responseResult?.id}`,
-        );
-      }
-    };
-
-    const infoRequest = new GraphRequest(
-      '/me',
-      {
-        accessToken: accessToken,
-        parameters: {
-          fields: {
-            string: 'email,name,first_name,middle_name,last_name',
-          },
-        },
-      },
-      responseInfoCallback,
-    );
-
-    new GraphRequestManager().addRequest(infoRequest).start();
-  };
-
   const loginWithFacebook = () => {
-    LoginManager.logInWithPermissions(['public_profile']).then(
-      handleLoginResult,
-      function (error) {
-        console.log('Login fail with error: ' + error);
-      },
-    );
+    navigation.navigate('BottomTabNavigator' as never);
   };
 
   return (

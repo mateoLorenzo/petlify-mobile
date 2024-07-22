@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,10 +14,16 @@ import {CustomButton} from '../../components/CustomButton';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../routes/StackNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {jwtDecode} from 'jwt-decode';
 const walker = require('../../../assets/images/paseo.png');
 const sitter = require('../../../assets/images/cuidado.png');
 const stylishDog = require('../../../assets/images/stylish-dog.png');
 const adoptGrid = require('../../../assets/images/adopt-grid.png');
+
+import {decode} from 'base-64';
+
+global.atob = decode;
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParams,
@@ -44,6 +50,20 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
   const onPressCareService = () => {
     navigation.navigate('ServiceRequestScreen', {service: 'care'});
   };
+
+  // TODO: Save data to store
+  const getAccessToken = async () => {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('accessToken from home', accessToken);
+    if (accessToken) {
+      const decoded = jwtDecode(accessToken);
+      console.log('decoded', decoded);
+    }
+  };
+
+  useEffect(() => {
+    getAccessToken();
+  }, []);
 
   return (
     <ScrollView

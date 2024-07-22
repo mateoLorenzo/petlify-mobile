@@ -84,10 +84,13 @@ export type RootStackParams = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParams>();
+interface navigatorProps {
+  initialRouteName: keyof RootStackParams;
+}
 
-export const StackNavigator = () => {
+export const StackNavigator = ({initialRouteName}: navigatorProps) => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName={initialRouteName}>
       <Stack.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}
