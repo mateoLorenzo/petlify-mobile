@@ -8,7 +8,6 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import Logo from '../../../assets/images/logo.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CustomButton} from '../../components/CustomButton';
 import {RouteProp} from '@react-navigation/native';
@@ -16,12 +15,15 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../routes/StackNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {jwtDecode} from 'jwt-decode';
-const walker = require('../../../assets/images/paseo.png');
-const sitter = require('../../../assets/images/cuidado.png');
+import {decode} from 'base-64';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 const stylishDog = require('../../../assets/images/stylish-dog.png');
 const adoptGrid = require('../../../assets/images/adopt-grid.png');
+const matumoto = require('../../../assets/images/matumoto.png');
 
-import {decode} from 'base-64';
+import PawIcon from '../../../assets/images/paw-prints.svg';
+import HomeIcon from '../../../assets/images/paw-home.svg';
 
 global.atob = decode;
 
@@ -68,32 +70,45 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
 
   return (
     <ScrollView
-      style={styles.container}
+      style={{...styles.container, paddingTop: marginTop + 20}}
       contentContainerStyle={styles.scrollViewContainer}>
-      <Logo height={100} width={100} style={{marginTop: marginTop + 20}} />
+      <View style={styles.header}>
+        <Image source={matumoto} style={styles.profileImage} />
+        <View>
+          <Text style={styles.profileName}>Mateo Lorenzo</Text>
+          <TouchableOpacity style={styles.locationSection} activeOpacity={0.3}>
+            <Text style={styles.locationText}>San miguel del Monte</Text>
+            <Icon name="chevron-down-sharp" size={15} color="#000" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.spacer} />
+        <View style={styles.shadow}>
+          <TouchableOpacity
+            activeOpacity={0.3}
+            style={styles.bellIconContainer}>
+            <Icon name="notifications-sharp" size={20} color="#000" />
+          </TouchableOpacity>
+        </View>
+      </View>
 
-      <Text style={styles.title}>¡Hola Mateo!</Text>
-      <Text style={styles.subtitle}>
-        ¿Qué servicio te gustaria agendar para Lucy?
-      </Text>
-
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={styles.walkServiceButton}
-          onPress={onPressWalkService}>
-          <Image source={walker} style={styles.serviceImage} />
-          <View style={styles.imageLayerContainer}>
-            <View style={styles.imageBlackLayer} />
-            <Text style={styles.serviceText}>Paseo</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onPressCareService}>
-          <Image source={sitter} style={styles.serviceImage} />
-          <View style={styles.imageLayerContainer}>
-            <View style={styles.imageBlackLayer} />
-            <Text style={styles.serviceText}>Cuidado</Text>
-          </View>
-        </TouchableOpacity>
+      <View style={styles.servicesSection}>
+        <Text style={styles.servicesTitle}>Nuestros Servicios</Text>
+        <View style={styles.servicesRow}>
+          <TouchableOpacity
+            style={styles.serviceCard}
+            activeOpacity={0.3}
+            onPress={onPressWalkService}>
+            <PawIcon width={35} height={35} />
+            <Text style={styles.cardText}>Paseo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.serviceCard}
+            activeOpacity={0.3}
+            onPress={onPressCareService}>
+            <HomeIcon style={styles.homeIcon} width={30} height={30} />
+            <Text style={styles.cardText}>Cuidado</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.checkOurFeesContainer}>
@@ -101,9 +116,10 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
         <View style={styles.serviceFeeTextContainer}>
           <Text style={styles.serviceFeeTitle}>¿Por qué Nosotros?</Text>
           <Text style={styles.serviceFeeSubtitle}>
-            Tenemos los mejores precios y todos los medios de pago! Mejorar la
-            vida de tu mascota nunca fue tan facil.
+            Precios bajos con excelentes paseadores y cuidadores para mejorar la
+            vida de tu mascota.
           </Text>
+          <View style={styles.spacer} />
           <CustomButton
             label="Ver Tarifas"
             onPress={onPressCheckFees}
@@ -126,11 +142,8 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
             ¡Encuentra tu mejor amigo!
           </Text>
           <Text style={styles.nextFeatureSubtitle}>
-            Te brindaremos la oportunidad de encontrar a tu compañero ideal.
-          </Text>
-          <Text style={styles.nextFeatureBottomSubtitle}>
-            Explora nuestra comunidad de mascotas en adopción con perfiles
-            detallados, imagenes, informacion de contacto y mucho mas!
+            Te conectamos con una comunidad de mascotas en adopcion para que
+            encuentres la compañia ideal para tu vida.
           </Text>
         </View>
       </View>
@@ -143,10 +156,67 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 50,
     backgroundColor: 'white',
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   container: {
     flex: 1,
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    marginRight: 10,
+  },
+  profileName: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 20,
+  },
+  locationSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  locationText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+  },
+  spacer: {
+    flex: 1,
+  },
+  bannerButton: {
+    backgroundColor: '#1E96FF',
+    paddingVertical: 8,
+    borderRadius: 5,
+    width: '100%',
+    alignItems: 'center',
+  },
+  bannerButtonText: {
+    fontFamily: 'Poppins-Medium',
+    color: '#FFF',
+  },
+  shadow: {
+    shadowColor: '#AFAFAF',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+    borderRadius: 50,
+  },
+  bellIconContainer: {
+    height: 45,
+    width: 45,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 26,
@@ -184,8 +254,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   serviceImage: {
-    width: '100%',
-    height: '100%',
+    width: 35,
+    height: 35,
     borderRadius: 10,
   },
   imageLayerContainer: {
@@ -210,6 +280,36 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 20,
   },
+  servicesSection: {
+    width: '100%',
+    marginTop: 20,
+  },
+  servicesTitle: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 16,
+    color: '#000',
+  },
+  servicesRow: {
+    flexDirection: 'row',
+    height: 100,
+    gap: 10,
+    marginTop: 10,
+  },
+  serviceCard: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  homeIcon: {
+    marginTop: 5,
+  },
+  cardText: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 16,
+  },
   checkOurFeesContainer: {
     minHeight: 150,
     flexDirection: 'row',
@@ -219,13 +319,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     backgroundColor: 'white',
-
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 1},
         shadowOpacity: 0.2,
-        shadowRadius: 6,
+        shadowRadius: 3,
       },
       android: {
         elevation: 3,
@@ -253,7 +352,8 @@ const styles = StyleSheet.create({
   serviceFeeSubtitle: {
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
-    marginVertical: 10,
+    marginTop: 5,
+    marginBottom: 20,
     textAlign: 'center',
     color: '#000',
   },
@@ -321,17 +421,10 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   nextFeatureSubtitle: {
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: 'Poppins-Regular',
     marginTop: 10,
-    textAlign: 'center',
-    paddingHorizontal: 10,
-    color: '#000',
-  },
-  nextFeatureBottomSubtitle: {
-    fontSize: 12,
-    fontFamily: 'Poppins-Regular',
-    marginVertical: 10,
+    marginBottom: 20,
     textAlign: 'center',
     paddingHorizontal: 10,
     color: '#000',
