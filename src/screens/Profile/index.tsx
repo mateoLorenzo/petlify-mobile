@@ -57,6 +57,9 @@ const ProfileScreen = () => {
     });
   };
 
+  const editProfile = () => {
+    navigation.navigate('ProfileEditScreen' as never);
+  };
   return (
     <ScrollView
       contentContainerStyle={styles.alignCenter}
@@ -93,6 +96,16 @@ const ProfileScreen = () => {
               <Text style={styles.infoRowText}>mateolorenzo.dev@gmail.com</Text>
             </View>
           </View>
+
+          <View style={styles.rowsDivisor} />
+
+          <TouchableOpacity style={styles.infoRow} onPress={editProfile}>
+            <View style={styles.rowLeftContainer}>
+              <Icon name="key-outline" size={25} color="#707070" />
+              <Text style={styles.infoRowText}>********</Text>
+            </View>
+            <Icon name="chevron-forward-outline" size={25} color="#707070" />
+          </TouchableOpacity>
         </View>
       </View>
 
