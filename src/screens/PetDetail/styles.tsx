@@ -29,7 +29,6 @@ export const styles = StyleSheet.create({
   },
   registerPetTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
     fontFamily: 'Poppins-SemiBold',
     marginTop: 20,
   },

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Animated,
   Dimensions,
@@ -16,53 +16,17 @@ const myImage = require('../../../assets/images/matumoto.png');
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAnimation} from '../../hooks/useAnimation';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+
 const ProfileScreen = () => {
   const [showBlackLayer, setShowBlackLayer] = useState(false);
   const [selectedImage, setSelectedImage] = useState(myImage);
-  const modalPosition = useRef(new Animated.Value(screenHeight)).current;
-  const blackLayerOpacity = useRef(new Animated.Value(0)).current;
-  const {navigate} = useNavigation();
+  const navigation = useNavigation();
   const {top} = useSafeAreaInsets();
-
-  const moveUpModal = () => {
-    Animated.timing(modalPosition, {
-      toValue: screenHeight / 3,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const moveDownModal = () => {
-    Animated.timing(modalPosition, {
-      toValue: screenHeight,
-      duration: 250,
-      useNativeDriver: true,
-    }).start(() => {
-      setShowBlackLayer(false);
-    });
-  };
-
-  const showLayerAnimation = () => {
-    Animated.timing(blackLayerOpacity, {
-      toValue: 0.5,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const hideLayerAnimation = (onFinish?: () => void) => {
-    Animated.timing(blackLayerOpacity, {
-      toValue: 0,
-      duration: 250,
-      useNativeDriver: true,
-    }).start(onFinish);
-  };
-
-  const editProfile = () => {
-    navigate('ProfileEditScreen' as never);
-  };
+  const {modalPosition, blackLayerOpacity, moveModal, toggleLayerAnimation} =
+    useAnimation();
 
   const choosePhotoFromGallery = () => {
     ImagePicker.openPicker({
@@ -76,29 +40,34 @@ const ProfileScreen = () => {
 
   const showConfirmLogout = () => {
     setShowBlackLayer(true);
-    showLayerAnimation();
-    moveUpModal();
+    toggleLayerAnimation(true);
+    moveModal('up');
   };
 
   const hideBlackLayer = () => {
-    moveDownModal();
-    hideLayerAnimation();
+    moveModal('down', () => setShowBlackLayer(false));
+    toggleLayerAnimation(false);
   };
 
   const logout = () => {
-    moveDownModal();
+    moveModal('down', () => setShowBlackLayer(false));
     AsyncStorage.removeItem('accessToken');
-    hideLayerAnimation(() => navigate('PreSignUpScreen' as never));
+    toggleLayerAnimation(false, () => {
+      navigation.navigate('PreSignUpScreen' as never);
+    });
   };
 
   return (
     <ScrollView
       contentContainerStyle={styles.alignCenter}
-      style={{
-        ...styles.container,
-        paddingTop: Platform.OS === 'android' ? top + 20 : top,
-      }}>
-      <Text style={styles.title}>Perfil</Text>
+      style={styles.container}>
+      <Text
+        style={{
+          ...styles.title,
+          marginTop: Platform.OS === 'android' ? top + 20 : top,
+        }}>
+        Perfil
+      </Text>
       <TouchableOpacity
         style={styles.imageContainer}
         onPress={choosePhotoFromGallery}>
@@ -124,15 +93,6 @@ const ProfileScreen = () => {
               <Text style={styles.infoRowText}>mateolorenzo.dev@gmail.com</Text>
             </View>
           </View>
-          <View style={styles.rowsDivisor} />
-
-          <TouchableOpacity style={styles.infoRow} onPress={editProfile}>
-            <View style={styles.rowLeftContainer}>
-              <Icon name="key-outline" size={25} color="#707070" />
-              <Text style={styles.infoRowText}>********</Text>
-            </View>
-            <Icon name="chevron-forward-outline" size={25} color="#707070" />
-          </TouchableOpacity>
         </View>
       </View>
 
@@ -218,7 +178,7 @@ const styles = StyleSheet.create({
     marginBottom: -5,
   },
   usernameSubTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Poppins-Regular',
     color: 'gray',
   },
@@ -308,6 +268,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 40,
     paddingVertical: 30,
+    zIndex: 10,
   },
   logoutTitle: {
     fontFamily: 'Poppins-SemiBold',

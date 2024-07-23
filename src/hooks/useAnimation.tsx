@@ -36,6 +36,8 @@ export const useAnimation = () => {
   ).current;
   const walkersPosition = useRef(new Animated.Value(0)).current;
   const buttonPosition = useRef(new Animated.Value(0)).current;
+  const modalPosition = useRef(new Animated.Value(screenHeight)).current;
+  const blackLayerOpacity = useRef(new Animated.Value(0)).current;
 
   const moveTextUP = (initPosition: number, duration: number = 200) => {
     Animated.timing(textPosition, {
@@ -265,6 +267,22 @@ export const useAnimation = () => {
     }).start();
   };
 
+  const moveModal = (direction: 'up' | 'down', onFinish?: () => void) => {
+    Animated.timing(modalPosition, {
+      toValue: direction === 'up' ? screenHeight / 3 : screenHeight,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(onFinish);
+  };
+
+  const toggleLayerAnimation = (show: boolean, onFinish?: () => void) => {
+    Animated.timing(blackLayerOpacity, {
+      toValue: show ? 0.5 : 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(onFinish);
+  };
+
   return {
     textPosition,
     textOpacity,
@@ -294,6 +312,8 @@ export const useAnimation = () => {
     servicesPosition,
     buttonPosition,
     walkersPosition,
+    modalPosition,
+    blackLayerOpacity,
 
     moveButton,
     moveWalkersContainer,
@@ -318,5 +338,7 @@ export const useAnimation = () => {
     closeDropdown,
     fadeInContent,
     fadeOutContent,
+    moveModal,
+    toggleLayerAnimation,
   };
 };
