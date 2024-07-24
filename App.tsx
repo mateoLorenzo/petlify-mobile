@@ -1,4 +1,5 @@
-import React, {PropsWithChildren, useEffect, useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {PropsWithChildren, useEffect, useState, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {RootStackParams, StackNavigator} from './src/routes/StackNavigator';
 import {AppContextProvider} from './src/context/PetlifyContext';
@@ -6,7 +7,7 @@ import {NewServiceModal} from './src/components/NewServiceModal';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Settings} from 'react-native-fbsdk-next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {View, ActivityIndicator, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet, Animated} from 'react-native';
 import Logo from './assets/images/logo.svg';
 
 const AppState = ({children}: PropsWithChildren) => (
@@ -14,76 +15,73 @@ const AppState = ({children}: PropsWithChildren) => (
 );
 
 const App = () => {
-  const [initialRouteName, setInitialRouteName] =
-    useState<keyof RootStackParams>('WelcomeScreen');
+  const [initialRouteName, setInitialRouteName] = useState<
+    keyof RootStackParams | null
+  >(null);
   const [loading, setLoading] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const getInitialData = async () => {
-    try {
-      const isFirstLaunch = await AsyncStorage.getItem('isFirstLaunch');
-      const accessToken = await AsyncStorage.getItem('accessToken');
+    const isFirstLaunch = await AsyncStorage.getItem('isFirstLaunch');
+    const accessToken = await AsyncStorage.getItem('accessToken');
 
-      if (isFirstLaunch === null) {
-        await AsyncStorage.setItem('isFirstLaunch', 'false');
-        setInitialRouteName('WelcomeScreen');
-      } else if (accessToken) {
-        setInitialRouteName('BottomTabNavigator');
-      } else {
-        setInitialRouteName('PreSignUpScreen');
-      }
-    } catch (error) {
-      console.error('Failed to get initial data', error);
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000); // Mínimo 2 segundos de carga
+    if (isFirstLaunch === null) {
+      await AsyncStorage.setItem('isFirstLaunch', 'false');
+      setInitialRouteName('WelcomeScreen');
+    } else if (accessToken) {
+      setInitialRouteName('BottomTabNavigator');
+    } else {
+      setInitialRouteName('PreSignUpScreen');
     }
   };
 
   useEffect(() => {
-    getInitialData();
+    getInitialData().then(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(() => setLoading(false));
+    });
   }, []);
 
   GoogleSignin.configure({
     webClientId:
       '190649997221-ob12blrh3chl4mi1hpb5k6rv4couggb6.apps.googleusercontent.com',
-    // androidClientId:
-    //   '190649997221-q00o495gd94rdfkkb4bpii7cb17hs549.apps.googleusercontent.com',
     iosClientId:
       '190649997221-vi8aus39vouh9qphs4rt3o2bbsmvpr00.apps.googleusercontent.com',
     scopes: ['profile', 'email'],
   });
   Settings.initializeSDK();
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Logo height={150} width={150} style={styles.logo} />
-        <Text style={styles.title}>Bienvenido a Petlify</Text>
-        <Text style={styles.subtitle}>Mejora la vida de tu mascota</Text>
-        <ActivityIndicator size="small" color="gray" style={styles.loader} />
-      </View>
-    );
-  }
-
   return (
     <AppState>
-      <NavigationContainer>
-        <StackNavigator initialRouteName={initialRouteName} />
-        <NewServiceModal />
-      </NavigationContainer>
+      <View style={styles.container}>
+        <NavigationContainer>
+          {initialRouteName && (
+            <StackNavigator initialRouteName={initialRouteName} />
+          )}
+          <NewServiceModal />
+        </NavigationContainer>
+        {loading && (
+          <Animated.View style={[styles.loadingContainer, {opacity: fadeAnim}]}>
+            <Logo height={200} width={200} />
+          </Animated.View>
+        )}
+      </View>
     </AppState>
   );
 };
 
 const styles = StyleSheet.create({
-  loadingContainer: {
+  container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'white',
   },
-  logo: {
-    marginTop: 100,
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
   },
   title: {
     fontFamily: 'Poppins-SemiBold',
