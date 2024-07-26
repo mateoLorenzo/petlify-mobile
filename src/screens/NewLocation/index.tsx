@@ -1,125 +1,67 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Animated, Dimensions} from 'react-native';
 import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import MapView, {
-  Marker,
+  Region,
   PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {CustomButton} from '../../components/CustomButton';
+import {mapStyle} from '../../constants';
+import axios from 'axios';
 
 const GOOGLE_API_KEY = 'AIzaSyCSu-CaK-Oaq7q42s-4GLQEFZCnBZ76MH8';
-const {height, width} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 interface mapsCoords {
   lat: number;
   lng: number;
 }
 
-const mapStyle = [
-  {
-    elementType: 'geometry',
-    stylers: [{color: '#242f3e'}],
-  },
-  {
-    elementType: 'labels.text.stroke',
-    stylers: [{color: '#242f3e'}],
-  },
-  {
-    elementType: 'labels.text.fill',
-    stylers: [{color: '#746855'}],
-  },
-  {
-    featureType: 'administrative.locality',
-    elementType: 'labels.text.fill',
-    stylers: [{color: '#d59563'}],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'labels.text.fill',
-    stylers: [{color: '#d59563'}],
-  },
-  {
-    featureType: 'poi.park',
-    elementType: 'geometry',
-    stylers: [{color: '#263c3f'}],
-  },
-  {
-    featureType: 'poi.park',
-    elementType: 'labels.text.fill',
-    stylers: [{color: '#6b9a76'}],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry',
-    stylers: [{color: '#38414e'}],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry.stroke',
-    stylers: [{color: '#212a37'}],
-  },
-  {
-    featureType: 'road',
-    elementType: 'labels.text.fill',
-    stylers: [{color: '#9ca5b3'}],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry',
-    stylers: [{color: '#746855'}],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry.stroke',
-    stylers: [{color: '#1f2835'}],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'labels.text.fill',
-    stylers: [{color: '#f3d19c'}],
-  },
-  {
-    featureType: 'transit',
-    elementType: 'geometry',
-    stylers: [{color: '#2f3948'}],
-  },
-  {
-    featureType: 'transit.station',
-    elementType: 'labels.text.fill',
-    stylers: [{color: '#d59563'}],
-  },
-  {
-    featureType: 'water',
-    elementType: 'geometry',
-    stylers: [{color: '#17263c'}],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.fill',
-    stylers: [{color: '#515c6d'}],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.stroke',
-    stylers: [{color: '#17263c'}],
-  },
-];
+const initialLatitude = -34.913854;
+const initialLongitude = -65.318303;
+
+const getAddressFromCoordinates = async (
+  latitude: number,
+  longitude: number,
+) => {
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_API_KEY}`;
+
+  try {
+    const response = await axios.get(url);
+    if (response.data.results.length > 0) {
+      const data = response.data;
+      const address = data.results[0].formatted_address.split(',')[0];
+      return address;
+    } else {
+      console.log('No address found');
+    }
+  } catch (error) {
+    console.log('Error getting address from coordinates', error);
+  }
+};
 
 const NewLocationScreen = () => {
-  const [origin, setOrigin] = React.useState({
-    latitude: -34.913854,
-    longitude: -65.318303,
+  const [origin, setOrigin] = useState({
+    latitude: initialLatitude,
+    longitude: initialLongitude,
+  });
+  const [userAddress, setUserAddress] = useState({
+    fullAddress: '',
+    latitude: initialLatitude,
+    longitude: initialLongitude,
   });
   const initialRegion = {
-    latitude: origin.latitude,
-    longitude: origin.longitude,
+    latitude: initialLatitude,
+    longitude: initialLongitude,
     latitudeDelta: 9.0,
     longitudeDelta: 9.0,
   };
-  const map = React.useRef<MapView | null>(null);
+  const [mapIsVisible, setMapIsVisible] = useState(false);
+  const map = useRef<MapView | null>(null);
   const navigation = useNavigation();
   const modalHeight = useRef(new Animated.Value(0.95)).current;
   const autocompleteRef = useRef<any>(null);
@@ -133,7 +75,7 @@ const NewLocationScreen = () => {
 
   const toggleModalHeight = (animation: 'expand' | 'reduce') => {
     Animated.timing(modalHeight, {
-      toValue: animation === 'expand' ? 0.95 : 0.25,
+      toValue: animation === 'expand' ? 0.95 : 0.3,
       duration: 300,
       useNativeDriver: false,
     }).start();
@@ -141,6 +83,49 @@ const NewLocationScreen = () => {
 
   const goBack = () => {
     navigation.goBack();
+  };
+
+  const onRegionChangeComplete = async (region: Region) => {
+    const {latitude, longitude} = region;
+    const addressFromCoords = await getAddressFromCoordinates(
+      latitude,
+      longitude,
+    );
+    setOrigin({latitude, longitude});
+    setUserAddress({
+      ...userAddress,
+      latitude,
+      longitude,
+      fullAddress: addressFromCoords,
+    });
+  };
+
+  const onChangeText = (text: string) => {
+    if (text !== userAddress.fullAddress && mapIsVisible === false) {
+      setUserAddress({...userAddress, fullAddress: text});
+    }
+  };
+
+  const renderRow = (item: any) => {
+    const [title, ...rest] = item.description.split(',');
+    const description = rest.join(',').trim();
+
+    return (
+      <View style={styles.itemRow}>
+        <View style={styles.locationIconContainer}>
+          <Icon name={'location-sharp'} size={16} color={'#1E96FF'} />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.itemTitle}>{title}</Text>
+          <Text
+            style={styles.itemDescription}
+            numberOfLines={1}
+            ellipsizeMode="tail">
+            {description}
+          </Text>
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -152,12 +137,11 @@ const NewLocationScreen = () => {
         customMapStyle={mapStyle}
         ref={map}
         style={styles.map}
-        initialRegion={initialRegion}>
-        <Marker
-          coordinate={origin}
-          draggable
-          onDragEnd={direction => setOrigin(direction.nativeEvent.coordinate)}
-        />
+        initialRegion={initialRegion}
+        onRegionChangeComplete={onRegionChangeComplete}>
+        <View style={styles.pinContainer}>
+          <Icon name={'location-sharp'} size={40} color={'#1E96FF'} />
+        </View>
       </MapView>
       <Animated.View
         style={{
@@ -181,39 +165,41 @@ const NewLocationScreen = () => {
           enablePoweredByContainer={false}
           onPress={(data, details = null) => {
             const {lat, lng} = details?.geometry.location as mapsCoords;
+            const fullAddress = details?.formatted_address || '';
+            setUserAddress({fullAddress, latitude: lat, longitude: lng});
             toggleModalHeight('reduce');
-            setOrigin({
-              latitude: lat,
-              longitude: lng,
-            });
+            setMapIsVisible(true);
+            setOrigin({latitude: lat, longitude: lng});
             map.current?.animateToRegion({
               latitude: lat,
               longitude: lng,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.00821,
+              latitudeDelta: 0.0015,
+              longitudeDelta: 0.0015,
             });
           }}
           textInputProps={{
             style: styles.searchInput,
-            onFocus: () => toggleModalHeight('expand'),
+            onFocus: () => {
+              setMapIsVisible(false);
+              toggleModalHeight('expand');
+            },
+            placeholderTextColor: '#8F8F8F',
+            autoCorrect: false,
+            value: userAddress.fullAddress,
+            onChangeText: onChangeText,
           }}
-          renderRow={item => (
-            <View style={styles.itemRow}>
-              <View style={styles.locationIconContainer}>
-                <Icon name={'location-sharp'} size={16} color={'#1E96FF'} />
-              </View>
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={styles.itemDescription}>
-                {item.description}
-              </Text>
-            </View>
-          )}
-          query={{
-            key: GOOGLE_API_KEY,
-            language: 'es',
-          }}
+          renderRow={renderRow}
+          query={{key: GOOGLE_API_KEY, language: 'es'}}
+        />
+
+        <CustomButton
+          label="Guardar"
+          onPress={() => console.log('User Address:', userAddress)}
+          style={styles.saveButton}
+          disabled={
+            origin.latitude === initialLatitude &&
+            origin.longitude === initialLongitude
+          }
         />
       </Animated.View>
     </View>
@@ -256,14 +242,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  textContainer: {
+    flexDirection: 'column',
+    width: width - 75 - 40,
+  },
+  itemTitle: {
+    fontFamily: 'Poppins-Medium',
+  },
   itemDescription: {
     fontFamily: 'Poppins-Regular',
-    paddingVertical: 5,
-    width: width - 75 - 40,
-    overflow: 'hidden',
+    color: 'gray',
   },
   modal: {
-    minHeight: height * 0.25,
+    minHeight: 260,
     width: '100%',
     backgroundColor: '#FFF',
     borderTopLeftRadius: 20,
@@ -292,6 +283,16 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontFamily: 'Poppins-SemiBold',
     fontSize: 18,
+  },
+  saveButton: {
+    marginBottom: 40,
+  },
+  pinContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginLeft: -20,
+    marginTop: -40,
   },
 });
 
