@@ -18,6 +18,7 @@
     "@react-navigation/native-stack": "^6.9.26",
     "@shopify/flash-list": "^1.6.4",
     "@supabase/supabase-js": "^2.44.2",
+    "axios": "^1.7.2",
     "base-64": "^1.0.0",
     "credit-card-type": "^10.0.1",
     "jwt-decode": "^4.0.0",
