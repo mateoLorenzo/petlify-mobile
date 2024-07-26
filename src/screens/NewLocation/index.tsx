@@ -106,6 +106,11 @@ const NewLocationScreen = () => {
     }
   };
 
+  const onPressSave = () => {
+    console.log('User Address:', userAddress);
+    navigation.goBack();
+  };
+
   const renderRow = (item: any) => {
     const [title, ...rest] = item.description.split(',');
     const description = rest.join(',').trim();
@@ -194,7 +199,7 @@ const NewLocationScreen = () => {
 
         <CustomButton
           label="Guardar"
-          onPress={() => console.log('User Address:', userAddress)}
+          onPress={onPressSave}
           style={styles.saveButton}
           disabled={
             origin.latitude === initialLatitude &&

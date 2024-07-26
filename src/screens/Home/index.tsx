@@ -77,6 +77,10 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
     }
   };
 
+  const onPressAddress = () => {
+    navigation.navigate('NewLocationScreen' as never);
+  };
+
   useEffect(() => {
     getAccessToken();
   }, []);
@@ -91,8 +95,11 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
           <Text style={styles.profileName}>
             {userInfo.name} {userInfo.lastName}
           </Text>
-          <TouchableOpacity style={styles.locationSection} activeOpacity={0.3}>
-            <Text style={styles.locationText}>San miguel del Monte</Text>
+          <TouchableOpacity
+            style={styles.locationSection}
+            onPress={onPressAddress}
+            activeOpacity={0.3}>
+            <Text style={styles.locationText}>Cargar direccion</Text>
             <Icon name="chevron-down-sharp" size={15} color="#000" />
           </TouchableOpacity>
         </View>
