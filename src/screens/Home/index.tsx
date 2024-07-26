@@ -1,4 +1,5 @@
-import React, {useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useContext, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -24,6 +25,8 @@ const matumoto = require('../../../assets/images/matumoto.png');
 
 import PawIcon from '../../../assets/images/paw-prints.svg';
 import HomeIcon from '../../../assets/images/paw-home.svg';
+import {PetlifyContext} from '../../context/PetlifyContext';
+import {CustomJwtPayload} from '../../interfaces';
 
 global.atob = decode;
 
@@ -40,6 +43,8 @@ type Props = {
 
 const HomeScreen: React.FC<Props> = ({navigation}) => {
   const {top: marginTop} = useSafeAreaInsets();
+
+  const {userInfo, setUserInfo} = useContext(PetlifyContext);
 
   const onPressCheckFees = () => {
     // navigation.navigate('ServicesFeesScreen' as never);
@@ -59,8 +64,16 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('accessToken from home', accessToken);
     if (accessToken) {
-      const decoded = jwtDecode(accessToken);
-      console.log('decoded', decoded);
+      const userData = jwtDecode<CustomJwtPayload>(accessToken);
+      setUserInfo({
+        name: userData?.user_metadata?.name,
+        lastName: userData?.user_metadata?.last_name,
+        email: userData?.user_metadata?.email,
+        phone: '1234567890',
+        id: userData?.user_metadata?.sub,
+        provider: userData?.app_metadata?.provider,
+        picture: 'https://lh3.google.com/u/0/d/1234567890=w100-h100',
+      });
     }
   };
 
@@ -75,7 +88,9 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
       <View style={styles.header}>
         <Image source={matumoto} style={styles.profileImage} />
         <View>
-          <Text style={styles.profileName}>Mateo Lorenzo</Text>
+          <Text style={styles.profileName}>
+            {userInfo.name} {userInfo.lastName}
+          </Text>
           <TouchableOpacity style={styles.locationSection} activeOpacity={0.3}>
             <Text style={styles.locationText}>San miguel del Monte</Text>
             <Icon name="chevron-down-sharp" size={15} color="#000" />

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Animated,
   Dimensions,
@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAnimation} from '../../hooks/useAnimation';
+import {PetlifyContext} from '../../context/PetlifyContext';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -27,6 +28,8 @@ const ProfileScreen = () => {
   const {top} = useSafeAreaInsets();
   const {modalPosition, blackLayerOpacity, moveModal, toggleLayerAnimation} =
     useAnimation();
+
+  const {userInfo} = useContext(PetlifyContext);
 
   const choosePhotoFromGallery = () => {
     ImagePicker.openPicker({
@@ -76,8 +79,9 @@ const ProfileScreen = () => {
         onPress={choosePhotoFromGallery}>
         <Image source={selectedImage} style={styles.image} />
       </TouchableOpacity>
-      <Text style={styles.usernameTitle}>Mateo Lorenzo</Text>
-      <Text style={styles.usernameSubTitle}>Dueño de Lucy</Text>
+      <Text style={styles.usernameTitle}>
+        {userInfo.name} {userInfo.lastName}
+      </Text>
 
       <View style={styles.accountInfoContainer}>
         <Text style={styles.accountInfoTitle}>Datos de la cuenta</Text>
@@ -85,7 +89,9 @@ const ProfileScreen = () => {
           <View style={styles.infoRow}>
             <View style={styles.rowLeftContainer}>
               <Icon name="person-circle-outline" size={25} color="#707070" />
-              <Text style={styles.infoRowText}>Mateo Lorenzo</Text>
+              <Text style={styles.infoRowText}>
+                {userInfo.name} {userInfo.lastName}
+              </Text>
             </View>
           </View>
 
@@ -93,7 +99,7 @@ const ProfileScreen = () => {
           <View style={styles.infoRow}>
             <View style={styles.rowLeftContainer}>
               <Icon name="mail-outline" size={25} color="#707070" />
-              <Text style={styles.infoRowText}>mateolorenzo.dev@gmail.com</Text>
+              <Text style={styles.infoRowText}>{userInfo.email}</Text>
             </View>
           </View>
 

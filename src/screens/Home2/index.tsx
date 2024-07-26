@@ -43,7 +43,7 @@ const HomeScreen2 = () => {
           </Text>
           <View style={styles.spacer} />
           <TouchableOpacity activeOpacity={0.3} style={styles.bannerButton}>
-            <Text style={styles.bannerButtonText}>Hechar un vistazo</Text>
+            <Text style={styles.bannerButtonText}>Ver precios</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -52,10 +52,10 @@ const HomeScreen2 = () => {
         <Text style={styles.servicesTitle}>Nuestros Servicios</Text>
         <View style={styles.servicesRow}>
           <TouchableOpacity style={styles.serviceCard} activeOpacity={0.3}>
-            <Text>Paseo</Text>
+            <Text style={{fontFamily: 'Poppins-Regular'}}>Paseo</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.serviceCard} activeOpacity={0.3}>
-            <Text>Cuidado</Text>
+            <Text style={{fontFamily: 'Poppins-Regular'}}>Cuidado</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -68,18 +68,18 @@ const HomeScreen2 = () => {
 
       <View style={styles.soonServicesRow}>
         <TouchableOpacity style={styles.soonServiceCard} activeOpacity={0.3}>
-          <Text>Adoptar</Text>
+          <Text style={{fontFamily: 'Poppins-Regular'}}>Adoptar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.soonServiceCard} activeOpacity={0.3}>
-          <Text>PetShops</Text>
+          <Text style={{fontFamily: 'Poppins-Regular'}}>PetShops</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.soonServicesRow}>
         <TouchableOpacity style={styles.soonServiceCard} activeOpacity={0.3}>
-          <Text>Veterinarias</Text>
+          <Text style={{fontFamily: 'Poppins-Regular'}}>Veterinarias</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.soonServiceCard} activeOpacity={0.3}>
-          <Text>Servicios</Text>
+          <Text style={{fontFamily: 'Poppins-Regular'}}>Servicios</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   bannerButton: {
     backgroundColor: '#1E96FF',
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 5,
     width: '100%',
     alignItems: 'center',
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   servicesTitle: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins-Medium',
     fontSize: 14,
     color: '#000',
   },

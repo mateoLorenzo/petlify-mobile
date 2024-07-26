@@ -160,7 +160,6 @@ const styles = StyleSheet.create({
   servicesDoneButtonText: {
     fontSize: 14,
     fontFamily: 'Poppins-Medium',
-    color: '#1E96FF',
   },
   newServiceButtonContainer: {
     flex: 1,

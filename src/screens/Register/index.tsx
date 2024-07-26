@@ -104,13 +104,14 @@ const RegisterScreen = () => {
   const navigation = useNavigation();
 
   const registerUser = async () => {
+    setLoading(true);
     const {data, error} = await supabase.auth.signUp({
       email: emailValue,
       password: passwordValue,
       options: {
         data: {
           name: nameValue,
-          lastName: lastNameValue,
+          last_name: lastNameValue,
         },
       },
     });
@@ -142,6 +143,7 @@ const RegisterScreen = () => {
   };
 
   const loginUser = async () => {
+    setLoading(true);
     const {error, data} = await supabase.auth.signInWithPassword({
       email: emailValue,
       password: passwordValue,
@@ -153,7 +155,7 @@ const RegisterScreen = () => {
     console.log('data', data);
     const accessToken = data.session?.access_token;
     AsyncStorage.setItem('accessToken', accessToken);
-
+    setLoading(false);
     navigation.navigate('BottomTabNavigator' as never);
   };
 

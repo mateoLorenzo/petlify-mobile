@@ -1,3 +1,4 @@
+import {JwtPayload} from 'jwt-decode';
 import {ImageSourcePropType} from 'react-native';
 import {SvgProps} from 'react-native-svg';
 
@@ -56,4 +57,45 @@ export interface PetData {
   months: string;
   size: 'small' | 'medium' | 'large' | 'extra_large' | undefined;
   image: string | ImageSourcePropType | undefined;
+}
+
+export interface UserInfo {
+  name: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  id: string;
+  provider: string;
+  picture?: string;
+}
+
+interface UserMetadata {
+  email: string;
+  email_verified: boolean;
+  last_name: string;
+  name: string;
+  phone_verified: boolean;
+  sub: string;
+}
+
+interface AppMetadata {
+  provider: string;
+  providers: string[];
+}
+
+export interface CustomJwtPayload extends JwtPayload {
+  aal: string;
+  amr: {method: string; timestamp: number}[];
+  app_metadata: AppMetadata;
+  aud: string;
+  email: string;
+  exp: number;
+  iat: number;
+  is_anonymous: boolean;
+  iss: string;
+  phone: string;
+  role: string;
+  session_id: string;
+  sub: string;
+  user_metadata: UserMetadata;
 }

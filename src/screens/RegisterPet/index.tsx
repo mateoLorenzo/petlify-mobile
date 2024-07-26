@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Dimensions,
@@ -33,6 +33,7 @@ import {supabase} from '../../lib/supabase';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../routes/StackNavigator';
 import {DismissKeyboard} from '../../components/DismissKeyboard';
+import {PetlifyContext} from '../../context/PetlifyContext';
 
 const steps = [1, 2, 3, 4, 5, 6, 7];
 const {width: screenWidth} = Dimensions.get('window');
@@ -67,6 +68,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
   const [petInfo, setPetInfo] = useState<PetData>(initialPetData);
   const [continueButtonColor, setContinueButtonColor] = useState('gray');
   const [breedsList, setBreedsList] = useState(dogBreeds);
+  const {userInfo} = useContext(PetlifyContext);
 
   const nameInputRef = useRef<TextInput>(null);
   const dropdownPaddingTop = useRef(new Animated.Value(60)).current;
@@ -240,7 +242,7 @@ const RegisterPetScreen: React.FC<Props> = ({navigation, route}) => {
       breed: petData.breed,
       size: petData.size,
       gender: petData.gender,
-      owner_id: '4', //TODO: get owner id from user when updating table users
+      owner_id: userInfo.id,
     };
     return petFormatted;
   };

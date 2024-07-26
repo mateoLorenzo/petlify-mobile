@@ -37,7 +37,7 @@ const RegisterPetInvitationScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const onPressOmit = () => {
-    navigation.navigate('HomeScreen');
+    navigation.navigate('BottomTabNavigator');
   };
 
   return (

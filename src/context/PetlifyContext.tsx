@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {PropsWithChildren, createContext} from 'react';
+import {UserInfo} from '../interfaces';
 
 interface PetlifyContextProps {
   isOpenServiceModal: boolean;
@@ -10,6 +11,8 @@ interface PetlifyContextProps {
   startMinute: string;
   endHour: string;
   endMinute: string;
+  userInfo: UserInfo;
+  setUserInfo: (newValue: UserInfo) => void;
   setIsOpenServiceModal: (newValue: boolean) => void;
   setPetSelectedIndex: (newValue: number) => void;
   setLocationSelectedIndex: (newValue: number) => void;
@@ -33,6 +36,7 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
   const [startMinute, setStartMinute] = useState<string>('00');
   const [endHour, setEndHour] = useState<string>('00');
   const [endMinute, setEndMinute] = useState<string>('00');
+  const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
 
   const setModalIsOpen = (value: boolean) => setIsOpenServiceModal(value);
   const setPetIndex = (value: number) => setPetSelectedIndex(value);
@@ -42,6 +46,7 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
   const modifyStartMinute = (value: string) => setStartMinute(value);
   const modifyEndHour = (value: string) => setEndHour(value);
   const modifyEndMinute = (value: string) => setEndMinute(value);
+  const modifyUserInfo = (value: UserInfo) => setUserInfo(value);
 
   return (
     <PetlifyContext.Provider
@@ -54,6 +59,7 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
         startMinute,
         endHour,
         endMinute,
+        userInfo,
         setIsOpenServiceModal: setModalIsOpen,
         setPetSelectedIndex: setPetIndex,
         setLocationSelectedIndex: setLocationIndex,
@@ -62,6 +68,7 @@ export const AppContextProvider = ({children}: PropsWithChildren) => {
         setStartMinute: modifyStartMinute,
         setEndHour: modifyEndHour,
         setEndMinute: modifyEndMinute,
+        setUserInfo: modifyUserInfo,
       }}>
       {children}
     </PetlifyContext.Provider>

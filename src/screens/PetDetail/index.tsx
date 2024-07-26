@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useContext, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -18,6 +19,7 @@ import {BottomTabParams} from '../../routes/BottomTabNavigator';
 import {RootStackParams} from '../../routes/StackNavigator';
 import {PetCard} from '../../components/PetCard';
 import {styles} from './styles';
+import {PetlifyContext} from '../../context/PetlifyContext';
 
 type PetDetailScreenNavigationProp = NativeStackNavigationProp<
   RootStackParams,
@@ -40,6 +42,8 @@ const PetDetailScreen: React.FC<Props> = ({navigation}) => {
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const {userInfo} = useContext(PetlifyContext);
+
   const onPressEdit = (pet: Pet) => {
     navigation.navigate('RegisterPetScreen', {actionType: 'update', pet});
   };
@@ -48,7 +52,7 @@ const PetDetailScreen: React.FC<Props> = ({navigation}) => {
     navigation.navigate('RegisterPetScreen', {actionType: 'register'});
   };
   const getPets = async () => {
-    const ownerID = '17e9b275-fcb3-4391-99ab-54f299a969bd'; //TODO: Get ownerID from data in store
+    const ownerID = userInfo.id;
 
     const {data, error} = await supabase
       .from('pets')
